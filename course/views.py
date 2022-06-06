@@ -1,4 +1,3 @@
-from multiprocessing import context
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import View
 from django.shortcuts import redirect, render
@@ -30,16 +29,17 @@ def create(request):
         if form.is_valid():
             print("success")
             form.save()
-
+        return redirect(index)
     return render(request, 'course/CourseForm.html', context)
 
 
 def update(request, id):
-    course = Course.objects.get(pk=3)
+    course = Course.objects.get(pk=id)
     form = CourseForm(instance=course)
     context = {
         'title': 'Update',
-        'form': form
+        'form': form,
+        'id': course.id
     }
 
     if request.method == 'POST':
@@ -49,3 +49,14 @@ def update(request, id):
             form.save()
             return redirect(update, id)
     return render(request, 'course/CourseForm.html', context)
+
+
+def delete(request, id):
+    course = Course.objects.get(pk=id)
+    context = {
+        'id': course.id
+    }
+    if request.method == 'POST':
+        course.delete()
+        return redirect(index)
+    return render(request, 'course/delete.html', context)

@@ -5,3 +5,8 @@
     {{ form.as_p }}
     <button type="submit">{{ title }}</button>
 </form>
+{% if title == 'Update' %}
+<!-- <form action="{% url 'delete' id=id %}"> -->
+<a href="{% url 'delete' id=id %}"><button type="submit">Delete</button></a>
+<!-- </form> -->
+{% endif %}
