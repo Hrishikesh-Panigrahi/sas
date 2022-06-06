@@ -25,6 +25,8 @@ class Course(models.Model):
     ]
 
     id = models.BigAutoField(primary_key=True)
+    code = models.CharField(max_length=10)
+    scheme = models.CharField(max_length=10)
     name = models.CharField(max_length=50)
     sem = models.IntegerField(choices=sem_choices)
     dept = models.CharField(
