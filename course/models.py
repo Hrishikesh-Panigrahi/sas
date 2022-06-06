@@ -28,6 +28,11 @@ class Course(models.Model):
     sem = models.IntegerField(choices=sem_choices)
     dept = models.CharField(
         max_length=50, choices=department_choices)
+    is_elective = models.BooleanField(default=False)
+    dept_level = models.BooleanField(default=True)
+    institue_level = models.BooleanField(default=False)
+    # Course code
+    # Course scheme
     # taught_by = models.ManyToManyField()
     # enrolled_students = models.ManyToManyField()
 
