@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import TeacherProfile
 
 # Create your models here.
 
@@ -33,7 +34,7 @@ class Course(models.Model):
     institue_level = models.BooleanField(default=False)
     # Course code
     # Course scheme
-    # taught_by = models.ManyToManyField()
+    # taught_by = models.ManyToManyField(TeacherProfile)
     # enrolled_students = models.ManyToManyField()
 
     def __str__(self):
