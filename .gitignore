@@ -3,6 +3,7 @@
 # described in https://git-scm.com/docs/gitignore
 
 .env
+*.sqlite3
 *.egg-info
 *.pot
 *.py[co]
