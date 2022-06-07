@@ -24,7 +24,7 @@ def index(request):
         'courses': courses,
         'range': range(60)
     }
-    return render(request, 'course/tables.html', context)
+    return render(request, 'course/courses.html', context)
 
 
 def create(request):
@@ -64,6 +64,8 @@ def update(request, id):
 def delete(request, id):
     course = Course.objects.get(pk=id)
     context = {
+        'course_collapsed': '',
+        'title': 'Delete',
         'id': course.id
     }
     if request.method == 'POST':

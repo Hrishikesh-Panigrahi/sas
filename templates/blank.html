@@ -3,7 +3,7 @@
 <html lang="en">
 
 <!-- head -->
-{% include 'components/head.html' with title=title page='table' %}
+{% include 'components/head.html' with title=title %}
 
 <body id="page-top">
 
@@ -11,7 +11,9 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        {% include 'components/sidebar.html' with course_collapsed='' course_show='show' %}
+        {% include 'components/sidebar.html' %}
+        <!-- End of Sidebar -->
+
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -23,14 +25,12 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <form class="form-inline">
-                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                    </form>
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
 
                     <!-- Topbar Search -->
-                    <!-- <form
+                    <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -41,7 +41,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form> -->
+                    </form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -225,63 +225,13 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-                        For more information about DataTables, please visit the <a target="_blank"
-                            href="https://datatables.net">official DataTables documentation</a>.</p>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">All Courses</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Scheme</th>
-                                            <th>Name</th>
-                                            <th>Deptartment</th>
-                                            <!-- <th>Start date</th>
-                                            <th>Salary</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Code</th>
-                                            <th>Scheme</th>
-                                            <th>Name</th>
-                                            <th>Deptartment</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        {% for course in courses %}
-                                        <tr>
-                                            <td>
-                                                <a href="{% url 'update' id=course.id %}">
-                                                    {{ course.code }}
-                                                </a>
-                                            </td>
-                                            <td>{{ course.scheme }}</td>
-                                            <td>{{ course.name }}</td>
-                                            <td>{{ course.dept }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                        {% for i in range %}
-                                        <tr>
-                                            <td>CSC708</td>
-                                            <td>CBCGS</td>
-                                            <td>Test</td>
-                                            <td>Comp</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- <h1 class="h3 mb-4 text-gray-800">Page Title</h1>
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fuga adipisci tempora consectetur
+                        consequatur quis optio, eius sit iusto explicabo eaque sint nostrum? Soluta, at? Officiis labore
+                        unde aperiam veniam soluta perferendis quis quam in ipsum temporibus ullam esse maiores sunt
+                        recusandae laboriosam eius, adipisci eos. Quis blanditiis non deleniti animi.</p> -->
+                    {% block content %}
+                    {% endblock %}
 
                 </div>
                 <!-- /.container-fluid -->
@@ -331,13 +281,6 @@
     </div>
 
     {% include 'components/scripts.html' %}
-
-    <!-- Page level plugins -->
-    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
 </body>
 
