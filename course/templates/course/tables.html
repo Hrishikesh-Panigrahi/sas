@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- head -->
 {% include 'components/head.html' with title=title page='table' %}
 
 <body id="page-top">
@@ -9,6 +10,7 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
+        <!-- Sidebar -->
         {% include 'components/sidebar.html' with course_collapsed='' course_show='show' %}
 
         <!-- Content Wrapper -->
@@ -28,7 +30,7 @@
                     </form>
 
                     <!-- Topbar Search -->
-                    <form
+                    <!-- <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -39,7 +41,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> -->
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -231,7 +233,7 @@
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">All Courses</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -257,7 +259,11 @@
                                     <tbody>
                                         {% for course in courses %}
                                         <tr>
-                                            <td>{{ course.code }}</td>
+                                            <td>
+                                                <a href="{% url 'update' id=course.id %}">
+                                                    {{ course.code }}
+                                                </a>
+                                            </td>
                                             <td>{{ course.scheme }}</td>
                                             <td>{{ course.name }}</td>
                                             <td>{{ course.dept }}</td>

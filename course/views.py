@@ -15,9 +15,11 @@ from course.models import Course
 # def index(request):
 #     c = Course.objects.all()
 #     return render(request, 'course/index.html', {'courses': c})
+
 def index(request):
     courses = Course.objects.all()
     context = {
+        'title': 'All Courses',
         'page': 'table',
         'courses': courses,
         'range': range(60)
