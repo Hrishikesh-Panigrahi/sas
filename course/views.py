@@ -18,6 +18,7 @@ from course.models import Course
 def index(request):
     courses = Course.objects.all()
     context = {
+        'page': 'table',
         'courses': courses,
         'range': range(60)
     }

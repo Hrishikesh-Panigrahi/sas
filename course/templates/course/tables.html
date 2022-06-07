@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{% include 'components/head.html' with title=title %}
+{% include 'components/head.html' with title=title page='table' %}
 
 <body id="page-top">
 
@@ -246,14 +246,14 @@
                                             <th>Salary</th> -->
                                         </tr>
                                     </thead>
-                                    <!-- <tfoot>
+                                    <tfoot>
                                         <tr>
                                             <th>Code</th>
                                             <th>Scheme</th>
                                             <th>Name</th>
                                             <th>Deptartment</th>
                                         </tr>
-                                    </tfoot> -->
+                                    </tfoot>
                                     <tbody>
                                         {% for course in courses %}
                                         <tr>
