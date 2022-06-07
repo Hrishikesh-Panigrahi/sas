@@ -12,9 +12,15 @@ from course.models import Course
 #         # return HttpResponse("hello world")
 #         return render(request, 'course/create.html')
 
+# def index(request):
+#     c = Course.objects.all()
+#     return render(request, 'course/index.html', {'courses': c})
 def index(request):
-    c = Course.objects.all()
-    return render(request, 'course/index.html', {'courses': c})
+    courses = Course.objects.all()
+    context = {
+        'courses': courses
+    }
+    return render(request, 'course/tables.html', context)
 
 
 def create(request):
