@@ -4,16 +4,6 @@ from django.contrib.auth.models import User, auth
 
 
 class TeacherProfile(models.Model):
-    sem_choices = [
-        (1, '1'),
-        (2, '2'),
-        (3, '3'),
-        (4, '4'),
-        (5, '5'),
-        (6, '6'),
-        (7, '7'),
-        (8, '8')
-    ]
 
     department_choices = [
         ('Computer Engineering', 'Computer Engineering'),
@@ -27,7 +17,6 @@ class TeacherProfile(models.Model):
     teacherID = models.IntegerField(unique=True, null=True)
     department = models.CharField(max_length=50, blank=True, null=True, choices=department_choices)
     course = models.CharField(max_length=50, blank=True, null=True)
-    semester = models.CharField(max_length=50, blank=True, null=True, choices=sem_choices)
     is_classteacher = models.BooleanField(default=False)
 
     def __str__(self):

@@ -1,1 +1,16 @@
 hello world duniya???
+{% if page == 'User' %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <div>
+        
+        {{ form.as_p }}
+        
+    </div>
+    <div>
+        {{ form1.as_p }}
+        </div>
+        
+</form>
+<button type="submit"><a href="{% url 'FacultyRegister' %}">Submit</a></button>
+{% endif %}
