@@ -1,5 +1,8 @@
 {% for course in courses %}
 <div>
+    {% comment %}
+    <p><a href="{% url 'course:update' id=course.id %}">name: {{ course.name }}</a></p>
+    {% endcomment %}
     <p><a href="{% url 'update' id=course.id %}">name: {{ course.name }}</a></p>
     <p>sem: {{ course.sem }}</p>
     <p>course: {{ course.dept }}</p>
@@ -7,3 +10,4 @@
 {% endfor %}
 
 <a href="{% url 'create' %}"><button>Create</button></a>
+{# <a href="{% url 'course:create' %}"><button>Create</button></a> #}

@@ -28,9 +28,9 @@ class Course(models.Model):
     code = models.CharField(max_length=10)
     scheme = models.CharField(max_length=10)
     name = models.CharField(max_length=50)
-    sem = models.IntegerField(choices=sem_choices)
     dept = models.CharField(
-        max_length=50, choices=department_choices)
+        max_length=50, choices=department_choices, verbose_name='Department')
+    sem = models.IntegerField(choices=sem_choices, verbose_name='Semester')
     is_elective = models.BooleanField(default=False)
     dept_level = models.BooleanField(default=True)
     institue_level = models.BooleanField(default=False)

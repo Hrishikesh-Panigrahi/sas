@@ -12,9 +12,19 @@ from course.models import Course
 #         # return HttpResponse("hello world")
 #         return render(request, 'course/create.html')
 
+# def index(request):
+#     c = Course.objects.all()
+#     return render(request, 'course/index.html', {'courses': c})
+
 def index(request):
-    c = Course.objects.all()
-    return render(request, 'course/index.html', {'courses': c})
+    courses = Course.objects.all()
+    context = {
+        'title': 'All Courses',
+        'page': 'table',
+        'courses': courses,
+        'range': range(60)
+    }
+    return render(request, 'course/courses.html', context)
 
 
 def create(request):
@@ -54,6 +64,8 @@ def update(request, id):
 def delete(request, id):
     course = Course.objects.get(pk=id)
     context = {
+        'course_collapsed': '',
+        'title': 'Delete',
         'id': course.id
     }
     if request.method == 'POST':
