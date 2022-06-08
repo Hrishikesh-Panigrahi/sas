@@ -3,7 +3,7 @@
 <html lang="en">
 
 <!-- head -->
-{% include 'components/head.html' with title=title %}
+{% include 'components/head.html' with title=title page='table' %}
 
 <body id="page-top">
 
@@ -12,8 +12,6 @@
 
         <!-- Sidebar -->
         {% include 'components/sidebar.html' with expand=title %}
-        <!-- End of Sidebar -->
-
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
@@ -25,12 +23,14 @@
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+                    <form class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </form>
 
                     <!-- Topbar Search -->
-                    <form
+                    <!-- <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                         <div class="input-group">
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -41,7 +41,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form> -->
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -223,8 +223,28 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    {% block content %}
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1>
+                    {% block heading %}
                     {% endblock %}
+                    <!-- <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+                        For more information about DataTables, please visit the <a target="_blank"
+                            href="https://datatables.net">official DataTables documentation</a>.</p> -->
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">All Courses</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                {% block table %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- /.container-fluid -->
 
@@ -273,6 +293,13 @@
     </div>
 
     {% include 'components/scripts.html' %}
+
+    <!-- Page level plugins -->
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 
 </body>
 

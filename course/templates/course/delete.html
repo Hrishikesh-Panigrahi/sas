@@ -1,6 +1,7 @@
 {% extends 'blank.html' %}
 
 {% block content %}
+<!-- Page Heading -->
 <h3>Are you sure you want to delete this course</h3>
 <p>Delteting course will delete all related data</p>
 <form action="{% url 'delete' id=id %}" method="post">
