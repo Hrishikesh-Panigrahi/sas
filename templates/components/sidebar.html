@@ -93,8 +93,6 @@
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Courses' %} collapsed{% endif %}" href="#" data-toggle="collapse"
             data-target="#collapseCourses" aria-expanded="true" aria-controls="collapseCourses">
-            <!-- <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseCourses" aria-expanded="true"
-            aria-controls="collapseCourses"> -->
             <i class="fas fa-fw fa-folder"></i>
             <span>Courses</span>
         </a>
@@ -110,12 +108,9 @@
     </li>
 
     <li class="nav-item">
-        <!-- <a class="nav-link{% if expand == 'Teachers' %}{% else %} collapsed{% endif %}" href="#" data-toggle="collapse" -->
         <a class="nav-link{% if not expand == 'Teachers' %} collapsed{% endif %}" href="#" data-toggle="collapse"
             data-target="#collapseTeachers" aria-expanded="true" aria-controls="#collapseTeachers">
-            <!-- <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTeachers" aria-expanded="true"
-            aria-controls="colla#collapseTeachers"> -->
-            <i class="fas fa-fw fa-folder"></i>
+            <i class="fas fa-fw fa-users"></i>
             <span>Teachers</span>
         </a>
         <div id="collapseTeachers" class="collapse{% if expand == 'Teachers' %} show{% endif %}"
