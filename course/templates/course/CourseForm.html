@@ -226,7 +226,7 @@
 
                     <!-- Page Heading -->
                     <div class="container">
-                        <h1 class="h3 mb-4 text-gray-800">{{ title }} Course</h1>
+                        <h1 class="h3 mb-4 text-gray-800">{{ type }} Course</h1>
                         <form action="" method="post" class="form-group">
                             {% csrf_token %}
                             {{ form.as_p }}
@@ -234,9 +234,9 @@
                                 <span class="icon text-white-50">
                                     <i class="fas fa-check"></i>
                                 </span>
-                                <span class="text">{{ title }}</span>
+                                <span class="text">{{ type }}</span>
                             </button>
-                            {% if title == 'Update' %}
+                            {% if type == 'Update' %}
                             <a href="{% url 'delete' id=id %}" class="btn btn-danger btn-icon-split">
                                 <span class="icon text-white-50">
                                     <i class="fas fa-trash"></i>

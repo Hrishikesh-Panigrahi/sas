@@ -31,6 +31,7 @@ def create(request):
     form = CourseForm()
     context = {
         'title': 'Courses',
+        'type': 'Create',
         'form': form
     }
 
@@ -49,6 +50,7 @@ def update(request, id):
     context = {
         'title': 'Courses',
         'form': form,
+        'type': 'Update',
         'id': course.id
     }
 
