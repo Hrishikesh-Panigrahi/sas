@@ -1,0 +1,55 @@
+{% extends 'tables.html' %}
+
+{% block heading %}
+<!-- <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1> -->
+<p class="mb-4">Some description Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt minus fugit dicta hic
+    ut sapiente dolorum obcaecati. Perferendis, cupiditate assumenda.</p>
+{% endblock %}
+
+{% block table %}
+<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Course Assigned</th>
+            <th>Is Class Teacher</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Course Assigned</th>
+            <th>Is Class Teacher</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        {% for teacher in teachers %}
+        <tr>
+            <td>
+                <!-- <a href="{# url 'update' id=course.id #}"> -->
+                {{ teacher.id }}
+                <!-- id -->
+                <!-- </a> -->
+            </td>
+            <td>{{ teacher.user.first_name }}</td> <!-- first_name -->
+            <td>{{ teacher.user.last_name }}</td> <!-- last_name -->
+            <td>{{ teacher.course }}</td> <!-- course assigned -->
+            <td>{{ teacher.is_classteacher }}</td> <!-- is class teacher -->
+        </tr>
+        {% endfor %}
+        {% for i in range %}
+        <tr>
+            <td>{{ i }}</td>
+            <td>Johnb</td>
+            <td>Doe</td>
+            <td>DS</td>
+            <td>False</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
