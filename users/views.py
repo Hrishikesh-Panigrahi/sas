@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 
 def register(request):
     page = 'User'
-    userForm = UserForm()  # USer Model - form
+    userForm = UserForm()
 
     if request.method == 'POST':
         userForm = UserForm(request.POST)
@@ -22,8 +22,10 @@ def register(request):
                 t = TeacherProfile(user=u)
                 t.save()
             except Exception as e:
+                context = {'e': e}
                 print('user not saved')
                 print(e)
+            
             print('h4')
     context = {'form': userForm, 'page': page}
     return render(request, 'users/register.html', context)
