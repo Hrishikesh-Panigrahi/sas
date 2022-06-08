@@ -3,14 +3,14 @@ hello world duniya???
 <form action="" method="POST">
     {% csrf_token %}
     <div>
-        
+
         {{ form.as_p }}
-        
+
     </div>
     <div>
-        {{ form1.as_p }}
-        </div>
-        
+        {# form1.as_p #}
+    </div>
+
+    <button type="submit">Submit</button>
 </form>
-<button type="submit"><a href="{% url 'FacultyRegister' %}">Submit</a></button>
 {% endif %}

@@ -14,11 +14,11 @@ class TeacherProfile(models.Model):
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # name = models.CharField(max_length=50)
-    teacherID = models.IntegerField(unique=True, null=True)
-    department = models.CharField(max_length=50, blank=True, null=True, choices=department_choices)
+    id = models.BigAutoField(primary_key=True)
+    department = models.CharField(
+        max_length=50, blank=True, null=True, choices=department_choices)
     course = models.CharField(max_length=50, blank=True, null=True)
     is_classteacher = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.teacherID)+ ' ' +self.user.first_name+ ' ' +self.user.last_name
-
+        return str(self.id) + ' ' + self.user.first_name + ' ' + self.user.last_name
