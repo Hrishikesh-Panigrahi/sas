@@ -19,7 +19,7 @@ from course.models import Course
 def index(request):
     courses = Course.objects.all()
     context = {
-        'title': 'All Courses',
+        'title': 'Courses',
         'page': 'table',
         'courses': courses,
         'range': range(60)
@@ -30,7 +30,7 @@ def index(request):
 def create(request):
     form = CourseForm()
     context = {
-        'title': 'Create',
+        'title': 'Courses',
         'form': form
     }
 
@@ -47,7 +47,7 @@ def update(request, id):
     course = Course.objects.get(pk=id)
     form = CourseForm(instance=course)
     context = {
-        'title': 'Update',
+        'title': 'Courses',
         'form': form,
         'id': course.id
     }
@@ -64,8 +64,7 @@ def update(request, id):
 def delete(request, id):
     course = Course.objects.get(pk=id)
     context = {
-        'course_collapsed': '',
-        'title': 'Delete',
+        'title': 'Courses',
         'id': course.id
     }
     if request.method == 'POST':
