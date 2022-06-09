@@ -30,10 +30,10 @@
         {% for teacher in teachers %}
         <tr>
             <td>
-                <!-- <a href="{# url 'update' id=course.id #}"> -->
-                {{ teacher.id }}
-                <!-- id -->
-                <!-- </a> -->
+                <a href="{% url 'updateTeacher' id=teacher.id %}">
+                    {{ teacher.id }}
+                    <!-- id -->
+                </a>
             </td>
             <td>{{ teacher.user.first_name }}</td> <!-- first_name -->
             <td>{{ teacher.user.last_name }}</td> <!-- last_name -->
@@ -44,7 +44,7 @@
         {% for i in range %}
         <tr>
             <td>{{ i }}</td>
-            <td>Johnb</td>
+            <td>John</td>
             <td>Doe</td>
             <td>DS</td>
             <td>False</td>
