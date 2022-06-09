@@ -91,20 +91,34 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link {{ course_collapsed | default:'collapsed' }}" href="#" data-toggle="collapse"
+        <a class="nav-link{% if not expand == 'Courses' %} collapsed{% endif %}" href="#" data-toggle="collapse"
             data-target="#collapseCourses" aria-expanded="true" aria-controls="collapseCourses">
-            <!-- <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseCourses" aria-expanded="true"
-            aria-controls="collapseCourses"> -->
             <i class="fas fa-fw fa-folder"></i>
             <span>Courses</span>
         </a>
-        <div id="collapseCourses" class="collapse {{ course_show }}" aria-labelledby="headingPages"
-            data-parent="#accordionSidebar">
+        <div id="collapseCourses" class="collapse{% if expand == 'Courses' %} show{% endif %}"
+            aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Courses</h6>
                 {#<a class="collapse-item" href="{% url 'course:chome' %}">Table</a>#}
                 <a class="collapse-item" href="/course">All Courses</a>
                 <a class="collapse-item" href="/course/create">Create Course</a>
+            </div>
+        </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link{% if not expand == 'Teachers' %} collapsed{% endif %}" href="#" data-toggle="collapse"
+            data-target="#collapseTeachers" aria-expanded="true" aria-controls="#collapseTeachers">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Teachers</span>
+        </a>
+        <div id="collapseTeachers" class="collapse{% if expand == 'Teachers' %} show{% endif %}"
+            aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Teachers</h6>
+                <a class="collapse-item" href="/users">All Teachers</a>
+                <a class="collapse-item" href="/course/create">Register Teacher</a>
             </div>
         </div>
     </li>
