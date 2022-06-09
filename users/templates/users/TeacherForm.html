@@ -1,6 +1,6 @@
 {% extends 'blank.html' %}
 
-{% block content %}
+{% comment %}
 <div class="container">
     <!-- Page Heading -->
     <h1 class="h3 mb-4 text-gray-800">{{ type }} Teacher</h1>
@@ -40,4 +40,62 @@
     </form>
 
 </div>
+{% endcomment %}
+
+{% block content %}
+<div class="container mb-5">
+    <!-- page heading -->
+    <h1 class="h3 mb-4 text-gray-800">{{ type }} Teacher</h1>
+    <!-- userForm holder -->
+    <form id="userForm" method="post">{% csrf_token %}</form>
+
+    <!-- userForm -->
+    {{ form.as_p }}
+    <!-- userForm break -->
+
+    <!-- filterForm starts -->
+    <br>
+    <h3>Assign Course</h3>
+    <p>seacrch Term should be exact</p><br>
+    <form id="filterForm" method="get">
+        {{ filter.form }}
+        <button type="submit" form="filterForm" class="ml-3 btn btn-primary btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-search"></i>
+            </span>
+            <span class="text">Search</span>
+        </button>
+    </form>
+    <br><br>
+    <!-- filterForm ends -->
+
+    <!-- userForm continues -->
+    {{ tForm.as_p }}
+    <button form="userForm" type="submit" class="btn btn-success btn-icon-split mr-3">
+        <span class="icon text-white-50">
+            <i class="fas fa-check"></i>
+        </span>
+        <span class="text">{{ type }}</span>
+    </button>
+    {% if type == 'Update' %}
+    <a href="{# url 'delete' id=id #}" class="btn btn-danger btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-trash"></i>
+        </span>
+        <span class="text">Delete</span>
+    </a>
+    <style>
+        #id_password {
+            display: none;
+        }
+    </style>
+    {% endif %}
+    <style>
+        .errorlist {
+            color: red;
+        }
+    </style>
+    <!-- userForm ends -->
+</div>
+
 {% endblock %}

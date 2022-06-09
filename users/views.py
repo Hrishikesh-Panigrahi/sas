@@ -53,18 +53,32 @@ def register(request):
 
 
 def update(request, id):
+    courses = Course.objects.all()
     teacher = TeacherProfile.objects.get(pk=id)
+    courseFilter = CourseFilter(request.GET, queryset=courses)
+    courses = courseFilter.qs
     userForm = UserUpdateForm(instance=teacher.user)
+    teacherForm = TeacherForm(instance=teacher, courseSet=courses)
+
     context = {
         'title': 'Teachers',
         'type': 'Update',
         'form': userForm,
+        'tForm': teacherForm,
+        'filter': courseFilter,
         'id': teacher.id
     }
 
     if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance=teacher.user)
-        if form.is_valid():
-            form.save()
-            return redirect(update, id)
+        userForm = UserUpdateForm(request.POST, instance=teacher.user)
+        teacherForm = TeacherForm(
+            request.POST, instance=teacher, courseSet=courses)
+        try:
+            if userForm.is_valid():
+                userForm.save()
+                if teacherForm.is_valid():
+                    teacherForm.save()
+                    return redirect(update, id)
+        except Exception as e:
+            print(e)
     return render(request, 'users/TeacherForm.html', context)
