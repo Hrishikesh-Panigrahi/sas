@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User, auth
+from course.models import Course
 
 
 class TeacherProfile(models.Model):
@@ -16,7 +17,7 @@ class TeacherProfile(models.Model):
     id = models.BigAutoField(primary_key=True)
     department = models.CharField(
         max_length=50, blank=True, null=True, choices=department_choices)
-    course = models.CharField(max_length=50, blank=True, null=True)
+    course = models.ManyToManyField(Course)
     is_classteacher = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

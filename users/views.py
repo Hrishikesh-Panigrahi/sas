@@ -1,7 +1,9 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
-from .forms import UserForm, UserUpdateForm
+from .forms import TeacherForm, UserForm, UserUpdateForm
 from .models import TeacherProfile
+from .filters import CourseFilter
+from course.models import Course
 
 
 def index(request):
@@ -15,11 +17,18 @@ def index(request):
 
 
 def register(request):
+    courses = Course.objects.all()
+    courseFilter = CourseFilter(request.GET, queryset=courses)
+    courses = courseFilter.qs
     userForm = UserForm(request.POST)
+    teacherForm = TeacherForm(courseSet=courses)
+    print('hello')
     context = {
         'title': 'Teachers',
         'type': 'Create',
-        'form': userForm
+        'form': userForm,
+        'tForm': teacherForm,
+        'filter': courseFilter
     }
 
     if request.method == 'POST':
