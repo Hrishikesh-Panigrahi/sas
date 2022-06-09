@@ -15,12 +15,17 @@ def index(request):
 
 
 def register(request):
-    page = 'User'
-    userForm = UserForm()
+    userForm = UserForm(request.POST)
+    context = {
+        'title': 'Teachers',
+        'type': 'Create',
+        'form': userForm
+    }
 
     if request.method == 'POST':
         userForm = UserForm(request.POST)
         print('not yet valid')
+        print(userForm)
         if userForm.is_valid():
             print('valid')
             try:
@@ -35,9 +40,7 @@ def register(request):
                 print('user not saved')
                 print(e)
 
-            print('h4')
-    context = {'form': userForm, 'page': page}
-    return render(request, 'users/register.html', context)
+    return render(request, 'users/TeacherForm.html', context)
 
 
 def update(request, id):
