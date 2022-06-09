@@ -1,0 +1,31 @@
+{% extends 'blank.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">{{ type }} Teacher</h1>
+    <form action="" method="post" class="form-group">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success btn-icon-split mr-3">
+            <span class="icon text-white-50">
+                <i class="fas fa-check"></i>
+            </span>
+            <span class="text">{{ type }}</span>
+        </button>
+        {% if type == 'Update' %}
+        <a href="{# url 'delete' id=id #}" class="btn btn-danger btn-icon-split">
+            <span class="icon text-white-50">
+                <i class="fas fa-trash"></i>
+            </span>
+            <span class="text">Delete</span>
+        </a>
+        <style>
+            #id_password {
+                display: none;
+            }
+        </style>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}
