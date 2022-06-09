@@ -34,7 +34,7 @@ def register(request):
                 print('user saved')
                 t = TeacherProfile(user=u)
                 t.save()
-                return render(request, 'users/teachers.html')
+                return redirect(index)
             except Exception as e:
                 context = {'e': e}
                 print('user not saved')
