@@ -81,4 +81,17 @@ def update(request, id):
                     return redirect(update, id)
         except Exception as e:
             print(e)
+            # TODO: handle exceptions
     return render(request, 'users/TeacherForm.html', context)
+
+
+def delete(request, id):
+    teacher = TeacherProfile.objects.get(pk=id)
+    context = {
+        'title': 'Teachers',
+        'id': id
+    }
+    if request.method == 'POST':
+        teacher.delete()
+        return redirect(index)
+    return render(request, 'users/delete.html', context)
