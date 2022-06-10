@@ -8,6 +8,9 @@ from course.models import Course
 
 def index(request):
     teachers = TeacherProfile.objects.all()
+    for teacher in teachers:
+        for course in teacher.course.all():
+            print(course.name)
     context = {
         'title': 'Teachers',
         'teachers': teachers,
