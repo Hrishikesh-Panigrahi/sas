@@ -123,6 +123,23 @@
         </div>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link{% if not expand == 'Students' %} collapsed{% endif %}" href="#" data-toggle="collapse"
+            data-target="#collapseStudents" aria-expanded="true" aria-controls="#collapseStudents">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Students</span>
+        </a>
+        <div id="collapseStudents" class="collapse{% if expand == 'Students' %} show{% endif %}"
+            aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Students</h6>
+                <a class="collapse-item" href="{% url 'StudentRegister' %}">All Students</a>
+                <a class="collapse-item" href="{% url 'StudentRegister' %}">Register Student</a>
+            </div>
+        </div>
+    </li>
+
+
     <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="charts.html">
