@@ -8,9 +8,6 @@ from course.models import Course
 
 def index(request):
     teachers = TeacherProfile.objects.all()
-    for teacher in teachers:
-        for course in teacher.course.all():
-            print(course.name)
     context = {
         'title': 'Teachers',
         'teachers': teachers,
@@ -36,15 +33,16 @@ def register(request):
 
     if request.method == 'POST':
         userForm = UserForm(request.POST)
-        print('not yet valid')
-        print(userForm)
         if userForm.is_valid():
-            print('valid')
             try:
                 userForm.save()
+                c_ids = request.POST.getlist('course')
                 u = User.objects.get(username=request.POST['username'])
-                print('user saved')
                 t = TeacherProfile(user=u)
+                t.save()
+                for id in c_ids:
+                    c = Course.objects.get(pk=id)
+                    t.course.add(c)
                 t.save()
                 return redirect(index)
             except Exception as e:
@@ -95,6 +93,8 @@ def delete(request, id):
         'id': id
     }
     if request.method == 'POST':
+        user = teacher.user
         teacher.delete()
+        user.delete()
         return redirect(index)
     return render(request, 'users/delete.html', context)

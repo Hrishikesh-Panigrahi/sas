@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Page Heading -->
 <h3>Are you sure you want to delete this teacher</h3>
-<form action="{% url 'delete' id=id %}" method="post">
+<form action="{% url 'deleteTeacher' id=id %}" method="post">
     {% csrf_token %}
     <!-- <button type="submit">Submit</button> -->
     <a href="{% url 'updateTeacher' id=id %}" class="btn btn-secondary btn-icon-split">
