@@ -1,8 +1,51 @@
-
-<form action="" method="POST">
+{% extends 'blank.html' %}
+<!-- <form action="" method="POST">
     {% csrf_token %}
     
-{{form.as_p}}
+    {{form.as_p}}
 
 <button type="submit">SUBMIT</button>
-</form> 
+</form>  -->
+
+{% block content %}
+<div class="container mb-5">
+    <!-- page heading -->
+    <h1 class="h3 mb-4 text-gray-800">Student</h1>
+    <!-- userForm holder -->
+    <form action="StudentRegister" method="POST">
+        {% csrf_token %}
+
+    <!-- userForm -->
+    {{ form.as_p }}
+    <!-- userForm break -->
+
+    <!-- {{ tForm.as_p }} -->
+    <button  type="submit" class="btn btn-success btn-icon-split mr-3">
+        <span class="icon text-white-50">
+            <i class="fas fa-check"></i>
+        </span>
+        <!-- <span class="text">{{ type }}</span> -->
+    </button>
+</form>
+    {% if type == 'Update' %}
+    <a href="{% url 'deleteStudent' id %}" class="btn btn-danger btn-icon-split">
+        <span class="icon text-white-50">
+            <i class="fas fa-trash"></i>
+        </span>
+        <span class="text">Delete</span>
+    </a>
+    <style>
+        #id_password {
+            display: none;
+        }
+    </style>
+    {% endif %}
+    <style>
+        .errorlist {
+            color: red;
+        }
+    </style>
+    <!-- userForm ends -->
+</div>
+
+{% endblock %}
