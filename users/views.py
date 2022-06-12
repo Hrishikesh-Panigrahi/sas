@@ -38,6 +38,9 @@ def register(request):
                 userForm.save()
                 c_ids = request.POST.getlist('course')
                 u = User.objects.get(username=request.POST['username'])
+                # form - input fields -> username ...  
+                                #  sahil 
+                
                 t = TeacherProfile(user=u)
                 t.save()
                 for id in c_ids:

@@ -2,6 +2,10 @@ from django.contrib.auth.models import User
 from django.db import models
 from course.models import  Course
 
+# User -> username, first_name, last_name, password, email, is_staff, is_active, is_superuser, date_created
+#         last_login/last_updated 
+
+# auth_session, auth_users, auth_active, 
 
 # Create your models here.
 
@@ -11,9 +15,9 @@ class student(models.Model):
     # name =models.CharField(max_length=30)
     # div = models.CharField(max_length=2)
     department = models.CharField(max_length=100, null=True)
-    roll_no=models.IntegerField()
-    DOB=models.DateField()
-    address=models.TextField()
+    roll_no=models.IntegerField(null = True)
+    DOB=models.DateField(null = True)
+    address=models.TextField(null = True)
     # email= models.EmailField()
     # id = (str(roll_no)+str(DOB))
     #attendance=something

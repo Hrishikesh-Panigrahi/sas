@@ -1,0 +1,17 @@
+<tr>
+    <th>Id</th>
+    <th>username</th>
+    
+
+    {% for students in student %}
+
+    <tr>
+        <a href="{% url 'UpdateStudent' user.id %}">
+        <td>{{ students.user.id }} </td>
+
+        <td> {{ students.user.username }} </td>
+    </a>     
+    </tr>
+
+</tr>
+{% endfor %}
