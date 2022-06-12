@@ -1,17 +1,51 @@
-<tr>
-    <th>Id</th>
-    <th>username</th>
-    
+{% extends 'tables.html' %}
 
-    {% for students in student %}
+{% block heading %}
 
-    <tr>
-        <a href="{% url 'UpdateStudent' user.id %}">
-        <td>{{ students.user.id }} </td>
+<p class="mb-4">Some description Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt minus fugit dicta hic
+    ut sapiente dolorum obcaecati. Perferendis, cupiditate assumenda.</p>
+{% endblock %}
 
-        <td> {{ students.user.username }} </td>
-    </a>     
-    </tr>
-
-</tr>
-{% endfor %}
+{% block table %}
+<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Course Assigned</th>
+            <th>Is Class Teacher</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Course Assigned</th>
+            <th>Is Class Teacher</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        {% for students in student %}
+        <tr>
+            <td>
+                <a href="{% url 'UpdateStudent' students.id %}">
+                    {{ students.id }}
+                    <!-- id -->
+                </a>
+            </td>
+            <td>{{ students.user.username }}</td> <!-- first_name -->
+            <td>{{ students.user.email }}</td> <!-- last_name -->
+            <!-- <td>{# teacher.course #}</td> course assigned -->
+            <!-- <td>
+                {% for course in teacher.course.all %}
+                {{ course.code }}-{{ course.name }},<br>
+                {% endfor %}
+            </td> -->
+            <!-- <td>{{ teacher.is_classteacher }}</td> is class teacher -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
