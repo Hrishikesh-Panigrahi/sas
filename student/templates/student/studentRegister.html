@@ -12,21 +12,24 @@
     <!-- page heading -->
     <h1 class="h3 mb-4 text-gray-800">Student</h1>
     <!-- userForm holder -->
-    <form action="StudentRegister" method="POST">
+    <form action="" method="POST">
         {% csrf_token %}
 
-    <!-- userForm -->
-    {{ form.as_p }}
-    <!-- userForm break -->
+            <!-- userForm -->
+            {{ userform.as_p }}
+            <!-- userForm break -->
+                {% if type == 'Update' %}
+                    {{ sform.as_p }}
+                {% endif %}
 
-    <!-- {{ tForm.as_p }} -->
-    <button  type="submit" class="btn btn-success btn-icon-split mr-3">
-        <span class="icon text-white-50">
-            <i class="fas fa-check"></i>
-        </span>
-        <!-- <span class="text">{{ type }}</span> -->
-    </button>
-</form>
+                <button  type="submit" class="btn btn-success btn-icon-split mr-3">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">{{ type }}</span>
+                </button>
+    </form>
+
     {% if type == 'Update' %}
     <a href="{% url 'deleteStudent' id %}" class="btn btn-danger btn-icon-split">
         <span class="icon text-white-50">
@@ -40,6 +43,7 @@
         }
     </style>
     {% endif %}
+
     <style>
         .errorlist {
             color: red;
