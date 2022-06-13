@@ -19,7 +19,7 @@ def register(request):
             print('student saved')
             stu.save()
             return redirect("/")
-    context = {'form': userform}
+    context = {'userform': userform, 'type' : 'Register'}
     return render(request, 'student/studentRegister.html ' , context)
 
 
@@ -48,13 +48,24 @@ def delete(request, pk):
 def update(request, pk):
     stu = student.objects.get(id = pk)
     context = {}
-    form = UserForm(instance=stu.user)
+    userform = UserForm(instance=stu.user)
+    sform = StudentForm(instance=stu)
     if request.method=='POST':
-        form = UserForm(request.POST, instance=stu.user)
-        if form.is_valid():
-            form.save()
-            print('student saved')
+        userform = UserForm(request.POST, instance=stu.user)
+        sform = UserForm(request.POST, instance=stu)
+        try: 
+            if userform.is_valid():
+                userform.save()
+                if sform.is_vaild():
+                    sform.save()
+                    print('student saved')
+                    return redirect('')
+        except Exception as e:
+            pass
             
-    context = {'form': form, 'type' : 'Update', 'id': stu.id}
+    context = { 'userform': userform,
+                'sform': sform, 
+                'type' : 'Update', 
+                'id': stu.id}
 
     return render(request, 'student/studentRegister.html ' , context)
