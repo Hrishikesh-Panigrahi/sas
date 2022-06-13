@@ -24,10 +24,20 @@ def register(request):
 
 
 def studentList(request):
+    
+    
     stu = student.objects.all()
-
+    
+    
     context = {'student' : stu}
-    return render(request, 'student/Studentlist.html', context)
+    if stu.count()==0:
+        return render(request,'student/emptystudent.html')
+    else:
+        return render(request, 'student/Studentlist.html', context)
+        
+        
+
+   
 
 
 def delete(request, pk):
