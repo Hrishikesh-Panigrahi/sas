@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from course.models import Course
 
+
 # User -> username, first_name, last_name, password, email, is_staff, is_active, is_superuser, date_created
 #         last_login/last_updated
 
@@ -32,8 +33,8 @@ class student(models.Model):
     # id = (str(roll_no)+str(DOB))
     # attendance=something
     id = models.BigAutoField(primary_key=True)
-    course = models.ManyToManyField(
-        "course.Course", verbose_name=("Enrolled Course"))
-
+    # course = models.ManyToManyField(
+    #     "course.Course", verbose_name=("Enrolled Course"))
+    course = models.ManyToManyField(Course)
     def __str__(self):
         return str(self.id) + " " + self.user.username
