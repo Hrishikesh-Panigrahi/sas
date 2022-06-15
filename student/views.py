@@ -1,8 +1,11 @@
 from django.shortcuts import redirect, render
+
+from course.models import Course
 from .forms import UserForm,  StudentForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import student
+from course.models import Course
 from django.http import HttpResponse
 
 
@@ -10,16 +13,28 @@ def register(request):
     context = {}
     # studentForm=StudentForm(request.POST)
     userform = UserForm(request.POST)
+    course =Course.objects.all()
+    studentForm = StudentForm(courseSet=course)
     if request.method=='POST':
         userform = UserForm(request.POST)
+        print('1')
+        # studentForm = StudentForm(request.POST ,courseSet=course)
         if userform.is_valid():
             userform.save()
-            u = User.objects.get(username=request.POST['username'])
-            stu = student(user = u)
-            print('student saved')
+            c_ids = request.POST.getlist('course')
+            print('2')
+            s = User.objects.get(username=request.POST['username'])
+            stu = student(user = s)
+            print(c_ids)
+            for i in c_ids:
+                c = Course.objects.get(pk=i)
+                stu.course.add(c)
+                print('course added saved')
             stu.save()
+            print('student saved')
+            
             return redirect("/")
-    context = {'userform': userform, 'type' : 'Register'}
+    context = {'userform': userform, 'type' : 'Register', 'sform': studentForm}
     return render(request, 'student/studentRegister.html ' , context)
 
 
@@ -56,13 +71,14 @@ def delete(request, pk):
 
 
 def update(request, pk):
+    course = Course.objects.all()
     stu = student.objects.get(id = pk)
     context = {}
     userform = UserForm(instance=stu.user)
-    sform = StudentForm(instance=stu)
+    sform = StudentForm(instance=stu, courseSet=course)
     if request.method=='POST':
         userform = UserForm(request.POST, instance=stu.user)
-        sform = UserForm(request.POST, instance=stu)
+        sform = StudentForm(request.POST, instance=stu, courseSet=course)
         try: 
             if userform.is_valid():
                 userform.save()
