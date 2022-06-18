@@ -51,10 +51,8 @@ def studentList(request):
         'student': stu,
         'title': 'Students'
     }
-    if stu.count() == 0:
-        return render(request, 'student/emptystudent.html')
-    else:
-        return render(request, 'student/Studentlist.html', context)
+    
+    return render(request, 'student/Studentlist.html', context)
 
 
 def delete(request, pk):
