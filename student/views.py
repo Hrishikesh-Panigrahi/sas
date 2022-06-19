@@ -13,8 +13,8 @@ def register(request):
     context = {}
     # studentForm=StudentForm(request.POST)
     userform = UserForm(request.POST)
-    course = Course.objects.all()
-    studentForm = StudentForm(courseSet=course)
+    courses = Course.objects.all()
+    studentForm = StudentForm(courseSet=courses)
     if request.method == 'POST':
         userform = UserForm(request.POST)
         print('1')
@@ -23,12 +23,14 @@ def register(request):
             userform.save()
             c_ids = request.POST.getlist('course')
             print('2')
+            
             s = User.objects.get(username=request.POST['username'])
             stu = student(user=s)
             print(c_ids)
             for i in c_ids:
-                c = Course.objects.get(pk=i)
-                stu.course.add(c)
+                # c = Course.objects.get(pk=i)
+                # stu.course.add(c)
+                stu.course.add(course=i)
                 print('course added saved')
             stu.save()
             print('student saved')
