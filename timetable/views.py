@@ -1,21 +1,20 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views import View
-from django.shortcuts import redirect, render
+# from django.http import HttpResponse, HttpResponseRedirect
+# from django.views import View
+from django.shortcuts import render
 # Create your views here.
 
 
 
 def createTT(request):
-    form = CourseForm()
     context = {
         'title': 'Timetable',
-        'type': 'createTT',
+        'page': 'createTT',
     }
     return render(request, 'timetable/tt.html', context)
 
 def updateTT(request):
     context = {
         'title': 'Timetable',
-        'type': 'UpdateTT',
+        'page': 'updateTT',
     }
-    return render(request, 'timetable/tt-editable.html', context)
+    return render(request, 'timetable/tt.html', context)
