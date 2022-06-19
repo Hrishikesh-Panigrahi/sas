@@ -4,13 +4,13 @@
 {% include 'components/head.html' %}
 <style>
 .custom-table {
+    font-size: 0.8rem;
     border-radius: 20px 20px 0 0;
     overflow: hidden;
     text-align: center;
 }
 
 .custom-table thead tr {
-    font-size: 0.7rem;
     background-color: #4e73df;
     color: #fff;
     font-weight: bold;
@@ -21,7 +21,7 @@
 }
 
 .custom-table tbody th {
-    font-size: 2rem;
+    font-size: 1.2rem;
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
 }
@@ -38,6 +38,11 @@
 
 .custom-table tbody td {
     border-right: 1px solid #ddd;
+}
+.select-form{
+    border: 1px solid #ddd;
+    background-color: transparent;
+    color: inherit;
 }
 </style>
 
@@ -93,14 +98,24 @@
                                     <div>Teacher</div>
                                     <div>EM-IV</div>
                                 </td>
-                                <td rowspan="3">OS</td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
                                 <td rowspan="18">Short Break</td>
                                 <!-- Lab1 -->
-                                <td rowspan="1" colspan="2">DBMS</td>
+                                <td rowspan="1" colspan="2">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
                                 <td rowspan="18">Lunch Break</td>
-                                <td rowspan="3">AOA</td>
-                                <td rowspan="3">DBMS</td>
-                                <td rowspan="3">EM-IV TUT</td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
                             </tr>
                             <!-- Lab2 -->
                             <tr>
