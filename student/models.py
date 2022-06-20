@@ -26,9 +26,9 @@ class student(models.Model):
     department = models.CharField(
         max_length=100, null=True, choices=department_choices)
     roll_no = models.IntegerField(null=True)
-    DOB = models.DateField(null=True)
-    address = models.TextField(null=True)
- 
+    # email= models.EmailField()
+    # id = (str(roll_no)+str(DOB))
+    # attendance=something
     id = models.BigAutoField(primary_key=True)
   
     course = models.ManyToManyField(Course)

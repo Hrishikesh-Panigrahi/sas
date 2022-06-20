@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% include 'components/head.html' %}
+<style>
+.custom-table {
+    font-size: 0.8rem;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    text-align: center;
+}
+
+.custom-table thead tr {
+    background-color: #4e73df;
+    color: #fff;
+    font-weight: bold;
+}
+
+.custom-table thead tr:first-child {
+    border-bottom: 5px solid #4e73df;
+}
+
+.custom-table tbody th {
+    font-size: 1.2rem;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.custom-table tbody td,
+.custom-table tbody th {
+    padding: .25rem .5rem;
+    vertical-align: middle;
+}
+
+.custom-table tbody tr:last-of-type {
+    border-bottom: 2px solid #4e73df;
+}
+
+.custom-table tbody td {
+    border-right: 1px solid #ddd;
+}
+.select-form{
+    border: 1px solid #ddd;
+    background-color: transparent;
+    color: inherit;
+}
+</style>
+
+<body>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        {% include 'components/sidebar.html' %}
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                {% include 'components/topbar.html' %}
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1>
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Lec0</th>
+                                <th>Lec1</th>
+                                <th>Lec2</th>
+                                <th>Break</th>
+                                <th colspan="2">Lab</th>
+                                <th>Break</th>
+                                <th>Lec3</th>
+                                <th>Lec4</th>
+                                <th>Lec5</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>08:00 - 09:00</th>
+                                <th>09:00 - 10:00</th>
+                                <th>10:00 - 11:00</th>
+                                <th>11:00 - 11:15</th>
+                                <th>11:15 - 12:15</th>
+                                <th>12:15 - 13:15</th>
+                                <th>13:15 - 14:00</th>
+                                <th>14:00 - 15:00</th>
+                                <th>15:00 - 16:00</th>
+                                <th>16:00 - 17:00</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- MONDAY -->
+                            <tr>
+                                <th rowspan="3">Mon</th>
+                                <td rowspan="3"></td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>EM-IV</div>
+                                </td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
+                                <td rowspan="18">Short Break</td>
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
+                                <td rowspan="18">Lunch Break</td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
+                                <td rowspan="3">
+                                    {% include 'components/dropdown.html' %}
+                                </td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">MP</td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">MP</td>
+                            </tr>
+                            <!-- TUESDAY -->
+                            <tr>
+                                <th rowspan="3">Tue</th>
+                                <td rowspan="3"></td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>DBMS</div>
+                                </td>
+                                <td rowspan="3">AOA</td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">Python</td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">MP</td>
+                                <td rowspan="3">OS</td>
+                                <td rowspan="3">EM-IV TUT</td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">DBMS</td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">MP</td>
+                            </tr>
+                            <!-- WEDNESDAY -->
+                            <tr>
+                                <th rowspan="3">Wed</th>
+                                <td rowspan="3"></td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>Python</div>
+                                </td>
+                                <td rowspan="3">EM-IV</td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">AOA</td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">OS</td>
+                                <td rowspan="3">Mini Project</td>
+                                <td rowspan="3">Mini Project</td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">MP</td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">MP</td>
+                            </tr>
+                            <!-- THURSDAY -->
+                            <tr>
+                                <th rowspan="3">Thu</th>
+                                <td rowspan="3"></td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>MP</div>
+                                </td>
+                                <td rowspan="3">EM-IV</td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">OS</td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">DBMS</td>
+                                <td rowspan="3">Python</td>
+                                <td rowspan="3">Mentoring</td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">Python</td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">DBMS</td>
+                            </tr>
+                            <!-- FRIDAY -->
+                            <tr>
+                                <th rowspan="3">Fri</th>
+                                <td rowspan="3"></td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>AOA</div>
+                                </td>
+                                <td rowspan="3">MP</td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">MP</td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">Mini Project</td>
+                                <td rowspan="3">Mini Project</td>
+                                <td rowspan="3">Remedial</td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">AOA</td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">OS</td>
+                            </tr>
+                            <!-- SATURDAY -->
+                            <tr>
+                                <th rowspan="3">Sat</th>
+                                <td rowspan="3"></td>
+                                <td rowspan="3"></td>
+                                <td rowspan="3"></td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2"></td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3"></td>
+                                <td rowspan="3"></td>
+                                <td rowspan="3"></td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2"></td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    {% include 'components/scripts.html' %}
+</body>
+
+</html>
