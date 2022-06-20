@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import redirect, render
 
 from course.models import Course
@@ -44,18 +45,12 @@ def register(request):
     }
     return render(request, 'student/studentRegister.html ', context)
 
-
 def studentList(request):
-
     stu = student.objects.all()
-
-    context = {
-        'student': stu,
-        'title': 'Students'
+    context = {'student': stu,
+                'title' : 'Students'
     }
-    
     return render(request, 'student/Studentlist.html', context)
-
 
 def delete(request, pk):
     stu = student.objects.get(id=pk)

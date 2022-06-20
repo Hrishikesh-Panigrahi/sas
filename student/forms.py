@@ -14,8 +14,7 @@ class StudentForm(forms.ModelForm):
     class Meta:
         # my_form = 'userForm'
         model = student
-        fields = ['department',
-                   'course']
+        fields = ['department', 'course']
         # widgets = {
     
         #     'department': forms.Select(attrs={'form': my_form}),
