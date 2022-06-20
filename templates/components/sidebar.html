@@ -1,6 +1,5 @@
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <!-- <div class="sidebar-brand-icon rotate-n-15">
@@ -8,29 +7,23 @@
         </div> -->
         <div class="sidebar-brand-text mx-3">SAS Admin</div>
     </a>
-
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
-
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ dashboard }}">
         <a class="nav-link" href="/">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
-
     <!-- Divider -->
     <hr class="sidebar-divider">
-
     <!-- Heading -->
     <div class="sidebar-heading">
         Interface
     </div>
-
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
-            aria-controls="collapseTwo">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Components</span>
         </a>
@@ -42,11 +35,9 @@
             </div>
         </div>
     </li>
-
     <!-- Nav Item - Utilities Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-            aria-expanded="true" aria-controls="collapseUtilities">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-fw fa-wrench"></i>
             <span>Utilities</span>
         </a>
@@ -60,19 +51,15 @@
             </div>
         </div>
     </li>
-
     <!-- Divider -->
     <hr class="sidebar-divider">
-
     <!-- Heading -->
     <div class="sidebar-heading">
         Addons
     </div>
-
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
-            aria-controls="collapsePages">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
             <i class="fas fa-fw fa-folder"></i>
             <span>Pages</span>
         </a>
@@ -89,15 +76,12 @@
             </div>
         </div>
     </li>
-
     <li class="nav-item">
-        <a class="nav-link{% if not expand == 'Courses' %} collapsed{% endif %}" href="#" data-toggle="collapse"
-            data-target="#collapseCourses" aria-expanded="true" aria-controls="collapseCourses">
+        <a class="nav-link{% if not expand == 'Courses' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseCourses" aria-expanded="true" aria-controls="collapseCourses">
             <i class="fas fa-fw fa-folder"></i>
             <span>Courses</span>
         </a>
-        <div id="collapseCourses" class="collapse{% if expand == 'Courses' %} show{% endif %}"
-            aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseCourses" class="collapse{% if expand == 'Courses' %} show{% endif %}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Courses</h6>
                 {#<a class="collapse-item" href="{% url 'course:chome' %}">Table</a>#}
@@ -106,15 +90,12 @@
             </div>
         </div>
     </li>
-
     <li class="nav-item">
-        <a class="nav-link{% if not expand == 'Teachers' %} collapsed{% endif %}" href="#" data-toggle="collapse"
-            data-target="#collapseTeachers" aria-expanded="true" aria-controls="#collapseTeachers">
+        <a class="nav-link{% if not expand == 'Teachers' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseTeachers" aria-expanded="true" aria-controls="#collapseTeachers">
             <i class="fas fa-fw fa-users"></i>
             <span>Teachers</span>
         </a>
-        <div id="collapseTeachers" class="collapse{% if expand == 'Teachers' %} show{% endif %}"
-            aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseTeachers" class="collapse{% if expand == 'Teachers' %} show{% endif %}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Teachers</h6>
                 <a class="collapse-item" href="/users">All Teachers</a>
@@ -122,15 +103,12 @@
             </div>
         </div>
     </li>
-
     <li class="nav-item">
-        <a class="nav-link{% if not expand == 'Students' %} collapsed{% endif %}" href="#" data-toggle="collapse"
-            data-target="#collapseStudents" aria-expanded="true" aria-controls="#collapseStudents">
+        <a class="nav-link{% if not expand == 'Students' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseStudents" aria-expanded="true" aria-controls="#collapseStudents">
             <i class="fas fa-fw fa-users"></i>
             <span>Students</span>
         </a>
-        <div id="collapseStudents" class="collapse{% if expand == 'Students' %} show{% endif %}"
-            aria-labelledby="headingPages" data-parent="#accordionSidebar">
+        <div id="collapseStudents" class="collapse{% if expand == 'Students' %} show{% endif %}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Students</h6>
                 <a class="collapse-item" href="{% url 'StudentList' %}">All Students</a>
@@ -138,29 +116,36 @@
             </div>
         </div>
     </li>
-
-
+    <li class="nav-item">
+        <a class="nav-link{% if not expand == 'Timetable' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseTimetable" aria-expanded="true" aria-controls="#collapseTimetable">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Timetable</span>
+        </a>
+        <div id="collapseTimetable" class="collapse{% if expand == 'Timetable' %} show{% endif %}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">TIMETABLE</h6>
+                <a class="collapse-item" href="{% url 'createTimeTable' %}">Create Timetable</a>
+                <a class="collapse-item" href="{% url 'updateTimeTable' %}">Update Timetable</a>
+            </div>
+        </div>
+    </li>
     <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="charts.html">
             <i class="fas fa-fw fa-chart-area"></i>
             <span>Charts</span></a>
     </li>
-
     <!-- Nav Item - Tables -->
     <li class="nav-item">
         <a class="nav-link" href="tables.html">
             <i class="fas fa-fw fa-table"></i>
             <span>Tables</span></a>
     </li>
-
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
-
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
-
 </ul>
 <!-- End of Sidebar -->

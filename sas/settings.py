@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-t+7k9!qs6r#5fk_&d&qj(1zpxk0h%@rjz&4ks2@i0=v!@@l$&b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'course.apps.CourseConfig',
     'users.apps.UsersConfig',
     'student.apps.StudentConfig',
+    'timetable.apps.TimetableConfig',
 
     # PIP packages
     'django_extensions',
