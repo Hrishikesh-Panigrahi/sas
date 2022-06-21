@@ -3,7 +3,7 @@
 <html lang="en">
 {% include 'components/head.html' %}
 <style>
-.custom-table {
+    .custom-table {
     font-size: 0.8rem;
     border-radius: 20px 20px 0 0;
     overflow: hidden;
@@ -39,7 +39,8 @@
 .custom-table tbody td {
     border-right: 1px solid #ddd;
 }
-.select-form{
+
+.select-form {
     border: 1px solid #ddd;
     background-color: transparent;
     color: inherit;
@@ -93,162 +94,319 @@
                             <!-- MONDAY -->
                             <tr>
                                 <th rowspan="3">Mon</th>
-                                <td rowspan="3"></td>
                                 <td rowspan="3">
                                     <div>Teacher</div>
-                                    <div>EM-IV</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
                                 <td rowspan="3">
-                                    {% include 'components/dropdown.html' %}
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
                                 <td rowspan="18">Short Break</td>
                                 <!-- Lab1 -->
                                 <td rowspan="1" colspan="2">
-                                    {% include 'components/dropdown.html' %}
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
                                 <td rowspan="18">Lunch Break</td>
                                 <td rowspan="3">
-                                    {% include 'components/dropdown.html' %}
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
                                 <td rowspan="3">
-                                    {% include 'components/dropdown.html' %}
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
                                 <td rowspan="3">
-                                    {% include 'components/dropdown.html' %}
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
                             </tr>
                             <!-- Lab2 -->
                             <tr>
-                                <td rowspan="1" colspan="2">MP</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab3 -->
                             <tr>
-                                <td rowspan="1" colspan="2">MP</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- TUESDAY -->
                             <tr>
                                 <th rowspan="3">Tue</th>
-                                <td rowspan="3"></td>
                                 <td rowspan="3">
                                     <div>Teacher</div>
-                                    <div>DBMS</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
-                                <td rowspan="3">AOA</td>
+                                <td rowspan="3">
+                                    <div>
+                                        <div>Teacher</div>
+                                        <div>{% include 'components/dropdown.html' %}</div>
+                                    </div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Short Break</td> -->
                                 <!-- Lab1 -->
-                                <td rowspan="1" colspan="2">Python</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Lunch Break</td> -->
-                                <td rowspan="3">MP</td>
-                                <td rowspan="3">OS</td>
-                                <td rowspan="3">EM-IV TUT</td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab2 -->
                             <tr>
-                                <td rowspan="1" colspan="2">DBMS</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab3 -->
                             <tr>
-                                <td rowspan="1" colspan="2">MP</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- WEDNESDAY -->
                             <tr>
                                 <th rowspan="3">Wed</th>
-                                <td rowspan="3"></td>
                                 <td rowspan="3">
                                     <div>Teacher</div>
-                                    <div>Python</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
-                                <td rowspan="3">EM-IV</td>
+                                <td rowspan="3">
+                                    <div>
+                                        <div>Teacher</div>
+                                        <div>{% include 'components/dropdown.html' %}</div>
+                                    </div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Short Break</td> -->
                                 <!-- Lab1 -->
-                                <td rowspan="1" colspan="2">AOA</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Lunch Break</td> -->
-                                <td rowspan="3">OS</td>
-                                <td rowspan="3">Mini Project</td>
-                                <td rowspan="3">Mini Project</td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab2 -->
                             <tr>
-                                <td rowspan="1" colspan="2">MP</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab3 -->
                             <tr>
-                                <td rowspan="1" colspan="2">MP</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- THURSDAY -->
                             <tr>
                                 <th rowspan="3">Thu</th>
-                                <td rowspan="3"></td>
                                 <td rowspan="3">
                                     <div>Teacher</div>
-                                    <div>MP</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
-                                <td rowspan="3">EM-IV</td>
+                                <td rowspan="3">
+                                    <div>
+                                        <div>Teacher</div>
+                                        <div>{% include 'components/dropdown.html' %}</div>
+                                    </div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Short Break</td> -->
                                 <!-- Lab1 -->
-                                <td rowspan="1" colspan="2">OS</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Lunch Break</td> -->
-                                <td rowspan="3">DBMS</td>
-                                <td rowspan="3">Python</td>
-                                <td rowspan="3">Mentoring</td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab2 -->
                             <tr>
-                                <td rowspan="1" colspan="2">Python</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab3 -->
                             <tr>
-                                <td rowspan="1" colspan="2">DBMS</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- FRIDAY -->
                             <tr>
                                 <th rowspan="3">Fri</th>
-                                <td rowspan="3"></td>
                                 <td rowspan="3">
                                     <div>Teacher</div>
-                                    <div>AOA</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
                                 </td>
-                                <td rowspan="3">MP</td>
+                                <td rowspan="3">
+                                    <div>
+                                        <div>Teacher</div>
+                                        <div>{% include 'components/dropdown.html' %}</div>
+                                    </div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Short Break</td> -->
                                 <!-- Lab1 -->
-                                <td rowspan="1" colspan="2">MP</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Lunch Break</td> -->
-                                <td rowspan="3">Mini Project</td>
-                                <td rowspan="3">Mini Project</td>
-                                <td rowspan="3">Remedial</td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab2 -->
                             <tr>
-                                <td rowspan="1" colspan="2">AOA</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab3 -->
                             <tr>
-                                <td rowspan="1" colspan="2">OS</td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- SATURDAY -->
                             <tr>
                                 <th rowspan="3">Sat</th>
-                                <td rowspan="3"></td>
-                                <td rowspan="3"></td>
-                                <td rowspan="3"></td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Short Break</td> -->
                                 <!-- Lab1 -->
-                                <td rowspan="1" colspan="2"></td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                                 <!-- <td rowspan="6">Lunch Break</td> -->
-                                <td rowspan="3"></td>
-                                <td rowspan="3"></td>
-                                <td rowspan="3"></td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab2 -->
                             <tr>
-                                <td rowspan="1" colspan="2"></td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                             <!-- Lab3 -->
                             <tr>
-                                <td rowspan="1" colspan="2"></td>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div>{% include 'components/dropdown.html' %}</div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
+                    <button form="userForm" type="submit" class="btn btn-success btn-icon-split mr-3">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="text">Create</span>
+                    </button>
+                    <button form="userForm" type="submit" class="btn btn-danger btn-icon-split mr-3">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                        <span class="text">Cancel</span>
+                    </button>
                 </div>
                 <!-- /.container-fluid -->
             </div>
@@ -267,5 +425,46 @@
     </div>
     {% include 'components/scripts.html' %}
 </body>
+<script type="text/javascript">
+timeTable = {
+    "class": "class_id",
+    "schedule": {
+        "monday": {
+            "slots": [{
+                    "time": "slot_time",
+                    "course": "course_id",
+                    "teacher": "teacher_id"
+                },
+                {
+                    "time": "slot_time",
+                    "course": "course_id",
+                    "teacher": "teacher_id"
+                },
+                {
+                    "time": "slot_time",
+                    "course": "course_id",
+                    "teacher": "teacher_id"
+                },
+                {
+                    "time": "slot_time",
+                    "course": "course_id",
+                    "teacher": "teacher_id"
+                },
+                {
+                    "time": "slot_time",
+                    "course": "course_id",
+                    "teacher": "teacher_id"
+                }
+            ]
+        },
+        "tuesday": {},
+        "wednesday": {},
+        "thursday": {},
+        "friday": {}
+    }
+};
+timeTable.class =
+    let tt = JSON.stringify(timeTable);
+</script>
 
 </html>
