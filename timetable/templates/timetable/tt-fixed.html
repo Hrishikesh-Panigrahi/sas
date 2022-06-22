@@ -1,1 +1,447 @@
-<p>This timetable cannot be edited</p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% include 'components/head.html' %}
+<style>
+    .custom-table {
+    font-size: 0.8rem;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    text-align: center;
+}
+
+.custom-table thead tr {
+    background-color: #4e73df;
+    color: #fff;
+    font-weight: bold;
+}
+
+.custom-table thead tr:first-child {
+    border-bottom: 5px solid #4e73df;
+}
+
+.custom-table tbody th {
+    font-size: 1.2rem;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.custom-table tbody td,
+.custom-table tbody th {
+    padding: .25rem .5rem;
+    vertical-align: middle;
+}
+
+.custom-table tbody tr:last-of-type {
+    border-bottom: 2px solid #4e73df;
+}
+
+.custom-table tbody td {
+    border-right: 1px solid #ddd;
+}
+
+.select-form {
+    border: 1px solid #ddd;
+    background-color: transparent;
+    color: inherit;
+}
+</style>
+
+<body>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        {% include 'components/sidebar.html' %}
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                {% include 'components/topbar.html' %}
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1>
+                    <table class="table custom-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Lec0</th>
+                                <th>Lec1</th>
+                                <th>Lec2</th>
+                                <th>Break</th>
+                                <th colspan="2">Lab</th>
+                                <th>Break</th>
+                                <th>Lec3</th>
+                                <th>Lec4</th>
+                                <th>Lec5</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>08:00 - 09:00</th>
+                                <th>09:00 - 10:00</th>
+                                <th>10:00 - 11:00</th>
+                                <th>11:00 - 11:15</th>
+                                <th>11:15 - 12:15</th>
+                                <th>12:15 - 13:15</th>
+                                <th>13:15 - 14:00</th>
+                                <th>14:00 - 15:00</th>
+                                <th>15:00 - 16:00</th>
+                                <th>16:00 - 17:00</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- MONDAY -->
+                            <tr>
+                                <th rowspan="3">Mon</th>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="monday1"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="monday2"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="monday3"></div>
+                                </td>
+                                <td rowspan="18">Short Break</td>
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="monday4"></div>
+                                </td>
+                                <td rowspan="18">Lunch Break</td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="monday7"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="monday8"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="monday9"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="monday5"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="monday6"></div>
+                                </td>
+                            </tr>
+                            <!-- TUESDAY -->
+                            <tr>
+                                <th rowspan="3">Tue</th>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="tuesday1"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>
+                                        <div>Teacher</div>
+                                        <div id="tuesday2"></div>
+                                    </div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="tuesday3"></div>
+                                </td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="tuesday4"></div>
+                                </td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="tuesday7"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="tuesday8"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="tuesday9"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="tuesday5"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="tuesday6"></div>
+                                </td>
+                            </tr>
+                            <!-- WEDNESDAY -->
+                            <tr>
+                                <th rowspan="3">Wed</th>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="wednesday1"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="wednesday2"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="wednesday3"></div>
+                                </td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="wednesday4"></div>
+                                </td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="wednesday7"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="wednesday8"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="wednesday9"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="wednesday5"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="wednesday6"></div>
+                                </td>
+                            </tr>
+                            <!-- THURSDAY -->
+                            <tr>
+                                <th rowspan="3">Thu</th>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="thursday1"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="thursday2"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="thursday3"></div>
+                                </td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="thursday4"></div>
+                                </td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="thursday7"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="thursday8"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="thursday9"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="thursday5"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="thursday6"></div>
+                                </td>
+                            </tr>
+                            <!-- FRIDAY -->
+                            <tr>
+                                <th rowspan="3">Fri</th>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="friday1"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="friday2"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="friday3"></div>
+                                </td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="friday4"></div>
+                                </td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="friday7"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="friday8"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="friday9"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="friday5"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="friday6"></div>
+                                </td>
+                            </tr>
+                            <!-- SATURDAY -->
+                            <tr>
+                                <th rowspan="3">Sat</th>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="saturday1"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="saturday2"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="saturday3"></div>
+                                </td>
+                                <!-- <td rowspan="6">Short Break</td> -->
+                                <!-- Lab1 -->
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="saturday4"></div>
+                                </td>
+                                <!-- <td rowspan="6">Lunch Break</td> -->
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="saturday7"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="saturday8"></div>
+                                </td>
+                                <td rowspan="3">
+                                    <div>Teacher</div>
+                                    <div id="saturday9"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab2 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="saturday5"></div>
+                                </td>
+                            </tr>
+                            <!-- Lab3 -->
+                            <tr>
+                                <td rowspan="1" colspan="2">
+                                    <div>Teacher</div>
+                                    <div id="saturday6"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button form="userForm" type="submit" id="submit-btn" class="btn btn-success btn-icon-split mr-3">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                        </span>
+                        <span class="text">Create</span>
+                    </button>
+                    <button form="userForm" type="submit" class="btn btn-danger btn-icon-split mr-3">
+                        <span class="icon text-white-50">
+                            <i class="fas fa-xmark"></i>
+                        </span>
+                        <span class="text">Cancel</span>
+                    </button>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    {% include 'components/scripts.html' %}
+</body>
+<script type="text/javascript">
+let lectures = [];
+lectures.push(document.querySelectorAll(`[id^="monday"]`));
+lectures.push(document.querySelectorAll(`[id^="tuesday"]`));
+lectures.push(document.querySelectorAll(`[id^="wednesday"]`));
+lectures.push(document.querySelectorAll(`[id^="thursday"]`));
+lectures.push(document.querySelectorAll(`[id^="friday"]`));
+lectures.push(document.querySelectorAll(`[id^="saturday"]`));
+let time_table = {"class":"class_id","schedule":{"monday":{"slots":[{"time":"8:00-9:00","course":"FREE","teacher":"yes"},{"time":"9:00-10:00","course":"EM","teacher":"yes"},{"time":"10:00-11:00","course":"OS","teacher":"yes"},{"time":"11:15-13:15","course":"DBMS","teacher":"yes"},{"time":"14:00-15:00","course":"AOA","teacher":"yes"},{"time":"15:00-16:00","course":"DBMS","teacher":"yes"},{"time":"16:00-17:00","course":"EM","teacher":"yes"},{"time":"11:15-13:15","course":"MP","teacher":"yes"},{"time":"11:15-13:15","course":"AOA","teacher":"yes"}]},"tuesday":{"slots":[{"time":"8:00-9:00","course":"FREE","teacher":"yes"},{"time":"9:00-10:00","course":"DBMS","teacher":"yes"},{"time":"10:00-11:00","course":"AOA","teacher":"yes"},{"time":"11:15-13:15","course":"PYTHON","teacher":"yes"},{"time":"14:00-15:00","course":"MP","teacher":"yes"},{"time":"15:00-16:00","course":"OS","teacher":"yes"},{"time":"16:00-17:00","course":"EM","teacher":"yes"},{"time":"11:15-13:15","course":"DBMS","teacher":"yes"},{"time":"11:15-13:15","course":"MP","teacher":"yes"}]},"wednesday":{"slots":[{"time":"8:00-9:00","course":"FREE","teacher":"yes"},{"time":"9:00-10:00","course":"PYTHON","teacher":"yes"},{"time":"10:00-11:00","course":"EM","teacher":"yes"},{"time":"11:15-13:15","course":"AOA","teacher":"yes"},{"time":"14:00-15:00","course":"OS","teacher":"yes"},{"time":"15:00-16:00","course":"PROJECT","teacher":"yes"},{"time":"16:00-17:00","course":"PROJECT","teacher":"yes"},{"time":"11:15-13:15","course":"OS","teacher":"yes"},{"time":"11:15-13:15","course":"PYTHON","teacher":"yes"}]},"thursday":{"slots":[{"time":"8:00-9:00","course":"FREE","teacher":"yes"},{"time":"9:00-10:00","course":"MP","teacher":"yes"},{"time":"10:00-11:00","course":"EM","teacher":"yes"},{"time":"11:15-13:15","course":"OS","teacher":"yes"},{"time":"14:00-15:00","course":"DBMS","teacher":"yes"},{"time":"15:00-16:00","course":"PYTHON","teacher":"yes"},{"time":"16:00-17:00","course":"MENTORING","teacher":"yes"},{"time":"11:15-13:15","course":"PYTHON","teacher":"yes"},{"time":"11:15-13:15","course":"DBMS","teacher":"yes"}]},"friday":{"slots":[{"time":"8:00-9:00","course":"FREE","teacher":"yes"},{"time":"9:00-10:00","course":"AOA","teacher":"yes"},{"time":"10:00-11:00","course":"MP","teacher":"yes"},{"time":"11:15-13:15","course":"MP","teacher":"yes"},{"time":"14:00-15:00","course":"PROJECT","teacher":"yes"},{"time":"15:00-16:00","course":"PROJECT","teacher":"yes"},{"time":"16:00-17:00","course":"REMEDY","teacher":"yes"},{"time":"11:15-13:15","course":"AOA","teacher":"yes"},{"time":"11:15-13:15","course":"OS","teacher":"yes"}]}}};
+
+// let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:15-13:15", "14:00-15:00", "15:00-16:00", "16:00-17:00", "11:15-13:15", "11:15-13:15"];
+const loadData = () => {
+    let i = 0;
+    Object.keys(time_table.schedule).forEach(function(key) {
+        for (let j = 0; j < 9; j++) {
+                // time: time_slot[j],
+                lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course,
+                lectures[i][j].previousElementSibling.innerHTML = time_table.schedule[key].slots[j].teacher
+        }
+        i += 1;
+    });
+};
+loadData();
+</script>
+
+</html>
