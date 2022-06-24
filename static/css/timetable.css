@@ -1,0 +1,42 @@
+   .custom-table {
+    font-size: 0.6rem;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    text-align: center;
+}
+
+.custom-table thead tr {
+    background-color: #4e73df;
+    color: #fff;
+    font-weight: bold;
+}
+
+.custom-table thead tr:first-child {
+    border-bottom: 5px solid #4e73df;
+}
+
+.custom-table tbody th {
+    font-size: 1.2rem;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.custom-table tbody td,
+.custom-table tbody th {
+    padding: .25rem .5rem;
+    vertical-align: middle;
+}
+
+.custom-table tbody tr:last-of-type {
+    border-bottom: 2px solid #4e73df;
+}
+
+.custom-table tbody td {
+    border-right: 1px solid #ddd;
+}
+
+.select-form {
+    border: 1px solid #ddd;
+    background-color: transparent;
+    color: inherit;
+}
