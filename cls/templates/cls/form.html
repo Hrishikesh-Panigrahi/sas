@@ -1,0 +1,14 @@
+<form action="" method="post" form="class-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+</form>
+<form action="" method="get">
+    {{ filter1.form }}
+    <button type="submit">Filter</button>
+</form>
+
+<button type="submit" form="class-form">Submit</button>
+{% comment %} <form action="" method="get">
+    {{ filter2.form }}
+    <button type="submit">Filter</button>
+</form> {% endcomment %}

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'student.apps.StudentConfig',
     'timetable.apps.TimetableConfig',
+    'cls.apps.ClsConfig',
 
     # PIP packages
     'django_extensions',

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from course.models import Course
+from cls.models import Class
 
 
 # User -> username, first_name, last_name, password, email, is_staff, is_active, is_superuser, date_created
@@ -30,7 +31,8 @@ class student(models.Model):
     # id = (str(roll_no)+str(DOB))
     # attendance=something
     id = models.BigAutoField(primary_key=True)
-  
     course = models.ManyToManyField(Course)
+    cls = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return str(self.id) + " " + self.user.username
