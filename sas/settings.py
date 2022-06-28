@@ -143,3 +143,5 @@ GRAPH_MODELS = {
     'all_applications': True,
     'group_models': True,
 }
+
+AUTH_USER_MODEL='users.User'
