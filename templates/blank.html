@@ -6,7 +6,7 @@
 {% include 'components/head.html' with title=title %}
 
 <body id="page-top">
-    {% if user.is_authenticated %}
+    
         <!-- Page Wrapper -->
         <div id="wrapper">
 
@@ -24,7 +24,7 @@
                     <!-- Topbar -->
                     {% include 'components/topbar.html' %}
                     <!-- End of Topbar -->
-                    {% endif %}
+                    
                     <!-- Begin Page Content -->
                     <div class="container-fluid">
                         {% block content %}

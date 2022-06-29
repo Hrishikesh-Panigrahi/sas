@@ -1,7 +1,8 @@
 from django import forms
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from users.models import TeacherProfile
+from users.models import User
 from course.models import Course
 
 
@@ -36,9 +37,9 @@ class UserForm(UserCreationForm):
         my_form = 'userForm'
         model = User
         # fields = ['username', 'is_staff']
-        fields = ['username', 'first_name', 'last_name', 'is_staff']
+        fields = [ 'first_name', 'last_name', 'is_staff']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
+            # 'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'is_staff': forms.HiddenInput(attrs={'form': my_form}),
@@ -59,9 +60,9 @@ class UserUpdateForm(UserChangeForm):
     class Meta:
         my_form = 'userForm'
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
+        fields = [ 'first_name', 'last_name', 'email']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
+            # 'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'form': my_form}),

@@ -99,7 +99,9 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Teachers</h6>
                 <a class="collapse-item" href="/users">All Teachers</a>
+                {% if request.user.is_staff %}
                 <a class="collapse-item" href="/users/FacultyRegister">Register Teacher</a>
+                {% endif %}
             </div>
         </div>
     </li>
@@ -112,7 +114,9 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Students</h6>
                 <a class="collapse-item" href="{% url 'StudentList' %}">All Students</a>
+                {% if request.user.is_staff %}
                 <a class="collapse-item" href="{% url 'StudentRegister' %}">Register Student</a>
+                {% endif %}
             </div>
         </div>
     </li>

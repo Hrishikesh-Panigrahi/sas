@@ -1,13 +1,12 @@
 from django.db import models
-# from django.contrib.auth.models import User, 
 from course.models import Course
 from django.contrib.auth.models import AbstractUser
-
+from django.contrib.auth.models import User
 from django.contrib.auth.base_user import BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
-    '''for using email as unique identifier instead of username '''
+    
     # use this function to save users
     def create_user(self, email, password, is_active=True, is_staff=False, is_superuser=False,first_name=None,last_name=None,middle_name=None):
 
@@ -78,7 +77,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return str(self.first_name + self.last_name)
+        return str(self.email)
 
 # User model end
 
