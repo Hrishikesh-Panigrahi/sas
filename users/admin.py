@@ -3,6 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 from django.contrib.auth.models import User
+from users.models import User
 from django.contrib.auth.admin import UserAdmin
 from .models import TeacherProfile
 
@@ -11,10 +12,10 @@ Desc = 'Add College Email-ID'
 
 class UserAdminConfig(UserAdmin):
     model = User
-    search_fields = ('email', 'username', 'first_name',)
-    list_filter = ('username', 'email', 'first_name', 'is_active', 'is_staff')
+    search_fields = ('email', 'first_name',)
+    list_filter = ( 'email', 'first_name', 'is_active', 'is_staff')
     ordering = ('email',)
-    list_display = ('username', 'email', 'first_name',
+    list_display = ( 'email', 'first_name',
                     'is_active', 'is_staff')
     fieldsets = (
         ('Section 1', {'fields': ('email', 'first_name', 'last_name',),
@@ -44,8 +45,9 @@ class Admin(admin.AdminSite):
 admin_site = Admin(name='SAS')
 
 admin_site.register(User, UserAdminConfig)
+
 admin_site.register(TeacherProfile)
-admin.site.register(TeacherProfile)
+# admin_site.register(TeacherProfile)
 
 # class UserTeacherConfig(UserAdminConfig):
 #     model = TeacherProfile

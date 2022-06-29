@@ -1,7 +1,8 @@
 from django import forms
 from .models import student
 from course.models import Course
-from django.contrib.auth.models import User
+from users.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -36,7 +37,7 @@ class UserForm(UserCreationForm):
         # my_form = 'userForm'
         model = User
         
-        fields = ['username', 'first_name', 'last_name']
+        fields = [ 'first_name', 'last_name']
         # widgets = {
         #     'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
         #     'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
