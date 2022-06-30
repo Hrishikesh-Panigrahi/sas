@@ -3,8 +3,9 @@ from django.views import View
 from django.shortcuts import redirect, render
 from course.forms import CourseForm
 from course.models import Course
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
-# Create your views here.
 
 
 # class Index(View):
@@ -15,7 +16,7 @@ from course.models import Course
 # def index(request):
 #     c = Course.objects.all()
 #     return render(request, 'course/index.html', {'courses': c})
-
+@login_required(login_url='/')
 def index(request):
     courses = Course.objects.all()
     context = {
@@ -26,7 +27,7 @@ def index(request):
     }
     return render(request, 'course/courses.html', context)
 
-
+@staff_member_required(login_url='/')
 def create(request):
     form = CourseForm()
     context = {
@@ -43,7 +44,7 @@ def create(request):
         return redirect(index)
     return render(request, 'course/CourseForm.html', context)
 
-
+@staff_member_required(login_url='/')
 def update(request, id):
     course = Course.objects.get(pk=id)
     form = CourseForm(instance=course)
@@ -62,7 +63,7 @@ def update(request, id):
             return redirect(update, id)
     return render(request, 'course/CourseForm.html', context)
 
-
+@staff_member_required(login_url='/')
 def delete(request, id):
     course = Course.objects.get(pk=id)
     context = {

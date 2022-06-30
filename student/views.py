@@ -8,9 +8,10 @@ from django.contrib.auth.models import User
 from .models import student
 from course.models import Course
 from django.http import HttpResponse
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
-# @login_required(login_url='Login')
+@staff_member_required(login_url='/')
 def register(request):
     context = {}
     # studentForm=StudentForm(request.POST)
@@ -46,6 +47,8 @@ def register(request):
     }
     return render(request, 'student/studentRegister.html ', context)
 
+
+@login_required(login_url='/')
 def studentList(request):
     stu = student.objects.all()
     context = {'student': stu,
@@ -53,6 +56,7 @@ def studentList(request):
     }
     return render(request, 'student/Studentlist.html', context)
 
+@staff_member_required(login_url='/')
 def delete(request, pk):
     stu = student.objects.get(id=pk)
     context = {}
@@ -70,7 +74,7 @@ def delete(request, pk):
 
     return render(request, 'student/delete.html ', context)
 
-
+@staff_member_required(login_url='/')
 def update(request, pk):
     course = Course.objects.all()
     stu = student.objects.get(id=pk)
