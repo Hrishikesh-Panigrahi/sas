@@ -20,7 +20,6 @@ class TeacherForm(forms.ModelForm):
         widgets = {
             'department': forms.Select(attrs={'form': my_form}),
             # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
-            # 'is_classteacher': forms.CheckboxInput(attrs={'form': my_form}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -36,12 +35,14 @@ class UserForm(UserCreationForm):
         my_form = 'userForm'
         model = User
         # fields = ['username', 'is_staff']
-        fields = [ 'first_name', 'last_name', 'is_staff']
+        fields = [ 'email', 'first_name', 'last_name', 'is_staff', 'is_classteacher']
         widgets = {
             # 'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'form': my_form}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'is_staff': forms.HiddenInput(attrs={'form': my_form}),
+            'is_classteacher': forms.CheckboxInput(attrs={'form': my_form}),    
         }
 
     def __init__(self, *args, **kwargs):
@@ -59,7 +60,7 @@ class UserUpdateForm(UserChangeForm):
     class Meta:
         my_form = 'userForm'
         model = User
-        fields = [ 'first_name', 'last_name', 'email']
+        fields = [ 'first_name', 'last_name', 'email', 'is_classteacher']
         widgets = {
             # 'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),

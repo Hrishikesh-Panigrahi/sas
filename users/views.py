@@ -23,9 +23,8 @@ def register(request):
     courses = Course.objects.all()
     courseFilter = CourseFilter(request.GET, queryset=courses)
     courses = courseFilter.qs
-    userForm = UserForm(request.POST)
+    userForm = UserForm(request.POST or None)
     teacherForm = TeacherForm(courseSet=courses)
-    print('hello')
     context = {
         'title': 'Teachers',
         'type': 'Create',
@@ -40,7 +39,7 @@ def register(request):
             try:
                 userForm.save()
                 c_ids = request.POST.getlist('course')
-                u = User.objects.get(username=request.POST['username'])
+                u = User.objects.get(email=request.POST['email'])
                 # form - input fields -> username ...  
                                 #  sahil 
                 
@@ -54,7 +53,7 @@ def register(request):
             except Exception as e:
                 context = {'e': e}
                 print('user not saved')
-                print(e)
+                print('%s' % type(e))
 
     return render(request, 'users/TeacherForm.html', context)
 

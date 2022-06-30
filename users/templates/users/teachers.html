@@ -43,7 +43,7 @@
                 {{ course.code }}-{{ course.name }},<br>
                 {% endfor %}
             </td>
-            <td>{{ teacher.is_classteacher }}</td> <!-- is class teacher -->
+            <td>{% if teacher.user.is_classteacher %}yes{% else %}no{% endif %}</td> <!-- is class teacher -->
         </tr>
         {% endfor %}
     </tbody>
