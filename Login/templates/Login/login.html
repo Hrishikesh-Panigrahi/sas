@@ -60,6 +60,10 @@
                                                     Me</label>
                                             </div>
                                         </div>
+
+                                        {% if request.GET.next %}
+                                            <input type="hidden" name="next" value="{{request.GET.next}}">
+                                        {% endif %}
                                         <button class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
@@ -97,16 +101,7 @@
                                             {% endfor %}
                                         {% endif %}
                                     </div>
-                                    <!-- {% if messages %}
-                                    {% for message in messages %}
-                                    {% if for.Loop.first %}
-
-                                    {{ message }}
-
-                                    {% endif %}
                                     
-                                    {% endfor %}
-                                    {% endif %} -->
 
 
                                 </div>

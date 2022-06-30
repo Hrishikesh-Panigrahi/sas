@@ -44,9 +44,9 @@ class Admin(admin.AdminSite):
 
 admin_site = Admin(name='SAS')
 
-admin_site.register(User, UserAdminConfig)
+admin.site.register(User, UserAdminConfig)
 
-admin_site.register(TeacherProfile)
+admin.site.register(TeacherProfile)
 # admin_site.register(TeacherProfile)
 
 # class UserTeacherConfig(UserAdminConfig):

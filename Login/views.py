@@ -2,13 +2,14 @@ from http import cookies
 from urllib import response
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import auth
 from django.contrib import messages
 # from django.conf import settings
+
 # Create your views here.
 def loginUser(request):
-    # context={ 'page' : 'Login' }
+    
 
     # if request.COOKIES.get("email"):
     #     return render(request, 'Login\login.html', {'cookies1': request.COOKIES['email'], 'cookies2': request.COOKIES['password']})
@@ -21,6 +22,9 @@ def loginUser(request):
             if user.is_active:
                 # if user.is_staff:
                 auth.login(request, user)
+                if 'next' in request.POST:
+                    print("hello")
+                    return redirect(request.POST.get('next'))
                 # if request.POST.get("checkbox", None):
                 #     request.session.set_expiry(settings.KEEP_LOGGED_DURATION)
                 #     response = redirect('/Dashboard')
@@ -28,17 +32,23 @@ def loginUser(request):
                 #     response.set_cookie('password', request.POST['password'])
                 #     # print(response.set_cookie)
                 #     return response
-                print("hello")
-                # if request.user.is_staff:
-                    # context.update(subjectTeacher = 'subjectTeacher')
-                return redirect('/Dashboard')
-                # return render (request, 'blank.html', context)
+                    
+                
+                else:
+                    return redirect('/Dashboard')
+               
 
             else:
                 print('account active kar re')
 
         else:
             messages.info(request, "Check your cerdentials")
-        # return render(request, 'Login/login-page.html')
+        
 
     return render(request, 'Login\login.html')
+
+
+def logoutUser(request):
+    if request.method =="POST":
+        logout(request)
+        return redirect("/")

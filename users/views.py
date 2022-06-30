@@ -4,9 +4,12 @@ from .forms import TeacherForm, UserForm, UserUpdateForm
 from .models import TeacherProfile, User
 from .filters import CourseFilter
 from course.models import Course
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
-
+@login_required(login_url='/')
 def index(request):
+    print(request.user)
     teachers = TeacherProfile.objects.all()
     context = {
         'title': 'Teachers',
@@ -15,7 +18,7 @@ def index(request):
     }
     return render(request, 'users/teachers.html', context)
 
-
+@staff_member_required(login_url='/')
 def register(request):
     courses = Course.objects.all()
     courseFilter = CourseFilter(request.GET, queryset=courses)
@@ -55,7 +58,7 @@ def register(request):
 
     return render(request, 'users/TeacherForm.html', context)
 
-
+@staff_member_required(login_url='/')
 def update(request, id):
     courses = Course.objects.all()
     teacher = TeacherProfile.objects.get(pk=id)
@@ -88,7 +91,7 @@ def update(request, id):
             # TODO: handle exceptions
     return render(request, 'users/TeacherForm.html', context)
 
-
+@staff_member_required(login_url='/')
 def delete(request, id):
     teacher = TeacherProfile.objects.get(pk=id)
     context = {

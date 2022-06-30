@@ -146,3 +146,7 @@ GRAPH_MODELS = {
 }
 
 AUTH_USER_MODEL='users.User'
+
+# if we want we can use this too fro login required
+# LOGIN_URL=''
+# LOGIN_REDIRECT_URL='/'

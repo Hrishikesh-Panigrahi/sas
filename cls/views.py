@@ -5,9 +5,10 @@ from cls.filters import StudentFilter
 from .forms import ClassCreateForm, ClassUpdateForm
 from .models import Class
 from student.models import student
-
+from django.contrib.admin.views.decorators import staff_member_required
 # Create your views here.
 
+@staff_member_required(login_url='/')
 def create(request):
     form = ClassCreateForm(request.POST or None)
     context = {
@@ -27,6 +28,7 @@ def create(request):
     return render(request, 'cls/form.html', context)
 
 
+@staff_member_required(login_url='/')
 def update(request, id):
     print(request.GET)
     c = Class.objects.get(pk=id)
