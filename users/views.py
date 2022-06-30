@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from .forms import TeacherForm, UserForm, UserUpdateForm
-from .models import TeacherProfile
+from .models import TeacherProfile, User
 from .filters import CourseFilter
 from course.models import Course
 

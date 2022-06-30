@@ -16,12 +16,11 @@ class TeacherForm(forms.ModelForm):
     class Meta:
         my_form = 'userForm'
         model = TeacherProfile
-        fields = ['department', 'course',
-                  'is_classteacher']
+        fields = ['department', 'course']
         widgets = {
             'department': forms.Select(attrs={'form': my_form}),
             # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
-            'is_classteacher': forms.CheckboxInput(attrs={'form': my_form}),
+            # 'is_classteacher': forms.CheckboxInput(attrs={'form': my_form}),
         }
 
     def __init__(self, *args, **kwargs):

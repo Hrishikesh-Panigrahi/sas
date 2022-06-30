@@ -8,7 +8,7 @@ from django.contrib.auth.base_user import BaseUserManager
 class CustomUserManager(BaseUserManager):
     
     # use this function to save users
-    def create_user(self, email, password, is_active=True, is_staff=False, is_superuser=False,first_name=None,last_name=None,middle_name=None):
+    def create_user(self, email, password, is_active=True, is_staff=False, is_superuser=False, is_classteacher= False, is_hod = False,first_name=None,last_name=None,middle_name=None):
 
         # create and save user with email and password
 
@@ -25,10 +25,13 @@ class CustomUserManager(BaseUserManager):
         User.is_active = is_active
         User.is_staff = is_staff
         User.is_superuser = is_superuser
+        User.is_classteacher=is_classteacher
+        User.is_hod =is_hod
         User.set_password(password)
         User.first_name=first_name
         User.last_name=last_name
         User.middle_name=middle_name
+        
         
         User.save(using=self.db)
         return User
@@ -40,7 +43,9 @@ class CustomUserManager(BaseUserManager):
             email, 
             password=password, 
             is_staff=True,
-            is_superuser=False
+            is_superuser=False,
+            is_classteacher= False,
+            is_hod = False
             )
         return User
 
@@ -51,7 +56,9 @@ class CustomUserManager(BaseUserManager):
             email,
             password=password,
             is_staff=True, 
-            is_superuser=True
+            is_superuser=True,
+            is_classteacher= True,
+            is_hod = True
             )
         return User
 
@@ -68,7 +75,8 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    
+    is_classteacher = models.BooleanField(default=False)
+    is_hod = models.BooleanField(default=False)
     
     # profile_img = models.ImageField()
 
@@ -96,7 +104,7 @@ class TeacherProfile(models.Model):
     department = models.CharField(
         max_length=50, blank=True, null=True, choices=department_choices)
     course = models.ManyToManyField(Course)
-    is_classteacher = models.BooleanField(default=False)
+    
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 

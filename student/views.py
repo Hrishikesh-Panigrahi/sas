@@ -8,8 +8,9 @@ from django.contrib.auth.models import User
 from .models import student
 from course.models import Course
 from django.http import HttpResponse
+# from django.contrib.auth.decorators import login_required
 
-
+# @login_required(login_url='Login')
 def register(request):
     context = {}
     # studentForm=StudentForm(request.POST)
