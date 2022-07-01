@@ -76,6 +76,10 @@
             </div>
         </div>
     </li>
+    
+
+    {% if request.user.is_hod or request.user.is_superuser %}
+    <!-- Courses -->
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Courses' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseCourses" aria-expanded="true" aria-controls="collapseCourses">
             <i class="fas fa-fw fa-folder"></i>
@@ -90,6 +94,8 @@
             </div>
         </div>
     </li>
+
+    <!-- Teachers -->
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Teachers' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseTeachers" aria-expanded="true" aria-controls="#collapseTeachers">
             <i class="fas fa-fw fa-users"></i>
@@ -105,6 +111,9 @@
             </div>
         </div>
     </li>
+    {% endif %}
+
+    {% comment %} Students {% endcomment %}
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Students' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseStudents" aria-expanded="true" aria-controls="#collapseStudents">
             <i class="fas fa-fw fa-users"></i>
@@ -120,6 +129,9 @@
             </div>
         </div>
     </li>
+
+    {% if request.user.is_classteacher %}
+    <!-- Timetable -->
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Timetable' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseTimetable" aria-expanded="true" aria-controls="#collapseTimetable">
             <i class="fas fa-fw fa-users"></i>
@@ -133,6 +145,8 @@
             </div>
         </div>
     </li>
+    {% endif %}
+
     <!-- Nav Item - Charts -->
     <li class="nav-item">
         <a class="nav-link" href="charts.html">

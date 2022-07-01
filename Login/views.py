@@ -43,6 +43,9 @@ def loginUser(request):
 
         else:
             messages.info(request, "Check your cerdentials")
+
+    if request.user.is_authenticated:
+        return redirect('/dashboard')
         
 
     return render(request, 'Login\login.html')
