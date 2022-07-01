@@ -12,10 +12,10 @@ Desc = 'Add College Email-ID'
 
 class UserAdminConfig(UserAdmin):
     model = User
-    search_fields = ('email', 'first_name',)
-    list_filter = ( 'email', 'first_name', 'is_active', 'is_staff')
+    search_fields = ('email', 'first_name', 'last_name')
+    list_filter = ( 'email', 'is_active', 'is_staff')
     ordering = ('email',)
-    list_display = ( 'email', 'first_name',
+    list_display = ( 'email', 'first_name', 'last_name',
                     'is_active', 'is_staff')
     fieldsets = (
         ('Section 1', {'fields': ('email', 'first_name', 'last_name'),
