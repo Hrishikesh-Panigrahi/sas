@@ -113,7 +113,8 @@
     </li>
     {% endif %}
 
-    {% comment %} Students {% endcomment %}
+    {% if request.user.is_classteacher %}
+    <!-- Students -->
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Students' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseStudents" aria-expanded="true" aria-controls="#collapseStudents">
             <i class="fas fa-fw fa-users"></i>
@@ -129,8 +130,9 @@
             </div>
         </div>
     </li>
-
-    {% if request.user.is_classteacher %}
+    {% endif %}
+    
+    {% if request.user.is_staff %}
     <!-- Timetable -->
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Timetable' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseTimetable" aria-expanded="true" aria-controls="#collapseTimetable">
@@ -146,6 +148,7 @@
         </div>
     </li>
     {% endif %}
+    
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">

@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from .forms import TeacherForm, UserForm, UserUpdateForm
 from .models import TeacherProfile, User
 from .filters import CourseFilter
@@ -9,18 +9,18 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 @login_required(login_url='/')
 def index(request):
-    print(request.user)
-    teachers = TeacherProfile.objects.all()
+    uDept = request.user.teacherprofile.department
+    teachers = TeacherProfile.objects.filter(department=uDept)
     context = {
         'title': 'Teachers',
         'teachers': teachers,
-        'range': range(60),
     }
     return render(request, 'users/teachers.html', context)
 
 @staff_member_required(login_url='/')
 def register(request):
-    courses = Course.objects.all()
+    uDept = request.user.teacherprofile.department
+    courses = Course.objects.filter(department=uDept)
     courseFilter = CourseFilter(request.GET, queryset=courses)
     courses = courseFilter.qs
     userForm = UserForm(request.POST or None)
@@ -43,7 +43,7 @@ def register(request):
                 # form - input fields -> username ...  
                                 #  sahil 
                 
-                t = TeacherProfile(user=u)
+                t = TeacherProfile(user=u, department=uDept)
                 t.save()
                 for id in c_ids:
                     c = Course.objects.get(pk=id)
@@ -59,7 +59,8 @@ def register(request):
 
 @staff_member_required(login_url='/')
 def update(request, id):
-    courses = Course.objects.all()
+    uDept = request.user.teacherprofile.department
+    courses = Course.objects.filter(department=uDept)
     teacher = TeacherProfile.objects.get(pk=id)
     courseFilter = CourseFilter(request.GET, queryset=courses)
     courses = courseFilter.qs

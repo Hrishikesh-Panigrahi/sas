@@ -15,7 +15,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 def register(request):
     context = {}
     # studentForm=StudentForm(request.POST)
-    userform = UserForm(request.POST)
+    userform = UserForm(request.POST or None)
     courses = Course.objects.all()
     studentForm = StudentForm(courseSet=courses)
     if request.method == 'POST':

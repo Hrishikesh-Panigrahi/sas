@@ -103,7 +103,7 @@ class TeacherProfile(models.Model):
     id = models.BigAutoField(primary_key=True)
     department = models.CharField(
         max_length=50, blank=True, null=True, choices=department_choices)
-    course = models.ManyToManyField(Course)
+    course = models.ManyToManyField(Course, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
