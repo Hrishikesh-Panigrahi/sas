@@ -20,7 +20,7 @@ def index(request):
 @staff_member_required(login_url='/')
 def register(request):
     uDept = request.user.teacherprofile.department
-    courses = Course.objects.filter(department=uDept)
+    courses = Course.objects.filter(dept=uDept)
     courseFilter = CourseFilter(request.GET, queryset=courses)
     courses = courseFilter.qs
     userForm = UserForm(request.POST or None)

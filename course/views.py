@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
 
-
 # class Index(View):
 #     def get(self, request):
 #         # return HttpResponse("hello world")
@@ -16,20 +15,24 @@ from django.contrib.admin.views.decorators import staff_member_required
 # def index(request):
 #     c = Course.objects.all()
 #     return render(request, 'course/index.html', {'courses': c})
+
+
 @login_required(login_url='/')
 def index(request):
-    courses = Course.objects.all()
+    uDept = request.user.teacherprofile.department
+    # TODO: filter institute level courses as well
+    courses = Course.objects.filter(dept=uDept)
     context = {
         'title': 'Courses',
         'page': 'table',
         'courses': courses,
-        'range': range(60)
     }
     return render(request, 'course/courses.html', context)
 
 @staff_member_required(login_url='/')
 def create(request):
-    form = CourseForm()
+    uDept = request.user.teacherprofile.department
+    form = CourseForm(request.POST or None, dept=uDept)
     context = {
         'title': 'Courses',
         'type': 'Create',
@@ -37,9 +40,8 @@ def create(request):
     }
 
     if request.method == 'POST':
-        form = CourseForm(request.POST)
+        form = CourseForm(request.POST, dept=uDept)
         if form.is_valid():
-            print("success")
             form.save()
         return redirect(index)
     return render(request, 'course/CourseForm.html', context)
