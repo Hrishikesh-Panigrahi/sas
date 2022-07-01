@@ -13,7 +13,7 @@ Desc = 'Add College Email-ID'
 class UserAdminConfig(UserAdmin):
     model = User
     search_fields = ('email', 'first_name', 'last_name')
-    list_filter = ( 'email', 'is_active', 'is_staff')
+    list_filter = ( 'email', 'is_active', 'is_staff', 'is_superuser')
     ordering = ('email',)
     list_display = ( 'email', 'first_name', 'last_name',
                     'is_active', 'is_staff')
@@ -22,7 +22,7 @@ class UserAdminConfig(UserAdmin):
                        'description': '%s' % Desc,
 
                        }),
-        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_classteacher', 'is_hod'),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_classteacher', 'is_hod', 'is_superuser'),
                          'classes': ('collapse',),
                          }),
 
@@ -31,7 +31,7 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_classteacher', 'is_hod')}
+            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_classteacher', 'is_hod', 'is_superuser')}
          ),
     )
 
