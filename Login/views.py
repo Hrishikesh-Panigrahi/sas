@@ -35,7 +35,7 @@ def loginUser(request):
                     
                 
                 else:
-                    return redirect('/Dashboard')
+                    return redirect('/dashboard')
                
 
             else:

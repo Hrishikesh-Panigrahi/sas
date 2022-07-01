@@ -5,7 +5,7 @@ from sas.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('Dashboard', index, name='index'),
+    path('dashboard/', index, name='index'),
     path('', include('Login.urls')),
     path('users/', include('users.urls')),
     path('course/', include('course.urls')),
