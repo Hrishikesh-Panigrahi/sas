@@ -22,7 +22,7 @@ class UserAdminConfig(UserAdmin):
                        'description': '%s' % Desc,
 
                        }),
-        ('Permissions', {'fields': ('is_staff', 'is_active'),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_classteacher', 'is_hod'),
                          'classes': ('collapse',),
                          }),
 
@@ -31,7 +31,7 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'first_name', 'password1', 'password2', 'is_active', 'is_staff')}
+            'fields': ('email', 'first_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_classteacher', 'is_hod')}
          ),
     )
 
