@@ -36,4 +36,4 @@ class student(models.Model):
     cls = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.user.first_name) + " " + str(self.user.last_name)

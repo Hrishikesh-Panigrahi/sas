@@ -1,10 +1,13 @@
-<form action="" method="post" form="class-form">
+{% extends 'blank.html' %}
+
+{% block content %}
+<form action="" method="post" id="class-form">
     {% csrf_token %}
     {{ form.as_p }}
 </form>
-<form action="" method="get">
+<form method="get" id="filter-form">
     {{ filter1.form }}
-    <button type="submit">Filter</button>
+    <button type="submit" form="filter-form">Filter</button>
 </form>
 
 <button type="submit" form="class-form">Submit</button>
@@ -12,3 +15,4 @@
     {{ filter2.form }}
     <button type="submit">Filter</button>
 </form> {% endcomment %}
+{% endblock content %}

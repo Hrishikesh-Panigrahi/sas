@@ -113,7 +113,7 @@
     </li>
     {% endif %}
 
-    {% if request.user.is_classteacher %}
+    {% if request.user.is_classteacher or request.user.is_superuser%}
     <!-- Students -->
     <li class="nav-item">
         <a class="nav-link{% if not expand == 'Students' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseStudents" aria-expanded="true" aria-controls="#collapseStudents">
@@ -131,6 +131,21 @@
         </div>
     </li>
     {% endif %}
+
+    <!-- Classes -->
+    <li class="nav-item">
+        <a class="nav-link{% if not expand == 'Class' %} collapsed{% endif %}" href="#" data-toggle="collapse" data-target="#collapseClass" aria-expanded="true" aria-controls="#collapseStudents">
+            <i class="fas fa-fw fa-users"></i>
+            <span>Class</span>
+        </a>
+        <div id="collapseClass" class="collapse{% if expand == 'Class' %} show{% endif %}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Students</h6>
+                {% comment %} <a class="collapse-item" href="{% url '' %}">All Classes</a> {% endcomment %}
+                <a class="collapse-item" href="{% url 'createClass' %}">Create Class</a>
+            </div>
+        </div>
+    </li>
     
     {% if request.user.is_staff %}
     <!-- Timetable -->
