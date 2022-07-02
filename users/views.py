@@ -17,6 +17,10 @@ def index(request):
     }
     return render(request, 'users/teachers.html', context)
 
+@staff_member_required(login_url="/")
+def profile(request):
+    return render(request, 'users/profile.html')
+
 @staff_member_required(login_url='/')
 def register(request):
     uDept = request.user.teacherprofile.department
