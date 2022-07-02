@@ -16,19 +16,21 @@ class StudentForm(forms.ModelForm):
         # my_form = 'userForm'
         model = student
         fields = ['department', 'course']
-        # widgets = {
+        widgets = {
     
-        #     'department': forms.Select(attrs={'form': my_form}),
+            'department': forms.HiddenInput(),
         #     # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
         #     'address': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
         #     'DOB': forms.DateField(attrs={'class': 'form-control', 'form': my_form}),
-        # }
+        }
     
     def __init__(self, *args, **kwargs):
         courseSet = kwargs.pop('courseSet')
+        d = kwargs.pop('dept', None)
         super(StudentForm, self).__init__(*args, **kwargs)
         self.fields['course'].queryset = courseSet
         self.fields['course'].label = 'Courses'
+        self.fields['department'].initial = d
     
        
 
@@ -37,7 +39,7 @@ class UserForm(UserCreationForm):
         # my_form = 'userForm'
         model = User
         
-        fields = [ 'first_name', 'last_name']
+        fields = [ 'email', 'first_name', 'last_name' ]
         # widgets = {
         #     'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
         #     'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),

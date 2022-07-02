@@ -1,23 +1,22 @@
-from multiprocessing import context
 from django.shortcuts import redirect, render
-
-from course.models import Course
-from .forms import UserForm,  StudentForm
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from .models import student
-from course.models import Course
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
+from student.forms import UserForm,  StudentForm
+from student.models import student
+
+from users.models import User
+from course.models import Course
+
 @staff_member_required(login_url='/')
 def register(request):
+    uDept = request.user.teacherprofile.department
     context = {}
     # studentForm=StudentForm(request.POST)
     userform = UserForm(request.POST or None)
     courses = Course.objects.all()
-    studentForm = StudentForm(courseSet=courses)
+    studentForm = StudentForm(courseSet=courses, dept=uDept)
     if request.method == 'POST':
         userform = UserForm(request.POST)
         print('1')
@@ -27,8 +26,8 @@ def register(request):
             c_ids = request.POST.getlist('course')
             print('2')
             
-            s = User.objects.get(username=request.POST['username'])
-            stu = student(user=s)
+            s = User.objects.get(email=request.POST['email'])
+            stu = student(user=s, department=uDept)
             print(c_ids)
             for i in c_ids:
                 # c = Course.objects.get(pk=i)
