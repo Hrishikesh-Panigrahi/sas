@@ -1,11 +1,11 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.models import User
 from .forms import TeacherForm, UserForm, UserUpdateForm
 from .models import TeacherProfile, User
 from .filters import CourseFilter
 from course.models import Course
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from .decorators import hod_allowed
 
 @login_required(login_url='/')
 def index(request):
@@ -22,8 +22,11 @@ def profile(request):
     return render(request, 'users/profile.html')
 
 @staff_member_required(login_url='/')
+@hod_allowed
 def register(request):
+    
     uDept = request.user.teacherprofile.department
+    
     courses = Course.objects.filter(dept=uDept)
     courseFilter = CourseFilter(request.GET, queryset=courses)
     courses = courseFilter.qs

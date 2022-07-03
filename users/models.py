@@ -1,8 +1,9 @@
 from django.db import models
 from course.models import Course
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.auth.base_user import BaseUserManager
+
 
 
 class CustomUserManager(BaseUserManager):
@@ -65,6 +66,7 @@ class CustomUserManager(BaseUserManager):
 
 # User model start 
 class User(AbstractUser):
+    # depart
     # id = models.CharField(max_length=50, unique=True)
     username = None
     first_name = models.CharField(max_length=50, null=True)
@@ -110,3 +112,6 @@ class TeacherProfile(models.Model):
 
     def __str__(self):
         return str(self.id) + ' ' + self.user.first_name + ' ' + self.user.last_name
+
+
+
