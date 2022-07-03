@@ -1,8 +1,7 @@
 from django import forms
-# from django.contrib.auth.models import User
+
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from users.models import TeacherProfile
-from users.models import User
+from users.models import TeacherProfile, User 
 from course.models import Course
 
 
@@ -16,11 +15,11 @@ class TeacherForm(forms.ModelForm):
     class Meta:
         my_form = 'userForm'
         model = TeacherProfile
-        fields = ['department', 'course']
-        widgets = {
-            'department': forms.Select(attrs={'form': my_form}),
-            # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
-        }
+        fields = ['course']
+        # widgets = {
+        #     'department': forms.Select(attrs={'form': my_form}),
+        #     # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
+        # }
 
     def __init__(self, *args, **kwargs):
         courseSet = kwargs.pop('courseSet')
