@@ -3,11 +3,13 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
-from student.forms import UserForm,  StudentForm
+from student.forms import StudentForm
 from student.models import student
 
 from users.models import User
 from course.models import Course
+
+from users.forms import UserForm
 
 @staff_member_required(login_url='/')
 def register(request):

@@ -18,7 +18,7 @@ class UserAdminConfig(UserAdmin):
     list_display = ( 'email', 'first_name', 'last_name',
                     'is_active', 'is_staff')
     fieldsets = (
-        ('Section 1', {'fields': ('email', 'first_name', 'last_name'),
+        ('Section 1', {'fields': ('email', 'first_name', 'last_name', 'middle_name','department' ,),
                        'description': '%s' % Desc,
 
                        }),
@@ -31,9 +31,16 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'first_name', 'last_name', 'password1', 'password2', 'is_active', 'is_staff', 'is_classteacher', 'is_hod', 'is_superuser')}
-         ),
+            'fields': ('email', 'first_name', 'last_name', 'middle_name','department' ,'password1', 'password2', )
+            }),
+            
+            ('Permissions', {'fields': ('is_active', 'is_staff', 'is_classteacher', 'is_hod', 'is_superuser',),
+            'classes': ('collapse',),
+        }),
     )
+
+    search_fields=('email',)
+    ordering=('email',)
 
 
 class Admin(admin.AdminSite):

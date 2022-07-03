@@ -1,16 +1,20 @@
 from django.shortcuts import redirect, render
 from .forms import TeacherForm, UserForm, UserUpdateForm
+
 from .models import TeacherProfile, User
-from .filters import CourseFilter
 from course.models import Course
+
+from .filters import CourseFilter
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from .decorators import hod_allowed
 
 @login_required(login_url='/')
 def index(request):
-    uDept = request.user.teacherprofile.department
-    teachers = TeacherProfile.objects.filter(department=uDept)
+    uDept = request.user.department
+    print(uDept)
+    teachers = TeacherProfile.objects.filter(user__department=uDept)
     context = {
         'title': 'Teachers',
         'teachers': teachers,
@@ -25,8 +29,8 @@ def profile(request):
 @hod_allowed
 def register(request):
     
-    uDept = request.user.teacherprofile.department
-    
+    uDept = request.user.department
+
     courses = Course.objects.filter(dept=uDept)
     courseFilter = CourseFilter(request.GET, queryset=courses)
     courses = courseFilter.qs
@@ -47,9 +51,7 @@ def register(request):
                 userForm.save()
                 c_ids = request.POST.getlist('course')
                 u = User.objects.get(email=request.POST['email'])
-                # form - input fields -> username ...  
-                                #  sahil 
-                
+               
                 t = TeacherProfile(user=u, department=uDept)
                 t.save()
                 for id in c_ids:
@@ -66,7 +68,7 @@ def register(request):
 
 @staff_member_required(login_url='/')
 def update(request, id):
-    uDept = request.user.teacherprofile.department
+    uDept = request.user.department
     courses = Course.objects.filter(department=uDept)
     teacher = TeacherProfile.objects.get(pk=id)
     courseFilter = CourseFilter(request.GET, queryset=courses)
