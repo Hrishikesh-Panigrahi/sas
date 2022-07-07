@@ -12,6 +12,13 @@ def createTT(request):
     }
     return render(request, 'timetable/tt.html', context)
 
+def editTT(request):
+    context = {
+        'title': 'Timetable',
+        'page': 'editTT',
+    }
+    return render(request, 'timetable/tt.html', context)
+
 def updateTT(request):
     context = {
         'title': 'Timetable',
