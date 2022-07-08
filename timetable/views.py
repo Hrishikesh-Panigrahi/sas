@@ -25,3 +25,10 @@ def updateTT(request):
         'page': 'updateTT',
     }
     return render(request, 'timetable/tt.html', context)
+
+def requests(request):
+    context = {
+        'title': 'Timetable',
+        'page': 'request',
+    }
+    return render(request, 'timetable/requests.html', context)

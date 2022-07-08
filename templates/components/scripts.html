@@ -10,13 +10,10 @@
 <!-- Custom scripts for all pages-->
 <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 
-{% if page == 'createTT' or page == 'updateTT' %}
+{% if page == 'createTT' %}
 <script src="{% static 'js/timetable.js' %}">
 </script>
 <script type="text/javascript">
-	{% if page == 'updateTT' %}
-		alert("LOLOLOL");
-	{% endif %}
 	loadData();
 </script>
 {% endif %}
@@ -24,5 +21,19 @@
 <script src="{% static 'js/timetable.js' %}"></script>
 <script type="text/javascript">
 	editTimeTable();
+</script>
+{% endif %}
+{% if page == 'updateTT' %}
+<script src="{% static 'js/timetable.js' %}">
+</script>
+<script type="text/javascript">
+	loadTempData();
+</script>
+{% endif %}
+{% if page == 'request' %}
+<script src="{% static 'js/timetable.js' %}">
+</script>
+<script type="text/javascript">
+	loadRequests();
 </script>
 {% endif %}

@@ -40,3 +40,15 @@
     background-color: transparent;
     color: inherit;
 }
+
+.break-data{
+    position: absolute;
+    transform: translateX(-25px) rotate(90deg);
+    font-size: x-large;
+    white-space: nowrap;
+}
+@media only screeen and (max-width: 1250px){
+    .break-data{
+        transform: translateX(-45px) rotate(90deg);
+    }
+}

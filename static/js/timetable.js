@@ -1,5 +1,5 @@
 // ------------------------------- Variables -----------------------------------
-
+let req_list = [];
 let lectures = [];
 // Take elements with id starting with weekday and push on to the array.
 lectures.push(document.querySelectorAll(`[id^="monday"]`));
@@ -58,7 +58,7 @@ const createTimeTable = () => {
             let dict = {
                 time: time_slot[j],
                 course: lectures[i][j].childNodes[1].value,
-                teacher: "yes"
+                teacher: "XYZ"
             };
             time_table.schedule[key].slots.push(dict);
         }
@@ -67,6 +67,7 @@ const createTimeTable = () => {
     tt = JSON.stringify(time_table);
     console.log(tt);
     localStorage.setItem('timetable', tt);
+    localStorage.setItem('flushtimetable', tt);
     document.getElementById("create-btn").disabled = true;
     window.location.reload();
 };
@@ -81,7 +82,7 @@ const loadData = () => {
         return;
     }
     time_table = JSON.parse(localStorage.getItem('timetable'));
-    console.log(time_table)
+    // console.log(time_table)
     let i = 0;
     Object.keys(time_table.schedule).forEach(function(key) {
         for (let j = 0; j < 9; j++) {
@@ -92,50 +93,26 @@ const loadData = () => {
     });
 };
 
-// ---------------- Edit json object data into temp file -----------------------
-// dictionary 'dict' is used to store lecture data until pushed to 'slots' array
-// in 'flush_tt' object. Store in browser storage as timetable and disable button.
-const flushableData = (_state,_date,_time) => {
-    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", 
-                    "11:15-13:15", "14:00-15:00", "15:00-16:00",
-                    "16:00-17:00", "11:15-13:15", "11:15-13:15"];
-    let tt = "";
-    let i = 0;
-
-    console.log(_state,parseInt(_date),parseInt(_time));
-    // time_table = JSON.parse(localStorage.getItem('timetable'));
-    // Object.keys(time_table.schedule).forEach(function(key) {
-    //     for (let j = 0; j < 9; j++) {
-    //         let dict = {
-    //             time: time_slot[j],
-    //             course: lectures[i][j].childNodes[1].value,
-    //             teacher: "yes"
-    //         };
-    //         time_table.schedule[key].slots.push(dict);
-    //     }
-    //     i += 1;
-    // });
-    // tt = JSON.stringify(time_table);
-    // console.log(tt);
-    // localStorage.setItem('timetable', tt);
-    // create_btn.disabled = true;
-    // window.location.reload();
-};
 
 // -------------- Render buttons for release/request click event ---------------
-// 
+// Render buttons on editTT page. The buttons get rendered according to the dropdown
+// value. It is meant for subject teachers. 
 const editTimeTable = ()=> {
     let sub_teacher = document.getElementById('subject').childNodes[1];
-    if (localStorage.getItem('timetable') == null) {
+    if (localStorage.getItem('flushtimetable') == null) {
         console.log("nothing to show");
         // TODO: Add redirect to createTT page
         return;
     }
-    const reloadPage = ()=> {
-        window.location.reload();
-    };
-    time_table = JSON.parse(localStorage.getItem('timetable'));
-    sub_teacher.addEventListener('change',reloadPage)
+    sub_teacher.addEventListener('change',() => {
+    sessionStorage.setItem('selectedtem', sub_teacher.value);
+    window.location.reload();
+    })
+    console.log(sub_teacher);
+    if(sessionStorage.getItem('item')!=null) {
+        sub_teacher.options[sessionStorage.getItem('selectedtem')].selected = true;
+    }
+    time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     let i = 0;
     Object.keys(time_table.schedule).forEach(function(key) {
         for (let j = 0; j < 9; j++) {
@@ -144,7 +121,7 @@ const editTimeTable = ()=> {
             lectures[i][j].previousElementSibling.innerHTML = "Teacher";
             let request = "";
             if(sub_teacher.value == time_table.schedule[key].slots[j].course){
-                request = '<button type="submit" onclick="flushableData(\'rel\','+ i +','+ j +');" class="btn btn-warning btn-icon-split">\
+                request = '<button type="submit" onclick="storeTempData(\'rel\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\'); this.disabled=true;" class="btn btn-warning btn-icon-split">\
                                 <span class="icon text-white-50">\
                                     <i class="fa fa-times"></i>\
                                 </span>\
@@ -152,7 +129,7 @@ const editTimeTable = ()=> {
                             </button>';
             }
             else{
-                request = '<button type="submit" onclick="flushableData(\'req\','+ i +','+ j +');" class="btn btn-info btn-icon-split">\
+                request = '<button type="submit" onclick="storeTempData(\'req\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\'); this.disabled=true;" class="btn btn-info btn-icon-split">\
                                 <span class="icon text-white-50">\
                                     <i class="fas fa-plus"></i>\
                                 </span>\
@@ -163,4 +140,97 @@ const editTimeTable = ()=> {
         }
         i += 1;
     });
+};
+
+// ---------------------- Store Requests in a list -----------------------------
+const storeTempData = (_state,_date,_time,_course) => {
+    console.log(_state,parseInt(_date),parseInt(_time),_course);
+    let dict = [_state,_date,_time,_course];
+    req_list.push(dict);
+};
+
+// --------------------- Store list in local storage ---------------------------
+const storeData = () => {
+    req_list = req_list.sort(function(a, b) {return (a[1] - b[1]) || (a[2] - b[2])});
+    localStorage.setItem('reqList', JSON.stringify(req_list));
+    // req_list = [];
+    window.location.reload();
+};
+// -------------------- Load Data in Update slot page ---------------------------
+// Load the flushable timetable into the table. Also create a counter for
+const loadTempData = () => {
+    time_table = JSON.parse(localStorage.getItem('flushtimetable'));
+    req_list = JSON.parse(localStorage.getItem('reqList'));
+    let i = 0;
+    Object.keys(time_table.schedule).forEach(function(key) {
+        for (let j = 0; j < 9; j++) {
+            // TODO: create a counter with absolute positioning.
+            lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
+            lectures[i][j].previousElementSibling.innerHTML = time_table.schedule[key].slots[j].teacher;
+        }
+        i += 1;
+    });
+};
+// -------------------- Render requests in form of cards ---------------------------
+//  In requests.html render all the requests sent for approval. Once approved
+//  or disapproved, update the flushable time table.
+const loadRequests = () => {
+    let cards = document.getElementById("cards");
+    let temp_time_table = JSON.parse(localStorage.getItem('flushtimetable'));
+    req_list = JSON.parse(localStorage.getItem('reqList'));
+    console.log(req_list);
+    // req_list = [["",date,time,""], ["",date,time,""], ...]
+    // req = ["",date,time,""]
+    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", 
+                "11:15-13:15", "14:00-15:00", "15:00-16:00",
+                "16:00-17:00", "11:15-13:15", "11:15-13:15"];
+    let day = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    while (req_list.length != 0) {
+        req = req_list.shift();
+        console.log(req);
+        let state = 'Release';
+        let clr_state = 'warning';
+        if(req_list[0][0] == 'req'){
+            state = 'Request';
+            clr_state = 'primary';
+        }
+        cards.innerHTML += '<div class="col-12 col-lg-6 mb-4">\
+                                <div class="card border-left-'+ clr_state +' shadow h-100 py-2">\
+                                    <div class="card-body">\
+                                        <div class="row no-gutters align-items-center">\
+                                            <div class="col mr-2">\
+                                                <div class="mb-xl-3 font-weight-bold text-gray-800 day">'+ state +'</div>\
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 lect">'+ req[3] +'</div>\
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800 day">'+ day[req[1]] +'</div>\
+                                                <div class="h5 mb-0 text-gray-800 time">'+ time_slot[req[2]] +'</div>\
+                                            </div>\
+                                            <div class="d-flex flex-column flex-xl-row col-auto">\
+                                                <button form="userForm" type="submit" class="btn btn-success btn-icon-split mb-3 my-xl-1 mr-xl-3" onclick="">\
+                                                    <span class="icon text-white-50">\
+                                                        <i class="fas fa-pen-to-square"></i>\
+                                                    </span>\
+                                                    <span class="text">Accept</span>\
+                                                </button>\
+                                                <button form="userForm" type="submit" class="btn btn-danger btn-icon-split my-xl-1" onclick="">\
+                                                    <span class="icon text-white-50">\
+                                                        <i class="fas fa-pen-to-square"></i>\
+                                                    </span>\
+                                                    <span class="text">Cancel</span>\
+                                                </button>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            </div>'
+        // lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
+        // lectures[i][j].previousElementSibling.innerHTML = time_table.schedule[key].slots[j].teacher;
+    };
+    // document.getElementById("demo").innerHTML = "This is lit!No cap!!! FR!!!";
+};
+
+const temp = () => {
+    const newDate = new Date("July 10, 2022 00:00:00").getTime();
+    const now = new Date().getTime();
+    let gap = newDate - now;
+    console.log(parseInt(gap / 1000));
 };
