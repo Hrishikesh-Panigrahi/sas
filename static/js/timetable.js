@@ -105,12 +105,11 @@ const editTimeTable = ()=> {
         return;
     }
     sub_teacher.addEventListener('change',() => {
-    sessionStorage.setItem('selectedtem', sub_teacher.value);
-    window.location.reload();
+        sessionStorage.setItem('selectedItem', sub_teacher.options.selectedIndex);
+        window.location.reload();
     })
-    console.log(sub_teacher);
-    if(sessionStorage.getItem('item')!=null) {
-        sub_teacher.options[sessionStorage.getItem('selectedtem')].selected = true;
+    if(sessionStorage.getItem('selectedItem') != null) {
+        sub_teacher.options[sessionStorage.getItem('selectedItem')].selected = true;
     }
     time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     let i = 0;
@@ -178,9 +177,6 @@ const loadRequests = () => {
     let cards = document.getElementById("cards");
     let temp_time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     req_list = JSON.parse(localStorage.getItem('reqList'));
-    console.log(req_list);
-    // req_list = [["",date,time,""], ["",date,time,""], ...]
-    // req = ["",date,time,""]
     let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", 
                 "11:15-13:15", "14:00-15:00", "15:00-16:00",
                 "16:00-17:00", "11:15-13:15", "11:15-13:15"];
@@ -190,7 +186,7 @@ const loadRequests = () => {
         console.log(req);
         let state = 'Release';
         let clr_state = 'warning';
-        if(req_list[0][0] == 'req'){
+        if(req[0] == 'req'){
             state = 'Request';
             clr_state = 'primary';
         }
@@ -205,13 +201,13 @@ const loadRequests = () => {
                                                 <div class="h5 mb-0 text-gray-800 time">'+ time_slot[req[2]] +'</div>\
                                             </div>\
                                             <div class="d-flex flex-column flex-xl-row col-auto">\
-                                                <button form="userForm" type="submit" class="btn btn-success btn-icon-split mb-3 my-xl-1 mr-xl-3" onclick="">\
+                                                <button form="userForm" type="submit" class="btn btn-success btn-icon-split mb-3 my-xl-1 mr-xl-3" onclick="Update(\''+ req[0] +'\','+ req[1] +','+ req[2] +',\''+ req[3] +'\');this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
                                                     <span class="icon text-white-50">\
                                                         <i class="fas fa-pen-to-square"></i>\
                                                     </span>\
                                                     <span class="text">Accept</span>\
                                                 </button>\
-                                                <button form="userForm" type="submit" class="btn btn-danger btn-icon-split my-xl-1" onclick="">\
+                                                <button form="userForm" type="submit" class="btn btn-danger btn-icon-split my-xl-1" onclick="Update(\''+ req[0] +'\','+ req[1] +','+ req[2] +',\''+ req[3] +'\');this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
                                                     <span class="icon text-white-50">\
                                                         <i class="fas fa-pen-to-square"></i>\
                                                     </span>\
@@ -222,10 +218,32 @@ const loadRequests = () => {
                                     </div>\
                                 </div>\
                             </div>'
-        // lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
-        // lectures[i][j].previousElementSibling.innerHTML = time_table.schedule[key].slots[j].teacher;
     };
-    // document.getElementById("demo").innerHTML = "This is lit!No cap!!! FR!!!";
+};
+
+// --------------------  ---------------------------
+//  
+//  
+const Update = (_stat,_date,_time,_course) => {
+    time_table = JSON.parse(localStorage.getItem('flushtimetable'));
+    let i = 0;
+    Object.keys(time_table.schedule).forEach(function(key) {
+        for (let j = 0; j < 9; j++) {
+            if(i == _date && j == _time){
+                if(_stat == 'req'){
+                    time_table.schedule[key].slots[j].course = _course;
+                    time_table.schedule[key].slots[j].teacher ="yesh";
+                }
+                else{
+                    time_table.schedule[key].slots[j].course = "FREE";
+                    time_table.schedule[key].slots[j].teacher ="";
+
+                }
+            }
+        }
+        i += 1;
+    });
+    localStorage.setItem('flushtimetable',JSON.stringify(time_table));
 };
 
 const temp = () => {
