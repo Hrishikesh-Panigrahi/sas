@@ -7,6 +7,24 @@ lectures.push(document.querySelectorAll(`[id^="friday"]`));
 lectures.push(document.querySelectorAll(`[id^="saturday"]`));
 
 
+// ----------------------- Get Site Cookies ----------------------------
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
 // ----------------------- Save Data to json object ----------------------------
 let submit_btn = document.getElementById("submit-btn");
 if (localStorage.getItem('timetable') != null) {
@@ -17,8 +35,8 @@ let time_table = {
     "schedule": {
         "monday": {
             "slots": [  //{"time": "slot_time",
-                        // "course": "course_id",
-                        // "teacher": "teacher_id"},
+                // "course": "course_id",
+                // "teacher": "teacher_id"},
             ]
         },
         "tuesday": {
@@ -39,7 +57,7 @@ let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:15-13:15", "14:00
 let tt = "";
 const parseData = () => {
     let i = 0;
-    Object.keys(time_table.schedule).forEach(function(key) {
+    Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 9; j++) {
             let dict = {
                 time: time_slot[j],
@@ -69,7 +87,7 @@ const loadData = () => {
     time_table = JSON.parse(localStorage.getItem('timetable'));
     console.log(time_table)
     let i = 0;
-    Object.keys(time_table.schedule).forEach(function(key) {
+    Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 9; j++) {
             // time: time_slot[j],
             lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course,
@@ -78,3 +96,16 @@ const loadData = () => {
         i += 1;
     });
 };
+
+
+
+submit_btn.addEventListener('click', async () => {
+    const csrftoken = getCookie('csrftoken');
+    tt = localStorage.getItem('timetable');
+    let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+        method: 'POST',
+        headers: { "X-CSRFToken": csrftoken },
+        body: tt
+    });
+    res = await res.json();
+})

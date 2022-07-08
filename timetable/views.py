@@ -1,5 +1,6 @@
 # from django.http import HttpResponse, HttpResponseRedirect
 # from django.views import View
+import json
 from unicodedata import name
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -17,21 +18,29 @@ def createTT(request):
         'page': 'createTT',
     }
     
-    if request.user.is_classteacher:
+    if request.method == 'POST':
+        # convert to dict
+        body = json.loads(request.body)
+        print(type(body))
+        return JsonResponse({"msg":"saved"})
+    
+    # commented to test post
+    # if request.user.is_classteacher:
         
-        print(request.method=='GET')
-        tt = TimeTable.objects.get_or_create(user = request.user)
+    #     print(request.method=='GET')
+    #     tt = TimeTable.objects.get_or_create(user = request.user)
                 
-        if request.method == 'POST':
+    #     if request.method == 'POST':
         
-            # tt = TimeTable()
-            name = request.POST('course1')
+    #         # tt = TimeTable()
+    #         name = request.POST('course1')
 
-            tt.name=name
-            tt.save()
-            print(tt)
+    #         tt.name=name
+    #         tt.save()
+    #         print(tt)
             
-            return JsonResponse("saved", safe=False)
+    #         return JsonResponse("saved", safe=False)
+
 
         # read_file('')
         # with open('path to json', 'r') as f:
