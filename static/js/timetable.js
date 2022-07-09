@@ -1,3 +1,23 @@
+// -------------------- Workflow ---------------------------
+
+// CreateTT > if(timetable is created) > loadData() > Display Time table
+//            else > create btn click > createTimeTable() >---- json Object('timetable')
+//                                                         \--- json Object('flushabletimetable')
+//                   clearAll btn > remove 'timetable' & 'flushabletimetable'
+
+// editTT > editTimeTable() >--- request/release btn click > storeTempData()
+//                           \-- update btn click > storeData()
+
+// UpdateTT >--- loadTempData()
+//           \-- manage btn click > requests.html
+
+// Requests > loadRequests() >--- accept btn click > Update() > destroy card
+//                            \-- cancel btn click > destroy card
+
+
+
+
+
 // ------------------------------- Variables -----------------------------------
 let req_list = [];
 let lectures = [];
@@ -29,9 +49,19 @@ function getCookie(name) {
 
 
 // ----------------------- Save Data to json object ----------------------------
-let submit_btn = document.getElementById("submit-btn");
-if (localStorage.getItem('timetable') != null) {
+if (localStorage.getItem('timetable') != null && document.getElementById("create-btn") != null) {
+    let submit_btn = document.getElementById("create-btn");
     submit_btn.disabled = true;
+    submit_btn.addEventListener('click', async () => {
+        const csrftoken = getCookie('csrftoken');
+        tt = localStorage.getItem('timetable');
+        let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+            method: 'POST',
+            headers: { "X-CSRFToken": csrftoken },
+            body: tt
+        });
+        res = await res.json();
+    })
 }
 
 // structure of JSON object.
@@ -140,7 +170,7 @@ const editTimeTable = ()=> {
             lectures[i][j].previousElementSibling.innerHTML = "Teacher";
             let request = "";
             if(sub_teacher.value == time_table.schedule[key].slots[j].course){
-                request = '<button type="submit" onclick="storeTempData(\'rel\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\'); this.disabled=true;" class="btn btn-warning btn-icon-split">\
+                request = '<button type="submit" onclick="storeTempData(\'rel\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\',\''+ sub_teacher.value +'\'); this.disabled=true;" class="btn btn-warning btn-icon-split">\
                                 <span class="icon text-white-50">\
                                     <i class="fa fa-times"></i>\
                                 </span>\
@@ -148,7 +178,7 @@ const editTimeTable = ()=> {
                             </button>';
             }
             else{
-                request = '<button type="submit" onclick="storeTempData(\'req\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\'); this.disabled=true;" class="btn btn-info btn-icon-split">\
+                request = '<button type="submit" onclick="storeTempData(\'req\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\',\''+ sub_teacher.value +'\'); this.disabled=true;" class="btn btn-info btn-icon-split">\
                                 <span class="icon text-white-50">\
                                     <i class="fas fa-plus"></i>\
                                 </span>\
@@ -162,9 +192,9 @@ const editTimeTable = ()=> {
 };
 
 // ---------------------- Store Requests in a list -----------------------------
-const storeTempData = (_state,_date,_time,_course) => {
-    console.log(_state,parseInt(_date),parseInt(_time),_course);
-    let dict = [_state,_date,_time,_course];
+const storeTempData = (_state,_date,_time,_course,_tchr) => {
+    console.log(_state,parseInt(_date),parseInt(_time),_course,_tchr);
+    let dict = [_state,_date,_time,_course,_tchr];
     req_list.push(dict);
 };
 
@@ -179,7 +209,6 @@ const storeData = () => {
 // Load the flushable timetable into the table. Also create a counter for
 const loadTempData = () => {
     time_table = JSON.parse(localStorage.getItem('flushtimetable'));
-    req_list = JSON.parse(localStorage.getItem('reqList'));
     let i = 0;
     Object.keys(time_table.schedule).forEach(function(key) {
         for (let j = 0; j < 9; j++) {
@@ -215,19 +244,20 @@ const loadRequests = () => {
                                     <div class="card-body">\
                                         <div class="row no-gutters align-items-center">\
                                             <div class="col mr-2">\
+                                                <div class="mb-xl-3 font-weight-bold text-gray-800 day">'+ req[4] +'</div>\
                                                 <div class="mb-xl-3 font-weight-bold text-gray-800 day">'+ state +'</div>\
                                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 lect">'+ req[3] +'</div>\
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800 day">'+ day[req[1]] +'</div>\
                                                 <div class="h5 mb-0 text-gray-800 time">'+ time_slot[req[2]] +'</div>\
                                             </div>\
                                             <div class="d-flex flex-column flex-xl-row col-auto">\
-                                                <button form="userForm" type="submit" class="btn btn-success btn-icon-split mb-3 my-xl-1 mr-xl-3" onclick="Update(\''+ req[0] +'\','+ req[1] +','+ req[2] +',\''+ req[3] +'\');this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
+                                                <button type="submit" class="btn btn-success btn-icon-split mb-3 my-xl-1 mr-xl-3" onclick="Update(\''+ req[0] +'\','+ req[1] +','+ req[2] +',\''+ req[4] +'\');this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
                                                     <span class="icon text-white-50">\
                                                         <i class="fas fa-pen-to-square"></i>\
                                                     </span>\
                                                     <span class="text">Accept</span>\
                                                 </button>\
-                                                <button form="userForm" type="submit" class="btn btn-danger btn-icon-split my-xl-1" onclick="Update(\''+ req[0] +'\','+ req[1] +','+ req[2] +',\''+ req[3] +'\');this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
+                                                <button type="submit" class="btn btn-danger btn-icon-split my-xl-1" onclick="this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
                                                     <span class="icon text-white-50">\
                                                         <i class="fas fa-pen-to-square"></i>\
                                                     </span>\
@@ -239,6 +269,7 @@ const loadRequests = () => {
                                 </div>\
                             </div>'
     };
+    localStorage.setItem('reqList',"");
 };
 
 // --------------------  ---------------------------
@@ -265,20 +296,3 @@ const Update = (_stat,_date,_time,_course) => {
     });
     localStorage.setItem('flushtimetable',JSON.stringify(time_table));
 };
-
-const temp = () => {
-    const newDate = new Date("July 10, 2022 00:00:00").getTime();
-    const now = new Date().getTime();
-    let gap = newDate - now;
-    console.log(parseInt(gap / 1000));
-};
-submit_btn.addEventListener('click', async () => {
-    const csrftoken = getCookie('csrftoken');
-    tt = localStorage.getItem('timetable');
-    let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
-        method: 'POST',
-        headers: { "X-CSRFToken": csrftoken },
-        body: tt
-    });
-    res = await res.json();
-})

@@ -60,5 +60,11 @@ def updateTT(request):
         'title': 'Timetable',
         'page': 'updateTT',
     }
-    read_file('static/js/timetable.js')
     return render(request, 'timetable/tt.html', context)
+
+def requests(request):
+    context = {
+        'title': 'Timetable',
+        'page': 'request',
+    }
+    return render(request, 'timetable/requests.html', context)

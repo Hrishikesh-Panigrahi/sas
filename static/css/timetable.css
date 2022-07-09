@@ -43,7 +43,7 @@
 
 .break-data{
     position: absolute;
-    transform: translateX(-25px) rotate(90deg);
+    transform: translateX(-45px) rotate(90deg);
     font-size: x-large;
     white-space: nowrap;
 }
