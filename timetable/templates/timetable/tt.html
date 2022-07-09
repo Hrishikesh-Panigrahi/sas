@@ -1,9 +1,22 @@
 {% extends 'blank.html' %}
 {% block content %}
 <!-- Page Heading -->
+{% if page == 'editTT' %}
+<div id="subject">{% include 'components/dropdown.html' %}</div>
+{% endif %}
+{% if page == 'updateTT' %}
+<button type="submit" class="btn btn-primary btn-icon-split mr-3" 
+    onclick="window.location.href='{% url 'requests' %}';">
+    <span class="icon text-white-50">
+        <i class="fas fa-pen-to-square"></i>
+    </span>
+    <span class="text">Manage</span>
+</button>
+{% endif %}
 <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1>
-<form action="{% url 'createTimeTable' %}" method="POST" id="formdata">
-    {% csrf_token %}
+<!-- <form action="{% url 'createTimeTable' %}" method="POST" id="formdata">
+    {% csrf_token %} -->
+    <div class="table-responsive">
         <table class="table custom-table">
             <thead>
                 <tr>
@@ -36,48 +49,52 @@
                 <!-- MONDAY -->
                 <tr>
                     <th rowspan="3">Mon</th>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday1" name="monday1">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday2">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday3">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="18">Short Break</td>
+                    <td rowspan="18" class="position-relative">
+                        <div class="break-data">Short Break</div>
+                    </td>
                     <!-- Lab1 -->
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday4">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="18">Lunch Break</td>
-                    <td rowspan="3">
+                    <td rowspan="18" class="position-relative">
+                        <div class="break-data">Lunch Break</div>
+                    </td>
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday7">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday8">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday9">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab2 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday5">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab3 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="monday6">{% include 'components/dropdown.html' %}</div>
                     </td>
@@ -85,50 +102,50 @@
                 <!-- TUESDAY -->
                 <tr>
                     <th rowspan="3">Tue</th>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday1">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>
                             <div>Teacher</div>
                             <div id="tuesday2">{% include 'components/dropdown.html' %}</div>
                         </div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday3">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Short Break</td> -->
                     <!-- Lab1 -->
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday4">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Lunch Break</td> -->
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday7">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday8">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday9">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab2 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday5">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab3 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="tuesday6">{% include 'components/dropdown.html' %}</div>
                     </td>
@@ -136,48 +153,48 @@
                 <!-- WEDNESDAY -->
                 <tr>
                     <th rowspan="3">Wed</th>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday1">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday2">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday3">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Short Break</td> -->
                     <!-- Lab1 -->
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday4">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Lunch Break</td> -->
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday7">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday8">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday9">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab2 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday5">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab3 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="wednesday6">{% include 'components/dropdown.html' %}</div>
                     </td>
@@ -185,48 +202,48 @@
                 <!-- THURSDAY -->
                 <tr>
                     <th rowspan="3">Thu</th>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday1">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday2">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday3">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Short Break</td> -->
                     <!-- Lab1 -->
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday4">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Lunch Break</td> -->
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday7">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday8">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday9">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab2 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday5">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab3 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="thursday6">{% include 'components/dropdown.html' %}</div>
                     </td>
@@ -234,48 +251,48 @@
                 <!-- FRIDAY -->
                 <tr>
                     <th rowspan="3">Fri</th>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday1">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday2">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday3">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Short Break</td> -->
                     <!-- Lab1 -->
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday4">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Lunch Break</td> -->
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday7">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday8">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday9">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab2 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday5">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab3 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="friday6">{% include 'components/dropdown.html' %}</div>
                     </td>
@@ -283,68 +300,82 @@
                 <!-- SATURDAY -->
                 <tr>
                     <th rowspan="3">Sat</th>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday1">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday2">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday3">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Short Break</td> -->
                     <!-- Lab1 -->
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday4">{% include 'components/dropdown.html' %}</div>
                     </td>
                     <!-- <td rowspan="6">Lunch Break</td> -->
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday7">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday8">{% include 'components/dropdown.html' %}</div>
                     </td>
-                    <td rowspan="3">
+                    <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday9">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab2 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday5">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
                 <!-- Lab3 -->
                 <tr>
-                    <td rowspan="1" colspan="2">
+                    <td rowspan="1" colspan="2" class="position-relative">
                         <div>Teacher</div>
                         <div id="saturday6">{% include 'components/dropdown.html' %}</div>
                     </td>
                 </tr>
             </tbody>
         </table>
-
-    <button form="userForm" type="submit" id="submit-btn" class="btn btn-success btn-icon-split mr-3">
-        <span class="icon text-white-50">
-            <i class="fas fa-check"></i>
-        </span>
-        <span class="text">Create</span>
-    </button>
-</form>
-<button form="userForm" type="submit" onclick="alert('cleared timettable');localStorage.clear();window.location.reload();" class="btn btn-danger btn-icon-split mr-3">
+    </div>
+<!-- </form> -->
+{% if page == 'createTT' %}
+<button form="userForm" type="submit" id="create-btn" class="btn btn-success btn-icon-split mr-3" 
+    onclick="createTimeTable();">
+    <span class="icon text-white-50">
+        <i class="fas fa-check"></i>
+    </span>
+    <span class="text">Create</span>
+</button>
+{% endif %}
+{% if page == 'editTT' %}
+<button type="submit" id="update-btn" class="btn btn-success btn-icon-split mr-3" 
+    onclick="storeData();this.disabled = true;">
+    <span class="icon text-white-50">
+        <i class="fas fa-check"></i>
+    </span>
+    <span class="text">Update</span>
+</button>
+{% endif %}
+{% if page == 'createTT' %}
+<button type="submit" class="btn btn-danger btn-icon-split mr-3" onclick="alert('cleared timetable');localStorage.removeItem('timetable');localStorage.removeItem('flushtimetable');window.location.reload();">
     <span class="icon text-white-50">
         <i class="fa fa-times"></i>
     </span>
-    <span class="text">Cancel</span>
+    <span class="text">Clear All</span>
 </button>
+{% endif %}
 
 <script type="text/javascript">
     document.getElementById("formdata").addEventListener("submit-btn", function(e){

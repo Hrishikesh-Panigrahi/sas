@@ -48,7 +48,7 @@ def loginUser(request):
         return redirect('/dashboard')
         
 
-    return render(request, 'Login\login.html')
+    return render(request, 'Login/login.html')
 
 
 def logoutUser(request):

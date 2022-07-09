@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <!-- Shortcut icon. Added temporarily to avoid error in console. -->
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
     <!-- <title>SB Admin 2 - Dashboard</title> -->
     <title>SB Admin 2 - {{ title }}</title>
 
@@ -22,7 +24,7 @@
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
     {% endif %}
 
-    {% if page == 'createTT' or page == 'updateTT' %}
+    {% if page == 'createTT' or page == 'editTT' or page == 'updateTT' %}
     <link rel="stylesheet" href="{% static 'css/timetable.css' %}">
     {% endif %}
 

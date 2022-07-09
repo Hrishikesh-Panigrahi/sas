@@ -1,4 +1,4 @@
-   .custom-table {
+.custom-table {
     font-size: 0.6rem;
     border-radius: 20px 20px 0 0;
     overflow: hidden;
@@ -39,4 +39,16 @@
     border: 1px solid #ddd;
     background-color: transparent;
     color: inherit;
+}
+
+.break-data{
+    position: absolute;
+    transform: translateX(-45px) rotate(90deg);
+    font-size: x-large;
+    white-space: nowrap;
+}
+@media only screeen and (max-width: 1250px){
+    .break-data{
+        transform: translateX(-45px) rotate(90deg);
+    }
 }
