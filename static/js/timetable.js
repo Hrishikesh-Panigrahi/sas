@@ -9,9 +9,29 @@ lectures.push(document.querySelectorAll(`[id^="thursday"]`));
 lectures.push(document.querySelectorAll(`[id^="friday"]`));
 lectures.push(document.querySelectorAll(`[id^="saturday"]`));
 
-// If 'timetable' present in storage, disable the create button
-if ((localStorage.getItem('timetable') != null) && (document.getElementById("create-btn") != null)) {
-    document.getElementById("create-btn").disabled = true;
+
+// ----------------------- Get Site Cookies ----------------------------
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+// ----------------------- Save Data to json object ----------------------------
+let submit_btn = document.getElementById("submit-btn");
+if (localStorage.getItem('timetable') != null) {
+    submit_btn.disabled = true;
 }
 
 // structure of JSON object.
@@ -53,7 +73,7 @@ const createTimeTable = () => {
                     "16:00-17:00", "11:15-13:15", "11:15-13:15"];
     let tt = "";
     let i = 0;
-    Object.keys(time_table.schedule).forEach(function(key) {
+    Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 9; j++) {
             let dict = {
                 time: time_slot[j],
@@ -252,3 +272,13 @@ const temp = () => {
     let gap = newDate - now;
     console.log(parseInt(gap / 1000));
 };
+submit_btn.addEventListener('click', async () => {
+    const csrftoken = getCookie('csrftoken');
+    tt = localStorage.getItem('timetable');
+    let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+        method: 'POST',
+        headers: { "X-CSRFToken": csrftoken },
+        body: tt
+    });
+    res = await res.json();
+})
