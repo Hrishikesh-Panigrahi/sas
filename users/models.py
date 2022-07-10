@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 
 
-
 class CustomUserManager(BaseUserManager):
 
     # use this function to save users

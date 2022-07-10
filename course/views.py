@@ -19,7 +19,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 @login_required(login_url='/')
 def index(request):
-    uDept = request.user.teacherprofile.department
+    uDept = request.user.department
     # TODO: filter institute level courses as well
     courses = Course.objects.filter(dept=uDept)
     context = {
@@ -31,7 +31,7 @@ def index(request):
 
 @staff_member_required(login_url='/')
 def create(request):
-    uDept = request.user.teacherprofile.department
+    uDept = request.user.department
     form = CourseForm(request.POST or None, dept=uDept)
     context = {
         'title': 'Courses',

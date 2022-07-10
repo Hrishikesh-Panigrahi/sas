@@ -13,12 +13,12 @@ from users.forms import UserForm
 
 @staff_member_required(login_url='/')
 def register(request):
-    uDept = request.user.teacherprofile.department
+    uDept = request.user.department
     context = {}
     # studentForm=StudentForm(request.POST)
     userform = UserForm(request.POST or None)
     courses = Course.objects.all()
-    studentForm = StudentForm(courseSet=courses, dept=uDept)
+    studentForm = StudentForm(courseSet=courses)
     if request.method == 'POST':
         userform = UserForm(request.POST)
         print('1')
@@ -29,7 +29,7 @@ def register(request):
             print('2')
             
             s = User.objects.get(email=request.POST['email'])
-            stu = student(user=s, department=uDept)
+            stu = student(user=s, user__department=uDept)
             print(c_ids)
             for i in c_ids:
                 # c = Course.objects.get(pk=i)

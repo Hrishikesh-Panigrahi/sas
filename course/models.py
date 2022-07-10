@@ -1,8 +1,8 @@
 from django.db import models
+# from student.models import student
+# from cls.models import Class
 
 # Create your models here.
-
-
 class Course(models.Model):
     sem_choices = [
         (1, '1'),
