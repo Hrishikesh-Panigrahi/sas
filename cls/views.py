@@ -70,7 +70,7 @@ def update(request, id):
         out_cstudents = dict(request.POST)['students not in class']
         for obj in out_cstudents:
             s = student.objects.get(pk=obj)
-            AssignCourse.course_assign(s, c)
+            # AssignCourse.course_assign(s, c)
             s.cls = c
             s.save()
         for obj in in_cstudents:
