@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block table %}
+<p id="err" style="color: red"></p>
 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
     <thead>
         <tr>
@@ -63,7 +64,7 @@
                 Course Name
             </th>
             <th>
-                <select name="" id="">
+                <select name="" id="slot-type">
                     <option selected value="">------</option>
                     <option value="Lecture">Lecture</option>
                     <option value="Lab">Lab</option>
@@ -72,8 +73,9 @@
                 Type
             </th>
             <th>
-                <select name="" id="">
-                    <option selected value="">All</option>
+                <select name="" id="batch">
+                    <option selected value="">------</option>
+                    <option value="All">All</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
@@ -82,29 +84,29 @@
                 Batch
             </th>
             <th>
-                <select name="" id="">
+                <select name="" id="weekday">
                     <option selected value="">------</option>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
                 </select>
                 <hr>
                 Day
             </th>
             <th>
-                <input type="time" name="" id=""/>
+                <input type="time" name="" id="start-time"/>
                 <hr>
                 Start Time
             </th>
             <th>
-                <input type="time" name="" id=""/>
+                <input type="time" name="" id="end-time"/>
                 <hr>
                 End Time
             </th>
             <th>
-                <button type="submit">Add</button>
+                <button type="submit" id="add-btn">Add</button>
                 <hr>
                 Action
             </th>            

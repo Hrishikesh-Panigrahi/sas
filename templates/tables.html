@@ -105,6 +105,10 @@
     <script>
         $(document).ready(initTable('{{ title }}'));
     </script>
+    {% if title == "tt_test" %}
+    <script src="{% static 'js/timetable2.js' %}"></script>
+    {% endif %}
+
 </body>
 
 </html>

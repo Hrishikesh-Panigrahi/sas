@@ -122,7 +122,6 @@ const createTimeTable = async () => {
     localStorage.setItem('flushtimetable', tt);
     document.getElementById("create-btn").disabled = true;
     const csrftoken = getCookie('csrftoken');
-    console.log('JEllo');
     // tt = localStorage.getItem('timetable');
     let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
         method: 'POST',
