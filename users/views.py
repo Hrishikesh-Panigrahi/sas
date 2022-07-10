@@ -46,22 +46,25 @@ def register(request):
 
     if request.method == 'POST':
         userForm = UserForm(request.POST)
+        # userForm = UserForm(request.POST, department=uDept)
         if userForm.is_valid():
             try:
                 userForm.save()
                 c_ids = request.POST.getlist('course')
                 u = User.objects.get(email=request.POST['email'])
-               
-                t = TeacherProfile(user=u, department=uDept)
-                t.save()
+
+                t = TeacherProfile.objects.get(user=u)
                 for id in c_ids:
                     c = Course.objects.get(pk=id)
                     t.course.add(c)
+                u.department = uDept
+                u.save()
                 t.save()
                 return redirect(index)
             except Exception as e:
                 context = {'e': e}
                 print('user not saved')
+                print(e)
                 print('%s' % type(e))
 
     return render(request, 'users/TeacherForm.html', context)
@@ -69,7 +72,7 @@ def register(request):
 @staff_member_required(login_url='/')
 def update(request, id):
     uDept = request.user.department
-    courses = Course.objects.filter(department=uDept)
+    courses = Course.objects.filter(dept=uDept)
     teacher = TeacherProfile.objects.get(pk=id)
     courseFilter = CourseFilter(request.GET, queryset=courses)
     courses = courseFilter.qs
@@ -86,18 +89,21 @@ def update(request, id):
     }
 
     if request.method == 'POST':
+        print(request.POST)
         userForm = UserUpdateForm(request.POST, instance=teacher.user)
         teacherForm = TeacherForm(
             request.POST, instance=teacher, courseSet=courses)
-        try:
-            if userForm.is_valid():
+        if userForm.is_valid():
+            # try:
+                print('user valid')
                 userForm.save()
                 if teacherForm.is_valid():
+                    print('vali')
                     teacherForm.save()
-                    return redirect(update, id)
-        except Exception as e:
-            print(e)
-            # TODO: handle exceptions
+            # except Exception as e:
+            #     print(e)
+            #     print('%s' % type(e))
+            #     # TODO: handle exceptions
     return render(request, 'users/TeacherForm.html', context)
 
 @staff_member_required(login_url='/')

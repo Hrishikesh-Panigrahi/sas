@@ -3,13 +3,13 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
-from student.forms import StudentForm
+from student.forms import StudentForm, UserForm, UserUpdateForm
 from student.models import student
 
 from users.models import User
 from course.models import Course
 
-from users.forms import UserForm
+# from users.forms import UserForm
 
 @staff_member_required(login_url='/')
 def register(request):
@@ -29,17 +29,21 @@ def register(request):
             print('2')
             
             s = User.objects.get(email=request.POST['email'])
-            stu = student(user=s, user__department=uDept)
+            stu = student(user=s)
             print(c_ids)
             for i in c_ids:
                 # c = Course.objects.get(pk=i)
                 # stu.course.add(c)
                 stu.course.add(course=i)
                 print('course added saved')
+            stu.user.department = uDept
             stu.save()
+            # stu.save
             print('student saved')
 
             return redirect("/")
+        else:
+            print('not valid')
     context = {
         'userform': userform,
         'type': 'Register',
@@ -80,10 +84,10 @@ def update(request, pk):
     course = Course.objects.all()
     stu = student.objects.get(id=pk)
     context = {}
-    userform = UserForm(instance=stu.user)
+    userform = UserUpdateForm(instance=stu.user)
     sform = StudentForm(instance=stu, courseSet=course)
     if request.method == 'POST':
-        userform = UserForm(request.POST, instance=stu.user)
+        userform = UserUpdateForm(request.POST, instance=stu.user)
         sform = StudentForm(request.POST, instance=stu, courseSet=course)
         try:
             if userform.is_valid():

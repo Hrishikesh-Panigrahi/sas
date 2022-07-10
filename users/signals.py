@@ -52,7 +52,7 @@ def save_user_profile(sender, instance, created ,**kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    print(instance)
+    # print(instance)
     if not instance.is_staff == True:
         try:
             

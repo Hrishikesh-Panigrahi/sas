@@ -8,7 +8,7 @@ from course.models import Course
 class TeacherForm(forms.ModelForm):
     my_form = 'userForm'
     course = forms.ModelMultipleChoiceField(
-        queryset=Course.objects.all(),
+        queryset=Course.objects.filter(),
         widget=forms.CheckboxSelectMultiple(attrs={'form': my_form}),
     )
 
@@ -16,10 +16,10 @@ class TeacherForm(forms.ModelForm):
         my_form = 'userForm'
         model = TeacherProfile
         fields = ['course']
-        # widgets = {
-        #     'department': forms.Select(attrs={'form': my_form}),
-        #     # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
-        # }
+        widgets = {
+            # 'department': forms.Select(attrs={'form': my_form}),
+            # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
+        }
 
     def __init__(self, *args, **kwargs):
         courseSet = kwargs.pop('courseSet')
@@ -41,14 +41,18 @@ class UserForm(UserCreationForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'is_staff': forms.HiddenInput(attrs={'form': my_form}),
+            'department': forms.HiddenInput(attrs={'form': my_form}),
             'is_classteacher': forms.CheckboxInput(attrs={'form': my_form}),    
         }
 
     def __init__(self, *args, **kwargs):
         my_form = 'userForm'
+        # d = kwargs.pop('department', None)
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['is_staff'].initial = True
         self.fields['is_staff'].disabled = True
+        # self.fields['department'].initial = d
+        # self.fields['department'].disabled = True
         self.fields['password1'].widget = forms.PasswordInput(
             attrs={'class': 'form-control', 'type': 'password', 'form': my_form})
         self.fields['password2'].widget = forms.PasswordInput(
@@ -65,6 +69,7 @@ class UserUpdateForm(UserChangeForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'form': my_form}),
+            'is_classteacher': forms.CheckboxInput(attrs={'form': my_form})
         }
 
     def __init__(self, *args, **kwargs):
