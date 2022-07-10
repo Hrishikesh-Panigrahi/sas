@@ -4,6 +4,7 @@ from django import forms
 from pkg_resources import require
 from cls.models import Class
 from student.models import student
+from course.models import Course
 
 department_choices = [
         ('Computer Engineering', 'Computer Engineering'),
@@ -12,6 +13,9 @@ department_choices = [
         ('Information Technology', 'Information Technology'),
         ('Mechanical Engineering', 'Mechanical Engineering'),
     ]
+
+
+Course_choices = [ (c.id, c.name) for c in Course.objects.all() ]
 
 
 

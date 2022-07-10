@@ -4,8 +4,10 @@ from django.http import HttpResponse
 from cls.filters import StudentFilter
 from .forms import ClassCreateForm, ClassUpdateForm
 from .models import Class
-from student.models import student
+from student.models import student,AssignCourse
+
 from django.contrib.admin.views.decorators import staff_member_required
+
 # Create your views here.
 
 @staff_member_required(login_url='/')
@@ -58,6 +60,7 @@ def update(request, id):
         out_cstudents = dict(request.POST)['students not in class']
         for obj in out_cstudents:
             s = student.objects.get(pk=obj)
+            AssignCourse.course_assign(s, c)
             s.cls = c
             s.save()
         for obj in in_cstudents:
