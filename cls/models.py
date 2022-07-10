@@ -20,7 +20,7 @@ class Class(models.Model):
     class_name = models.CharField(max_length=20, verbose_name='Class Name')
     department = models.CharField(max_length=100, null=True, choices=department_choices, blank=True)
     class_teacher = models.OneToOneField(TeacherProfile, on_delete=models.SET_NULL, null=True, blank=True)
-    is_timetable= models.BooleanField(default=False)
+    # is_timetable= models.BooleanField(default=False)
 
     
     def __str__(self):
