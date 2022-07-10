@@ -4,7 +4,8 @@ import json
 from unicodedata import name
 from django.http import JsonResponse
 from django.shortcuts import render
-from .models import TimeTable
+# from .models import TimeTable
+from cls.models import Class
 
 def read_file(path):
     file = open(path, "r")
@@ -17,9 +18,18 @@ def createTT(request):
         'title': 'Timetable',
         'page': 'createTT',
     }
+    # print(request.method)
+    # cls = Class.objects.filter(is_timetable=False)
+    # print(cls)
+    # tt = TimeTable.objects.get(faculty__user__id = request.user.id)
+    # print(tt)
+    # print(request.body)
     
     if request.method == 'POST':
+        
         # convert to dict
+        print('hello')
+
         body = json.loads(request.body)
         print(type(body))
         return JsonResponse({"msg":"saved"})

@@ -14,8 +14,8 @@
 </button>
 {% endif %}
 <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1>
-<!-- <form action="{% url 'createTimeTable' %}" method="POST" id="formdata">
-    {% csrf_token %} -->
+<form action="{% url 'createTimeTable' %}" method="POST" id="formdata">
+    {% csrf_token %}
     <div class="table-responsive">
         <table class="table custom-table">
             <thead>
@@ -51,7 +51,7 @@
                     <th rowspan="3">Mon</th>
                     <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
-                        <div id="monday1" name="monday1">{% include 'components/dropdown.html' %}</div>
+                        <div id="monday1" >{% include 'components/dropdown.html' %}</div>
                     </td>
                     <td rowspan="3" class="position-relative">
                         <div>Teacher</div>
@@ -349,7 +349,7 @@
             </tbody>
         </table>
     </div>
-<!-- </form> -->
+
 {% if page == 'createTT' %}
 <button form="userForm" type="submit" id="create-btn" class="btn btn-success btn-icon-split mr-3" 
     onclick="createTimeTable();">
@@ -359,6 +359,7 @@
     <span class="text">Create</span>
 </button>
 {% endif %}
+</form>
 {% if page == 'editTT' %}
 <button type="submit" id="update-btn" class="btn btn-success btn-icon-split mr-3" 
     onclick="storeData();this.disabled = true;">
@@ -377,31 +378,5 @@
 </button>
 {% endif %}
 
-<script type="text/javascript">
-    document.getElementById("formdata").addEventListener("submit-btn", function(e){
-    e.preventDefault();
-  
-    name = document.getElementById(" course1").value;
-
-	
-  const formData = new FormData();
-  //console.log(name);
-  formData.append('course1', name);
-
-  formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-  console.log(formData);
-  fetch('{% url "createTimeTable" %}', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Success:', data);
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-  });
-</script>
 {% endblock %}
 

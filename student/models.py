@@ -3,10 +3,7 @@ from django.db import models
 from course.models import Course
 from cls.models import Class
 
-
-
 # Create your models here.
-
 
 class student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -20,3 +17,11 @@ class student(models.Model):
 
     def __str__(self):
         return str(self.user.first_name) + " " + str(self.user.last_name)
+
+class AssignCourse(models.Model):
+    cls=models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
+    course= models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,)
+    stu = models.ManyToManyField(student)
+
+    def __str__(self):
+        return str(self.id)

@@ -10,14 +10,14 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 @staff_member_required(login_url='/')
 def index(request):
-    uDept = request.user.teacherprofile.department
+    uDept = request.user.department
     # return render()
     return HttpResponse("helo")
 
 @staff_member_required(login_url='/')
 def create(request):
-    uDept = request.user.teacherprofile.department
-    s = student.objects.filter(department=uDept, cls=None)
+    uDept = request.user.department
+    s = student.objects.filter(user__department=uDept, cls=None)
     filter = StudentFilter(request.GET, queryset=s)
     form = ClassCreateForm(request.POST or None, students=s)
     context = {
@@ -40,10 +40,10 @@ def create(request):
 
 @staff_member_required(login_url='/')
 def update(request, id):
-    uDept = request.user.teacherprofile.department
+    uDept = request.user.department
     c = Class.objects.get(pk=id)
-    in_class = student.objects.filter(cls=c, department=uDept)
-    out_class = student.objects.filter(cls=None, department=uDept)
+    in_class = student.objects.filter(cls=c, user__department=uDept)
+    out_class = student.objects.filter(cls=None, user__department=uDept)
     inStudentFilter = StudentFilter(request.GET, queryset=in_class)
     in_class = inStudentFilter.qs
 

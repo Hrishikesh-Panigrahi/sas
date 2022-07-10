@@ -53,14 +53,16 @@ if (localStorage.getItem('timetable') != null && document.getElementById("create
     let submit_btn = document.getElementById("create-btn");
     submit_btn.disabled = true;
     submit_btn.addEventListener('click', async () => {
-        const csrftoken = getCookie('csrftoken');
-        tt = localStorage.getItem('timetable');
-        let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
-            method: 'POST',
-            headers: { "X-CSRFToken": csrftoken },
-            body: tt
-        });
-        res = await res.json();
+
+        // const csrftoken = getCookie('csrftoken');
+        // console.log('JEllo');
+        // tt = localStorage.getItem('timetable');
+        // let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+        //     method: 'POST',
+        //     headers: { "X-CSRFToken": csrftoken },
+        //     body: tt
+        // });
+        // res = await res.json();
     })
 }
 
@@ -70,8 +72,8 @@ let time_table = {
     "schedule": {
         "monday": {
             "slots": [  //{"time": "slot_time",
-                        // "course": "course_id",
-                        // "teacher": "teacher_id"},
+                // "course": "course_id",
+                // "teacher": "teacher_id"},
             ]
         },
         "tuesday": {
@@ -97,10 +99,10 @@ let time_table = {
 // ----------------------- Save Data to json object ----------------------------
 // dictionary 'dict' is used to store lecture data until pushed to 'slots' array
 // in time_table object. Store in browser storage as timetable and disable button.
-const createTimeTable = () => {
-    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", 
-                    "11:15-13:15", "14:00-15:00", "15:00-16:00",
-                    "16:00-17:00", "11:15-13:15", "11:15-13:15"];
+const createTimeTable = async () => {
+    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00",
+        "11:15-13:15", "14:00-15:00", "15:00-16:00",
+        "16:00-17:00", "11:15-13:15", "11:15-13:15"];
     let tt = "";
     let i = 0;
     Object.keys(time_table.schedule).forEach(function (key) {
@@ -119,7 +121,17 @@ const createTimeTable = () => {
     localStorage.setItem('timetable', tt);
     localStorage.setItem('flushtimetable', tt);
     document.getElementById("create-btn").disabled = true;
-    window.location.reload();
+    const csrftoken = getCookie('csrftoken');
+    console.log('JEllo');
+    // tt = localStorage.getItem('timetable');
+    let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+        method: 'POST',
+        headers: { "X-CSRFToken": csrftoken },
+        body: tt
+    });
+    res = await res.json();
+    console.log(res);
+    // window.location.reload();
 };
 
 // ----------------------- Load Data from json object --------------------------
@@ -134,7 +146,7 @@ const loadData = () => {
     time_table = JSON.parse(localStorage.getItem('timetable'));
     // console.log(time_table)
     let i = 0;
-    Object.keys(time_table.schedule).forEach(function(key) {
+    Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 9; j++) {
             lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
             lectures[i][j].previousElementSibling.innerHTML = time_table.schedule[key].slots[j].teacher;
@@ -147,38 +159,38 @@ const loadData = () => {
 // -------------- Render buttons for release/request click event ---------------
 // Render buttons on editTT page. The buttons get rendered according to the dropdown
 // value. It is meant for subject teachers. 
-const editTimeTable = ()=> {
+const editTimeTable = () => {
     let sub_teacher = document.getElementById('subject').childNodes[1];
     if (localStorage.getItem('flushtimetable') == null) {
         console.log("nothing to show");
         // TODO: Add redirect to createTT page
         return;
     }
-    sub_teacher.addEventListener('change',() => {
+    sub_teacher.addEventListener('change', () => {
         sessionStorage.setItem('selectedItem', sub_teacher.options.selectedIndex);
         window.location.reload();
     })
-    if(sessionStorage.getItem('selectedItem') != null) {
+    if (sessionStorage.getItem('selectedItem') != null) {
         sub_teacher.options[sessionStorage.getItem('selectedItem')].selected = true;
     }
     time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     let i = 0;
-    Object.keys(time_table.schedule).forEach(function(key) {
+    Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 9; j++) {
             lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
-            lectures[i][j].classList.add("d-flex","flex-column","align-items-center");            
+            lectures[i][j].classList.add("d-flex", "flex-column", "align-items-center");
             lectures[i][j].previousElementSibling.innerHTML = "Teacher";
             let request = "";
-            if(sub_teacher.value == time_table.schedule[key].slots[j].course){
-                request = '<button type="submit" onclick="storeTempData(\'rel\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\',\''+ sub_teacher.value +'\'); this.disabled=true;" class="btn btn-warning btn-icon-split">\
+            if (sub_teacher.value == time_table.schedule[key].slots[j].course) {
+                request = '<button type="submit" onclick="storeTempData(\'rel\',' + i + ',' + j + ',\'' + time_table.schedule[key].slots[j].course + '\',\'' + sub_teacher.value + '\'); this.disabled=true;" class="btn btn-warning btn-icon-split">\
                                 <span class="icon text-white-50">\
                                     <i class="fa fa-times"></i>\
                                 </span>\
                                 <span class="text">Release</span>\
                             </button>';
             }
-            else{
-                request = '<button type="submit" onclick="storeTempData(\'req\','+ i +','+ j +',\''+ time_table.schedule[key].slots[j].course +'\',\''+ sub_teacher.value +'\'); this.disabled=true;" class="btn btn-info btn-icon-split">\
+            else {
+                request = '<button type="submit" onclick="storeTempData(\'req\',' + i + ',' + j + ',\'' + time_table.schedule[key].slots[j].course + '\',\'' + sub_teacher.value + '\'); this.disabled=true;" class="btn btn-info btn-icon-split">\
                                 <span class="icon text-white-50">\
                                     <i class="fas fa-plus"></i>\
                                 </span>\
@@ -192,15 +204,15 @@ const editTimeTable = ()=> {
 };
 
 // ---------------------- Store Requests in a list -----------------------------
-const storeTempData = (_state,_date,_time,_course,_tchr) => {
-    console.log(_state,parseInt(_date),parseInt(_time),_course,_tchr);
-    let dict = [_state,_date,_time,_course,_tchr];
+const storeTempData = (_state, _date, _time, _course, _tchr) => {
+    console.log(_state, parseInt(_date), parseInt(_time), _course, _tchr);
+    let dict = [_state, _date, _time, _course, _tchr];
     req_list.push(dict);
 };
 
 // --------------------- Store list in local storage ---------------------------
 const storeData = () => {
-    req_list = req_list.sort(function(a, b) {return (a[1] - b[1]) || (a[2] - b[2])});
+    req_list = req_list.sort(function (a, b) { return (a[1] - b[1]) || (a[2] - b[2]) });
     localStorage.setItem('reqList', JSON.stringify(req_list));
     // req_list = [];
     window.location.reload();
@@ -210,7 +222,7 @@ const storeData = () => {
 const loadTempData = () => {
     time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     let i = 0;
-    Object.keys(time_table.schedule).forEach(function(key) {
+    Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 9; j++) {
             // TODO: create a counter with absolute positioning.
             lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
@@ -226,32 +238,32 @@ const loadRequests = () => {
     let cards = document.getElementById("cards");
     let temp_time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     req_list = JSON.parse(localStorage.getItem('reqList'));
-    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", 
-                "11:15-13:15", "14:00-15:00", "15:00-16:00",
-                "16:00-17:00", "11:15-13:15", "11:15-13:15"];
-    let day = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00",
+        "11:15-13:15", "14:00-15:00", "15:00-16:00",
+        "16:00-17:00", "11:15-13:15", "11:15-13:15"];
+    let day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     while (req_list.length != 0) {
         req = req_list.shift();
         console.log(req);
         let state = 'Release';
         let clr_state = 'warning';
-        if(req[0] == 'req'){
+        if (req[0] == 'req') {
             state = 'Request';
             clr_state = 'primary';
         }
         cards.innerHTML += '<div class="col-12 col-lg-6 mb-4">\
-                                <div class="card border-left-'+ clr_state +' shadow h-100 py-2">\
+                                <div class="card border-left-'+ clr_state + ' shadow h-100 py-2">\
                                     <div class="card-body">\
                                         <div class="row no-gutters align-items-center">\
                                             <div class="col mr-2">\
-                                                <div class="mb-xl-3 font-weight-bold text-gray-800 day">'+ req[4] +'</div>\
-                                                <div class="mb-xl-3 font-weight-bold text-gray-800 day">'+ state +'</div>\
-                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 lect">'+ req[3] +'</div>\
-                                                <div class="h5 mb-0 font-weight-bold text-gray-800 day">'+ day[req[1]] +'</div>\
-                                                <div class="h5 mb-0 text-gray-800 time">'+ time_slot[req[2]] +'</div>\
+                                                <div class="mb-xl-3 font-weight-bold text-gray-800 day">'+ req[4] + '</div>\
+                                                <div class="mb-xl-3 font-weight-bold text-gray-800 day">'+ state + '</div>\
+                                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 lect">'+ req[3] + '</div>\
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800 day">'+ day[req[1]] + '</div>\
+                                                <div class="h5 mb-0 text-gray-800 time">'+ time_slot[req[2]] + '</div>\
                                             </div>\
                                             <div class="d-flex flex-column flex-xl-row col-auto">\
-                                                <button type="submit" class="btn btn-success btn-icon-split mb-3 my-xl-1 mr-xl-3" onclick="Update(\''+ req[0] +'\','+ req[1] +','+ req[2] +',\''+ req[4] +'\');this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
+                                                <button type="submit" class="btn btn-success btn-icon-split mb-3 my-xl-1 mr-xl-3" onclick="Update(\''+ req[0] + '\',' + req[1] + ',' + req[2] + ',\'' + req[4] + '\');this.parentNode.parentNode.parentNode.parentNode.parentNode.remove()">\
                                                     <span class="icon text-white-50">\
                                                         <i class="fas fa-pen-to-square"></i>\
                                                     </span>\
@@ -269,30 +281,44 @@ const loadRequests = () => {
                                 </div>\
                             </div>'
     };
-    localStorage.setItem('reqList',"");
+    localStorage.setItem('reqList', "");
 };
 
 // --------------------  ---------------------------
 //  
 //  
-const Update = (_stat,_date,_time,_course) => {
+const Update = (_stat, _date, _time, _course) => {
     time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     let i = 0;
-    Object.keys(time_table.schedule).forEach(function(key) {
+    Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 9; j++) {
-            if(i == _date && j == _time){
-                if(_stat == 'req'){
+            if (i == _date && j == _time) {
+                if (_stat == 'req') {
                     time_table.schedule[key].slots[j].course = _course;
-                    time_table.schedule[key].slots[j].teacher ="yesh";
+                    time_table.schedule[key].slots[j].teacher = "yesh";
                 }
-                else{
+                else {
                     time_table.schedule[key].slots[j].course = "FREE";
-                    time_table.schedule[key].slots[j].teacher ="";
+                    time_table.schedule[key].slots[j].teacher = "";
 
                 }
             }
         }
         i += 1;
     });
-    localStorage.setItem('flushtimetable',JSON.stringify(time_table));
+    localStorage.setItem('flushtimetable', JSON.stringify(time_table));
 };
+
+
+// submit_btn.addEventListener('click', async () => {
+//         const csrftoken = getCookie('csrftoken');
+//         tt = localStorage.getItem('timetable');
+//         console.log('heloo');
+//         let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+//             method: 'POST',
+//             headers: { "X-CSRFToken": csrftoken },
+//             body: tt
+//         });
+//         res = await res.json();
+//         console.log(res);
+//     })

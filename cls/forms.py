@@ -1,4 +1,5 @@
 from dataclasses import fields
+from random import choices
 from django import forms
 from pkg_resources import require
 from cls.models import Class
@@ -12,8 +13,11 @@ department_choices = [
         ('Mechanical Engineering', 'Mechanical Engineering'),
     ]
 
+
+
 class ClassCreateForm(forms.Form):
     name = forms.CharField(label='Class Name')
+    
     def __init__(self, *args, **kwargs):
         s = kwargs.pop('students', None)
         super(ClassCreateForm, self).__init__(*args, **kwargs)

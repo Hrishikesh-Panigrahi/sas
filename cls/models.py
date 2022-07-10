@@ -1,11 +1,11 @@
 from statistics import mode
 from django.db import models
+from course.models import Course
 
 from users.models import TeacherProfile
 # from student.models import student
 
 # Create your models here.
-
 class Class(models.Model):
 
     department_choices = [
@@ -20,6 +20,7 @@ class Class(models.Model):
     class_name = models.CharField(max_length=20, verbose_name='Class Name')
     department = models.CharField(max_length=100, null=True, choices=department_choices, blank=True)
     class_teacher = models.OneToOneField(TeacherProfile, on_delete=models.SET_NULL, null=True, blank=True)
-    
+    is_timetable= models.BooleanField(default=False)
+    course=models.OneToOneField(Course, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return str(self.id) + " " + self.class_name

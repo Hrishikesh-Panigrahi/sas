@@ -3,6 +3,7 @@
 from django.db import models
 from course.models import Course
 from users.models import TeacherProfile, User
+from cls.models import Class 
 
 
 # User -> username, first_name, last_name, password, email, is_staff, is_active, is_superuser, date_created
@@ -15,7 +16,7 @@ from users.models import TeacherProfile, User
 
 
 
-class TimeTable(models.Model):
+# class TimeTable(models.Model):
     
 #     time_slots = (
 #         ('9:30 - 10:30', '9:30 - 10:30'),
@@ -35,15 +36,16 @@ class TimeTable(models.Model):
 #         ('Friday', 'Friday'),
 #         ('Saturday', 'Saturday'),
 #     )
-#     semester = 
-#     department =
-#     meetingtime =
-#     course = models.ForeignKey()
-#     faculty = 
-#     day =
-    name = models.CharField(max_length=100)
-    user=models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+#     # relationship with class 
+#     cls= models.ForeignKey(Class, on_delete=models.CASCADE)
+#     # relationship with faculty
+#     faculty=models.ForeignKey(TeacherProfile, on_delete=models.CASCADE)
+#     # relationship with course
+#     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return str(self.id)
+#     day = models.CharField(max_length=100, choices=DAYS_OF_WEEK)
+#     slot = models.CharField(max_length=100, choices=time_slots)
+
+#     def __str__(self):
+#         return str(self.id)
 

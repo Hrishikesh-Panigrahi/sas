@@ -29,7 +29,7 @@ class StudentForm(forms.ModelForm):
         super(StudentForm, self).__init__(*args, **kwargs)
         self.fields['course'].queryset = courseSet
         self.fields['course'].label = 'Courses'
-        self.fields['department'].initial = d
+        # self.fields['department'].initial = d
     
        
 
