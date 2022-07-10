@@ -102,12 +102,9 @@
 
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
-
-    {% if title == "tt_test" %}
     <script>
-        dtb.order([[3, 'asc'], [4, 'asc']]).draw();
+        $(document).ready(initTable('{{ title }}'));
     </script>
-    {% endif %}
 </body>
 
 </html>

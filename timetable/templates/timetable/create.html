@@ -54,58 +54,35 @@
                 <button>Delete</button>
             </td>
         </tr>
-        {% comment %} <tr>
-            <td colspan="2">{% include 'components/dropdown.html' %}</td>
-            <td>
-                <select name="" id="">
-                    <option selected value="">------</option>
-                    <option value="Lecture">Lecture</option>
-                    <option value="Lab">Lab</option>
-                </select>
-            </td>
-            <td>
-                <select name="" id="">
-                    <option selected value="">All</option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                </select>
-            </td>
-            <td>
-                <select name="" id="">
-                    <option selected value="">------</option>
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                </select>
-            </td>
-            <td><input type="time" name="" id=""/>
-            <td><input type="time" name="" id=""/>
-            <td colspan="4"><button type="submit">Add</button></td>
-        </tr> {% endcomment %}
     </tbody>
     
     <tfoot>
         <tr>
-            <td>{% include 'components/dropdown.html' %}</td>
-            <td>
+            <th>
+                {% include 'components/dropdown.html' %} 
+                <hr>
+                Course Name
+            </th>
+            <th>
                 <select name="" id="">
                     <option selected value="">------</option>
                     <option value="Lecture">Lecture</option>
                     <option value="Lab">Lab</option>
                 </select>
-            </td>
-            <td>
+                <hr>
+                Type
+            </th>
+            <th>
                 <select name="" id="">
                     <option selected value="">All</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
                     <option value="C">C</option>
                 </select>
-            </td>
-            <td>
+                <hr>
+                Batch
+            </th>
+            <th>
                 <select name="" id="">
                     <option selected value="">------</option>
                     <option value="Monday">Monday</option>
@@ -114,19 +91,24 @@
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
                 </select>
-            </td>
-            <td><input type="time" name="" id=""/>
-            <td><input type="time" name="" id=""/>
-            <td colspan="4"><button type="submit">Add</button></td>
-        </tr>
-        <tr>
-            <th>Course Name</th>
-            <th>Type</th>
-            <th>Batch</th>
-            <th>Day</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Action</th>            
+                <hr>
+                Day
+            </th>
+            <th>
+                <input type="time" name="" id=""/>
+                <hr>
+                Start Time
+            </th>
+            <th>
+                <input type="time" name="" id=""/>
+                <hr>
+                End Time
+            </th>
+            <th>
+                <button type="submit">Add</button>
+                <hr>
+                Action
+            </th>            
         </tr>
     </tfoot>
 </table>
