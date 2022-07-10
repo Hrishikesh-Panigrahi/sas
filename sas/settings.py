@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # Project Apps
     'course.apps.CourseConfig',
+    'attendance.apps.AttendanceConfig',
     'users.apps.UsersConfig',
     'student.apps.StudentConfig',
     'timetable.apps.TimetableConfig',

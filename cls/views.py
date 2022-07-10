@@ -5,7 +5,7 @@ from cls.filters import StudentFilter,CourseFilter
 from course.models import Course
 from .forms import ClassCreateForm, ClassUpdateForm
 from .models import Class
-from student.models import student,AssignCourse
+from student.models import student
 
 from django.contrib.admin.views.decorators import staff_member_required
 
