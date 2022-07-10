@@ -1,11 +1,14 @@
 # from django.http import HttpResponse, HttpResponseRedirect
 # from django.views import View
 import json
+import os
 from unicodedata import name
 from django.http import JsonResponse
 from django.shortcuts import render
 # from .models import TimeTable
 from cls.models import Class
+
+path = os.path.join(os.getcwd(), 'timetable', 'tables')
 
 def read_file(path):
     file = open(path, "r")
@@ -26,12 +29,11 @@ def createTT(request):
     # print(request.body)
     
     if request.method == 'POST':
-        
-        # convert to dict
-        print('hello')
-
         body = json.loads(request.body)
-        print(type(body))
+        with open (os.path.join(path, '{}_static.json'.format(body['class'])), 'w') as fp:
+            json.dump(body, fp, indent=4)
+        with open (os.path.join(path, '{}_weekly.json'.format(body['class'])), 'w') as fp:
+            json.dump(body, fp, indent=4)
         return JsonResponse({"msg":"saved"})
     
     # commented to test post
