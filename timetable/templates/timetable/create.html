@@ -1,0 +1,169 @@
+{% extends 'tables.html' %}
+{% load static %}
+
+{% block heading %}
+<p class="mb-4">Some description Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt minus fugit dicta hic
+    ut sapiente dolorum obcaecati. Perferendis, cupiditate assumenda.</p>
+{% endblock %}
+
+{% block table %}
+<link rel="stylesheet" href="{% static 'css/table.css' %}">
+<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Course Name</th>
+            <th>Type</th>
+            <th>Batch</th>
+            <th>Day</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>AOA</td>
+            <td>Lecture</td>
+            <td>All</td>
+            <td>Monday</td>
+            <td>10:00 am</td>
+            <td>11:00 am</td>
+            <td>
+                <button>Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>OS</td>
+            <td>Lecture</td>
+            <td>All</td>
+            <td>Tuesday</td>
+            <td>09:00 am</td>
+            <td>10:00 am</td>
+            <td>
+                <button>Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>DBMS</td>
+            <td>Lab</td>
+            <td>A</td>
+            <td>Tuesday</td>
+            <td>11:15 am</td>
+            <td>13:15 am</td>
+            <td>
+                <button>Delete</button>
+            </td>
+        </tr>
+        {% comment %} <tr>
+            <td colspan="2">{% include 'components/dropdown.html' %}</td>
+            <td>
+                <select name="" id="">
+                    <option selected value="">------</option>
+                    <option value="Lecture">Lecture</option>
+                    <option value="Lab">Lab</option>
+                </select>
+            </td>
+            <td>
+                <select name="" id="">
+                    <option selected value="">All</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+            </td>
+            <td>
+                <select name="" id="">
+                    <option selected value="">------</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </td>
+            <td><input type="time" name="" id=""/>
+            <td><input type="time" name="" id=""/>
+            <td colspan="4"><button type="submit">Add</button></td>
+        </tr> {% endcomment %}
+    </tbody>
+    
+    <tfoot>
+        <tr>
+            <td>{% include 'components/dropdown.html' %}</td>
+            <td>
+                <select name="" id="">
+                    <option selected value="">------</option>
+                    <option value="Lecture">Lecture</option>
+                    <option value="Lab">Lab</option>
+                </select>
+            </td>
+            <td>
+                <select name="" id="">
+                    <option selected value="">All</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+            </td>
+            <td>
+                <select name="" id="">
+                    <option selected value="">------</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </td>
+            <td><input type="time" name="" id=""/>
+            <td><input type="time" name="" id=""/>
+            <td colspan="4"><button type="submit">Add</button></td>
+        </tr>
+        <tr>
+            <th>Course Name</th>
+            <th>Type</th>
+            <th>Batch</th>
+            <th>Day</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Action</th>            
+        </tr>
+    </tfoot>
+</table>
+{% endblock table %}
+
+{% comment %} {% block content %}
+<link rel="stylesheet" href="{% static 'css/table.css' %}">
+<div class="container-fluid">
+    <table>
+        <tr>
+            <th>Course Id</th>
+            <th>Course Name</th>
+            <th>Day</th>
+            <th>Time</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>AOA</td>
+            <td>Monday</td>
+            <td>11:00 am</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="td-add">
+                {% include 'components/dropdown.html' %}
+            </td>
+            <td>
+                <select name="" id="">
+                    <option selected value="">------</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </td>
+            <td><input type="time" name="" id=""></td>
+        </tr>
+    </table>
+</div>
+{% endblock content %} {% endcomment %}
