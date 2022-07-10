@@ -18,10 +18,6 @@ class student(models.Model):
     def __str__(self):
         return str(self.user.first_name) + " " + str(self.user.last_name)
 
-class AssignCourse(models.Model):
-    cls=models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
-    course= models.ForeignKey(Course, on_delete=models.SET_NULL, null=True,)
-    stu = models.ManyToManyField(student)
 
-    def __str__(self):
-        return str(self.id)
+
+ 
