@@ -1,7 +1,8 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 
-from cls.filters import StudentFilter
+from cls.filters import StudentFilter,CourseFilter
+from course.models import Course
 from .forms import ClassCreateForm, ClassUpdateForm
 from .models import Class
 from student.models import student,AssignCourse
@@ -20,22 +21,31 @@ def index(request):
 def create(request):
     uDept = request.user.department
     s = student.objects.filter(user__department=uDept, cls=None)
+    co = Course.objects.filter(dept=uDept)
     filter = StudentFilter(request.GET, queryset=s)
-    form = ClassCreateForm(request.POST or None, students=s)
+    cfilter = CourseFilter(request.GET, queryset=co)
+    form = ClassCreateForm(request.POST or None, students=s,course=co)
     context = {
         'form': form,
-        'filter1': filter
+        'filter1': filter,
+        'cfilter': cfilter
+        
     }
     if request.method == 'POST':
-        form = ClassCreateForm(request.POST, students=s)
+        form = ClassCreateForm(request.POST, students=s,course=co)
+        # print(request.POST)
         if form.is_valid():
             body = request.POST.dict()
             students = dict(request.POST)['students']
+            course=dict(request.POST)['course']
+            print(course)
             c = Class(class_name=body['name'], department=uDept)
+            
             c.save()
             for obj in students:
                 s = student.objects.get(pk=obj)
                 s.cls = c
+                s.course.add(*course)
                 s.save()
     return render(request, 'cls/form.html', context)
 

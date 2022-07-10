@@ -14,18 +14,21 @@ department_choices = [
         ('Mechanical Engineering', 'Mechanical Engineering'),
     ]
 
-
-Course_choices = [ (c.id, c.name) for c in Course.objects.all() ]
-
+#Course_choices = [ (c.id ,c.name) for c in Course.objects.all()]
 
 
 class ClassCreateForm(forms.Form):
     name = forms.CharField(label='Class Name')
+    #course= forms.ChoiceField(label='Course', choices=Course_choices)
+    
+    
     
     def __init__(self, *args, **kwargs):
         s = kwargs.pop('students', None)
+        co = kwargs.pop('course', None)
         super(ClassCreateForm, self).__init__(*args, **kwargs)
         self.fields['students'] = forms.ModelMultipleChoiceField(queryset=s,widget=forms.CheckboxSelectMultiple)
+        self.fields['course'] = forms.ModelMultipleChoiceField(queryset=co,widget=forms.CheckboxSelectMultiple)
 
 class ClassUpdateForm(forms.ModelForm):
     
