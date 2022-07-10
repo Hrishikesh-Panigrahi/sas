@@ -16,6 +16,12 @@ def read_file(path):
     file.close()
     return data
 
+def test_C(request):
+    context = {
+        'title': 'tt_test'
+    }
+    return render(request, 'timetable/create.html', context)
+
 def createTT(request):
     context = {
         'title': 'Timetable',
