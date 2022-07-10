@@ -21,6 +21,7 @@ class Class(models.Model):
     department = models.CharField(max_length=100, null=True, choices=department_choices, blank=True)
     class_teacher = models.OneToOneField(TeacherProfile, on_delete=models.SET_NULL, null=True, blank=True)
     is_timetable= models.BooleanField(default=False)
-    course=models.OneToOneField(Course, on_delete=models.SET_NULL, null=True)
+
+    
     def __str__(self):
         return str(self.id) + " " + self.class_name
