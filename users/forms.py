@@ -10,6 +10,7 @@ class TeacherForm(forms.ModelForm):
     course = forms.ModelMultipleChoiceField(
         queryset=Course.objects.filter(),
         widget=forms.CheckboxSelectMultiple(attrs={'form': my_form}),
+        required=False
     )
 
     class Meta:

@@ -79,15 +79,6 @@ def update(request, id):
     userForm = UserUpdateForm(instance=teacher.user)
     teacherForm = TeacherForm(instance=teacher, courseSet=courses)
 
-    context = {
-        'title': 'Teachers',
-        'type': 'Update',
-        'form': userForm,
-        'tForm': teacherForm,
-        'filter': courseFilter,
-        'id': teacher.id
-    }
-
     if request.method == 'POST':
         print(request.POST)
         userForm = UserUpdateForm(request.POST, instance=teacher.user)
@@ -104,6 +95,16 @@ def update(request, id):
             #     print(e)
             #     print('%s' % type(e))
             #     # TODO: handle exceptions
+    
+    context = {
+        'title': 'Teachers',
+        'type': 'Update',
+        'form': userForm,
+        'tForm': teacherForm,
+        'filter': courseFilter,
+        'id': teacher.id
+    }
+
     return render(request, 'users/TeacherForm.html', context)
 
 @staff_member_required(login_url='/')
