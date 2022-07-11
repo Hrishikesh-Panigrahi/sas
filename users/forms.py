@@ -8,7 +8,7 @@ from course.models import Course
 class TeacherForm(forms.ModelForm):
     my_form = 'userForm'
     course = forms.ModelMultipleChoiceField(
-        queryset=Course.objects.filter(),
+        queryset=Course.objects.none(),
         widget=forms.CheckboxSelectMultiple(attrs={'form': my_form}),
         required=False
     )
