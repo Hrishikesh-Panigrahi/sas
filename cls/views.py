@@ -20,7 +20,9 @@ def index(request):
 @staff_member_required(login_url='/')
 def create(request):
     uDept = request.user.department
+    # getting students of the department
     s = student.objects.filter(user__department=uDept, cls=None)
+    # getting course of the department
     co = Course.objects.filter(dept=uDept)
     filter = StudentFilter(request.GET, queryset=s)
     cfilter = CourseFilter(request.GET, queryset=co)
@@ -33,14 +35,12 @@ def create(request):
     }
     if request.method == 'POST':
         form = ClassCreateForm(request.POST, students=s,course=co)
-        # print(request.POST)
         if form.is_valid():
             body = request.POST.dict()
             students = dict(request.POST)['students']
             course=dict(request.POST)['course']
             print(course)
             c = Class(class_name=body['name'], department=uDept)
-            
             c.save()
             for obj in students:
                 s = student.objects.get(pk=obj)
@@ -71,6 +71,7 @@ def update(request, id):
         for obj in out_cstudents:
             s = student.objects.get(pk=obj)
             # AssignCourse.course_assign(s, c)
+            
             s.cls = c
             s.save()
         for obj in in_cstudents:

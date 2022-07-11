@@ -40,11 +40,11 @@ class UserForm(UserCreationForm):
         my_form = 'userForm'
         model = User
         
-        fields = [ 'email', 'first_name', 'last_name' ]
+        fields = [ 'email' ]
         widgets = {
             'email': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
+            # 'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
+            # 'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
         }
         # widgets = {
         #     'email': forms.TextInput(attrs={'class': 'form-control'}),

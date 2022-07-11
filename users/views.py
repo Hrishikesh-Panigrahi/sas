@@ -13,7 +13,6 @@ from .decorators import hod_allowed
 @login_required(login_url='/')
 def index(request):
     uDept = request.user.department
-    print(uDept)
     teachers = TeacherProfile.objects.filter(user__department=uDept)
     context = {
         'title': 'Teachers',
