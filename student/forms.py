@@ -8,9 +8,10 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 class StudentForm(forms.ModelForm):
     my_form = 'userForm'
     course = forms.ModelMultipleChoiceField(
-        queryset=Course.objects.all(),
-        # widget=forms.CheckboxSelectMultiple(attrs={'form': my_form}),
-        widget=forms.CheckboxSelectMultiple(),
+        required=False,
+        queryset=Course.objects.none(),
+        widget=forms.CheckboxSelectMultiple(attrs={'form': my_form}),
+        # widget=forms.CheckboxSelectMultiple()
     )
     class Meta:
         # my_form = 'userForm'
@@ -40,24 +41,24 @@ class UserForm(UserCreationForm):
         model = User
         
         fields = [ 'email', 'first_name', 'last_name' ]
-        # widgets = {
-        #     'email': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-        #     'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-        #     'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-        # }
         widgets = {
-            'email': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
         }
+        # widgets = {
+        #     'email': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+        #     'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        # }
 
     def __init__(self, *args, **kwargs):
         my_form = 'userForm'
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['password1'].widget = forms.PasswordInput(
-            attrs={'class': 'form-control', 'type': 'password'})
+            attrs={'class': 'form-control', 'type': 'password', 'form': my_form})
         self.fields['password2'].widget = forms.PasswordInput(
-            attrs={'class': 'form-control', 'type': 'password'})
+            attrs={'class': 'form-control', 'type': 'password', 'form': my_form})
 
 
 class UserUpdateForm(UserChangeForm):

@@ -6,7 +6,7 @@
     <!-- page heading -->
     <h1 class="h3 mb-4 text-gray-800">Student</h1>
     <!-- userForm holder -->
-    <form action="" method="POST">
+    <form action="" method="POST" id="userForm">
         {% csrf_token %}
 
             {{ userform.as_p }}

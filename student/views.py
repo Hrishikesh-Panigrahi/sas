@@ -29,7 +29,7 @@ def register(request):
             print('2')
             
             s = User.objects.get(email=request.POST['email'])
-            stu = student(user=s)
+            stu = student.objects.get(user=s)
             print(c_ids)
             for i in c_ids:
                 # c = Course.objects.get(pk=i)
@@ -41,7 +41,7 @@ def register(request):
             # stu.save
             print('student saved')
 
-            return redirect("/")
+            return redirect(studentList)
         else:
             print('not valid')
     context = {
@@ -81,29 +81,31 @@ def delete(request, pk):
 
 @staff_member_required(login_url='/')
 def update(request, pk):
-    course = Course.objects.all()
+    uDept = request.user.department
+    course = Course.objects.filter(dept=uDept)
     stu = student.objects.get(id=pk)
-    context = {}
     userform = UserUpdateForm(instance=stu.user)
     sform = StudentForm(instance=stu, courseSet=course)
     if request.method == 'POST':
+        print(request.POST)
         userform = UserUpdateForm(request.POST, instance=stu.user)
         sform = StudentForm(request.POST, instance=stu, courseSet=course)
         try:
             if userform.is_valid():
                 userform.save()
-                if sform.is_vaild():
+                if sform.is_valid():
                     sform.save()
                     print('student saved')
-                    return redirect('')
+                    return redirect(update, pk)
         except Exception as e:
-            pass
+            print(e)
 
-    context = {'userform': userform,
-               'sform': sform,
-               'type': 'Update',
-               'id': stu.id,
-               'title': 'Students'
-               }
+    context = {
+        'userform': userform,
+        'sform': sform,
+        'type': 'Update',
+        'id': stu.id,
+        'title': 'Students'
+    }
 
     return render(request, 'student/studentRegister.html ', context)
