@@ -18,8 +18,22 @@ def read_file(path):
 
 def test_C(request):
     context = {
-        'title': 'tt_test'
+        'title': 'tt_test',
     }
+    try:
+        f = open(os.path.join(path, '{}_static.json'.format('class_id')))
+        table = json.loads(f.read())
+        schedule = table['schedule']
+        schedule_keys = list(schedule.keys())
+        Formatted_Schedule=[]
+        for key, value in schedule.items():
+            for i in value:
+                i['weekday'] = key
+                i['weekday_id'] = schedule_keys.index(key)
+                Formatted_Schedule.append(i)
+        context['table'] = Formatted_Schedule
+    except:
+        table = None
     return render(request, 'timetable/create.html', context)
 
 def createTT(request):

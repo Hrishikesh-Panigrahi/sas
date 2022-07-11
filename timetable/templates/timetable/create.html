@@ -21,39 +21,17 @@
         </tr>
     </thead>
     <tbody>
+        {% for slot in table %}
         <tr>
-            <td>AOA</td>
-            <td>Lecture</td>
-            <td>All</td>
-            <td>Monday</td>
-            <td>10:00 am</td>
-            <td>11:00 am</td>
-            <td>
-                <button>Delete</button>
-            </td>
+            <td>{{ slot.course }}</td>
+            <td>{{ slot.type }}</td>
+            <td>{{ slot.batch }}</td>
+            <td><span style="display:none">{{ slot.weekday_id }}</span>{{ slot.weekday }}</td>
+            <td>{{ slot.start_time }}</td>
+            <td>{{ slot.end_time }}</td>
+            <td><button>Delete</button></td>
         </tr>
-        <tr>
-            <td>OS</td>
-            <td>Lecture</td>
-            <td>All</td>
-            <td>Tuesday</td>
-            <td>09:00 am</td>
-            <td>10:00 am</td>
-            <td>
-                <button>Delete</button>
-            </td>
-        </tr>
-        <tr>
-            <td>DBMS</td>
-            <td>Lab</td>
-            <td>A</td>
-            <td>Tuesday</td>
-            <td>11:15 am</td>
-            <td>13:15 am</td>
-            <td>
-                <button>Delete</button>
-            </td>
-        </tr>
+        {% endfor %}
     </tbody>
     
     <tfoot>
