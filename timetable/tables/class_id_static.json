@@ -1,0 +1,50 @@
+{
+    "class": "class_id",
+    "schedule": {
+        "Monday": [
+            {
+                "course": "EM-IV",
+                "type": "Lecture",
+                "batch": "All",
+                "start_time": "08:00",
+                "end_time": "09:00"
+            },
+            {
+                "course": "OS",
+                "type": "Lecture",
+                "batch": "All",
+                "start_time": "09:00",
+                "end_time": "10:00"
+            }
+        ],
+        "Tuesday": [
+            {
+                "course": "OS",
+                "type": "Lecture",
+                "batch": "All",
+                "start_time": "10:00",
+                "end_time": "09:00"
+            }
+        ],
+        "Wednesday": [
+            {
+                "course": "EM-IV",
+                "type": "Lecture",
+                "batch": "All",
+                "start_time": "08:00",
+                "end_time": "09:00"
+            }
+        ],
+        "Thursday": [],
+        "Friday": [
+            {
+                "course": "OS",
+                "type": "Lecture",
+                "batch": "All",
+                "start_time": "10:00",
+                "end_time": "09:00"
+            }
+        ],
+        "Saturday": []
+    }
+}

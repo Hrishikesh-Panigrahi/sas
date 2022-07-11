@@ -21,7 +21,18 @@
         </tr>
     </thead>
     <tbody>
+        {% for slot in table %}
         <tr>
+            <td>{{ slot.course }}</td>
+            <td>{{ slot.type }}</td>
+            <td>{{ slot.batch }}</td>
+            <td><span style="display:none">{{ slot.weekday_id }}</span>{{ slot.weekday }}</td>
+            <td>{{ slot.start_time }}</td>
+            <td>{{ slot.end_time }}</td>
+            <td><button>Delete</button></td>
+        </tr>
+        {% endfor %}
+        {% comment %} <tr>
             <td>AOA</td>
             <td>Lecture</td>
             <td>All</td>
@@ -53,7 +64,7 @@
             <td>
                 <button>Delete</button>
             </td>
-        </tr>
+        </tr> {% endcomment %}
     </tbody>
     
     <tfoot>

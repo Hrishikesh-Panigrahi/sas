@@ -1,10 +1,26 @@
 const errTxt = $("#err")
 errTxt.html("").hide();
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 let time_table = {
     "class": "class_id",
     "schedule": {
-        "monday": [
+        "Monday": [
             //{
             // "course": "course_id",
             // "teacher": "teacher_id",
@@ -17,11 +33,11 @@ let time_table = {
             // Demo object
             // { course: 'Python', type: 'Lecture', batch: 'All', start_time: '09:00', end_time: '10:00' }
         ],
-        "tuesday": [],
-        "wednesday": [],
-        "thursday": [],
-        "friday": [],
-        "saturday": []
+        "Tuesday": [],
+        "Wednesday": [],
+        "Thursday": [],
+        "Friday": [],
+        "Saturday": []
     }
 };
 
@@ -39,12 +55,10 @@ $("#start-time").on("change", () => {
     let temp = new Date("01-01-2017 " + $("#start-time").val())
     temp.setHours(temp.getHours() + 1)
     temp = temp.toTimeString().split(' ')[0].slice(0, 5);
-    // temp = temp.slice(0, 5)
-    console.log(temp);
     $("#end-time").val(temp)
 })
 
-$("#add-btn").on("click", () => {
+$("#add-btn").on("click", async () => {
     const course = $(".select-form").val();
     const type = $("#slot-type").val();
     const batch = $("#batch").val();
@@ -60,5 +74,17 @@ $("#add-btn").on("click", () => {
         errTxt.html("").hide();
         time_table.schedule[weekday].push(slot);
         time_table.schedule[weekday].sort(sortByKey)
+        /* 
+            TODO: send time_table to server
+            save time)table to localstorage
+        */
+        const csrftoken = getCookie('csrftoken');
+        tt = JSON.stringify(time_table);
+        let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+            method: 'POST',
+            headers: { "X-CSRFToken": csrftoken },
+            body: tt
+        });
+        res = await res.json();
     }
 })
