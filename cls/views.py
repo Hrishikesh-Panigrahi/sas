@@ -3,6 +3,7 @@ from django.http import HttpResponse
 
 from cls.filters import StudentFilter,CourseFilter
 from course.models import Course
+from users.models import TeacherProfile, User
 from .forms import ClassCreateForm, ClassUpdateForm
 from .models import Class
 from student.models import student
@@ -20,13 +21,15 @@ def index(request):
 @staff_member_required(login_url='/')
 def create(request):
     uDept = request.user.department
-    # getting students of the department
+    # getting teacher and students
+    # t = User.objects.filter(department=uDept, is_classteacher=True)
+    t = TeacherProfile.objects.filter(user__department=uDept, user__is_classteacher=True, class__class_teacher=None)
     s = student.objects.filter(user__department=uDept, cls=None)
     # getting course of the department
     co = Course.objects.filter(dept=uDept)
     filter = StudentFilter(request.GET, queryset=s)
     cfilter = CourseFilter(request.GET, queryset=co)
-    form = ClassCreateForm(request.POST or None, students=s,course=co)
+    form = ClassCreateForm(None, students=s, course=co, teachers=t)
     context = {
         'form': form,
         'filter1': filter,
@@ -34,18 +37,26 @@ def create(request):
         
     }
     if request.method == 'POST':
-        form = ClassCreateForm(request.POST, students=s,course=co)
+        form = ClassCreateForm(request.POST, students=s,course=co, teachers=t)
+
         if form.is_valid():
+            print(request.POST)
+        # if (1==2):
             body = request.POST.dict()
+            teacher = t.get(pk=request.POST['teacher'])
+            print(teacher)
             students = dict(request.POST)['students']
-            course=dict(request.POST)['course']
-            print(course)
-            c = Class(class_name=body['name'], department=uDept)
+            course=None
+            if 'course' in dict(request.POST):
+                course=dict(request.POST)['course']
+                print(course)
+            c = Class(class_name=body['name'], department=uDept, class_teacher=teacher)
             c.save()
             for obj in students:
                 s = student.objects.get(pk=obj)
                 s.cls = c
-                s.course.add(*course)
+                if course:
+                    s.course.add(*course)
                 s.save()
     return render(request, 'cls/form.html', context)
 
