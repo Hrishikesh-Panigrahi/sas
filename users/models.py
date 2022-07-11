@@ -77,7 +77,7 @@ class User(AbstractUser):
     middle_name = models.CharField(max_length=50, null=True, blank=True)
     email = models.EmailField(max_length=255, unique=True)
     department = models.CharField(
-        max_length=50, blank=True, null=True, choices=department_choices, default=1)
+        max_length=50, blank=True, null=True, choices=department_choices)
     created_on = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

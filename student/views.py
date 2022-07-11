@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
-from student.forms import StudentForm, UserForm, UserUpdateForm
+from student.forms import  UserForm, UserUpdateForm, StudentForm
 from student.models import student
 
 from users.models import User
@@ -15,20 +15,24 @@ from course.models import Course
 def register(request):
     uDept = request.user.department
     context = {}
-    # studentForm=StudentForm(request.POST)
+    
     userform = UserForm(request.POST or None)
     courses = Course.objects.all()
     studentForm = StudentForm(courseSet=courses)
+
+
+
     if request.method == 'POST':
         userform = UserForm(request.POST)
-        print('1')
-        # studentForm = StudentForm(request.POST ,courseSet=course)
+        
         if userform.is_valid():
             userform.save()
             c_ids = request.POST.getlist('course')
             print('2')
             
             s = User.objects.get(email=request.POST['email'])
+            s.department = uDept
+            s.save()
             stu = student.objects.get(user=s)
             print(c_ids)
             for i in c_ids:
@@ -36,10 +40,7 @@ def register(request):
                 # stu.course.add(c)
                 stu.course.add(course=i)
                 print('course added saved')
-            stu.user.department = uDept
             stu.save()
-            # stu.save
-            print('student saved')
 
             return redirect(studentList)
         else:
