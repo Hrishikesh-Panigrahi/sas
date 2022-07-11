@@ -1,7 +1,4 @@
-from dataclasses import fields
-from random import choices
 from django import forms
-from pkg_resources import require
 from cls.models import Class
 from student.models import student
 from course.models import Course
@@ -24,11 +21,13 @@ class ClassCreateForm(forms.Form):
     
     
     def __init__(self, *args, **kwargs):
+        t = kwargs.pop('teachers', None)
         s = kwargs.pop('students', None)
         co = kwargs.pop('course', None)
         super(ClassCreateForm, self).__init__(*args, **kwargs)
-        self.fields['students'] = forms.ModelMultipleChoiceField(queryset=s,widget=forms.CheckboxSelectMultiple)
-        self.fields['course'] = forms.ModelMultipleChoiceField(queryset=co,widget=forms.CheckboxSelectMultiple)
+        self.fields['teacher'] = forms.ModelChoiceField(queryset=t, required=False)
+        self.fields['students'] = forms.ModelMultipleChoiceField(queryset=s, required=False, widget=forms.CheckboxSelectMultiple)
+        self.fields['course'] = forms.ModelMultipleChoiceField(queryset=co, required=False, widget=forms.CheckboxSelectMultiple)
 
 class ClassUpdateForm(forms.ModelForm):
     

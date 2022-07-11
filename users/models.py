@@ -104,7 +104,7 @@ class TeacherProfile(models.Model):
     course = models.ManyToManyField(Course, blank=True)
 
     def __str__(self):
-        return str(self.id) + ' ' + self.user.first_name + ' ' + self.user.last_name
+        return self.user.first_name + ' ' + self.user.last_name
 
 
 
