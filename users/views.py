@@ -45,20 +45,18 @@ def register(request):
     }
 
     if request.method == 'POST':
-        userForm = UserForm(request.POST)
+        userForm = UserForm(request.POST, department=uDept)
         # userForm = UserForm(request.POST, department=uDept)
         if userForm.is_valid():
             try:
                 userForm.save()
                 c_ids = request.POST.getlist('course')
                 u = User.objects.get(email=request.POST['email'])
-
                 t = TeacherProfile.objects.get(user=u)
+
                 for id in c_ids:
                     c = Course.objects.get(pk=id)
                     t.course.add(c)
-                u.department = uDept
-                u.save()
                 t.save()
                 return redirect(index)
             except Exception as e:

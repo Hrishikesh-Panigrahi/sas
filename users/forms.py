@@ -35,7 +35,7 @@ class UserForm(UserCreationForm):
         my_form = 'userForm'
         model = User
         # fields = ['username', 'is_staff']
-        fields = [ 'email', 'first_name', 'last_name', 'is_staff', 'is_classteacher']
+        fields = [ 'email', 'first_name', 'last_name', 'is_staff', 'is_classteacher', 'department']
         widgets = {
             # 'username': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'form': my_form}),
@@ -48,12 +48,12 @@ class UserForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         my_form = 'userForm'
-        # d = kwargs.pop('department', None)
+        d = kwargs.pop('department', None)
         super(UserForm, self).__init__(*args, **kwargs)
         self.fields['is_staff'].initial = True
         self.fields['is_staff'].disabled = True
-        # self.fields['department'].initial = d
-        # self.fields['department'].disabled = True
+        self.fields['department'].initial = d
+        self.fields['department'].disabled = True
         self.fields['password1'].widget = forms.PasswordInput(
             attrs={'class': 'form-control', 'type': 'password', 'form': my_form})
         self.fields['password2'].widget = forms.PasswordInput(
