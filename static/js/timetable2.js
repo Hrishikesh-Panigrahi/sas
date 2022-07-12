@@ -41,6 +41,9 @@ let time_table = {
     }
 };
 
+if (t_json)
+    time_table = t_json
+
 const sortByKey = (a, b) => {
     let keyA = a.start_time
     let keyB = b.start_time
@@ -71,6 +74,7 @@ $("#add-btn").on("click", async () => {
     if (course == "" || type == "" || batch == "" || weekday == "" || start_time == "" || end_time == "")
         errTxt.html("All fields must be populated").show();
     else {
+        console.log(time_table);
         errTxt.html("").hide();
         time_table.schedule[weekday].push(slot);
         time_table.schedule[weekday].sort(sortByKey)
@@ -80,11 +84,11 @@ $("#add-btn").on("click", async () => {
         */
         const csrftoken = getCookie('csrftoken');
         tt = JSON.stringify(time_table);
-        let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
-            method: 'POST',
-            headers: { "X-CSRFToken": csrftoken },
-            body: tt
-        });
-        res = await res.json();
+        // let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
+        //     method: 'POST',
+        //     headers: { "X-CSRFToken": csrftoken },
+        //     body: tt
+        // });
+        // res = await res.json();
     }
 })

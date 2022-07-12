@@ -31,6 +31,7 @@ def test_C(request):
                 i['weekday'] = key
                 i['weekday_id'] = schedule_keys.index(key)
                 Formatted_Schedule.append(i)
+        context['json'] = table
         context['table'] = Formatted_Schedule
     except:
         table = None

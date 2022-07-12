@@ -29,7 +29,7 @@
             <td><span style="display:none">{{ slot.weekday_id }}</span>{{ slot.weekday }}</td>
             <td>{{ slot.start_time }}</td>
             <td>{{ slot.end_time }}</td>
-            <td><button>Delete</button></td>
+            <td><button class="slot-delete" id="{{ slot.weekday }}-{{ slot.course }}-{{ slot.start_time }}">Delete</button></td>
         </tr>
         {% endfor %}
     </tbody>
@@ -64,11 +64,11 @@
             <th>
                 <select name="" id="weekday">
                     <option selected value="">------</option>
-                    <option value="monday">Monday</option>
-                    <option value="tuesday">Tuesday</option>
-                    <option value="wednesday">Wednesday</option>
-                    <option value="thursday">Thursday</option>
-                    <option value="friday">Friday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
                 </select>
                 <hr>
                 Day
