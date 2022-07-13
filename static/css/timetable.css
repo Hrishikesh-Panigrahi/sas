@@ -33,6 +33,7 @@
 
 .custom-table tbody td {
     border-right: 1px solid #ddd;
+    position: relative;
 }
 
 .select-form {
@@ -43,11 +44,11 @@
 
 .break-data{
     position: absolute;
-    transform: translateX(-45px) rotate(90deg);
+    transform: translateX(-25px) rotate(90deg);
     font-size: x-large;
     white-space: nowrap;
 }
-@media only screeen and (max-width: 1250px){
+@media only screeen and (max-width: 1200px){
     .break-data{
         transform: translateX(-45px) rotate(90deg);
     }
