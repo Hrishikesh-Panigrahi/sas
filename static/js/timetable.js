@@ -143,24 +143,25 @@ const loadData = () => {
         return;
     }
     time_table = JSON.parse(localStorage.getItem('timetable'));
-    // console.log(time_table)
     let i = 0;
     Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 24; j++) {
             lectures[i][j].childNodes[3].innerHTML = time_table.schedule[key].slots[j].course;
             lectures[i][j].childNodes[1].innerHTML = time_table.schedule[key].slots[j].teacher;
             // Check verticaly
-            // if((j-7 >= 0)&&(lectures[i][j-7].innerHTML == lectures[i][j].innerHTML)){
-            //     console.log(i,j,j-7,parseInt(lectures[i][j-7].getAttribute('rowspan'))+1,"row");
-            //     lectures[i][j].parentNode.removeChild(lectures[i][j]);
-            //     lectures[i][j-7].setAttribute('rowspan',(parseInt(lectures[i][j-7].getAttribute('rowspan'))+1));
-            // }
-            // // check horizontally
-            // if((j-1 >= 0) && ((j-1)%8 != 2) && ((j-1)%8 != 4) && ((j-1)%8 != 7) && (lectures[i][j-1].innerHTML == lectures[i][j].innerHTML)){
-            //     console.log(i,j,j-1,parseInt(lectures[i][j-1].getAttribute('colspan'))+1,"col");
-            //     lectures[i][j].parentNode.removeChild(lectures[i][j]);
-            //     lectures[i][j-1].setAttribute('colspan',(parseInt(lectures[i][j-1].getAttribute('colspan'))+1));
-            // }
+            if((j-8 >= 0)&&(lectures[i][j-8].innerHTML == lectures[i][j].innerHTML)){
+                console.log(i,j,j-8,parseInt(lectures[i][j-8].getAttribute('rowspan'))+1);
+                if((j-16 >= 0)&&(lectures[i][j-16].innerHTML == lectures[i][j].innerHTML))
+                    lectures[i][j-16].setAttribute('rowspan',(parseInt(lectures[i][j-16].getAttribute('rowspan'))+1));
+                else
+                    lectures[i][j-8].setAttribute('rowspan',(parseInt(lectures[i][j-8].getAttribute('rowspan'))+1));
+                lectures[i][j].parentNode.removeChild(lectures[i][j]);
+            }
+            // check horizontally
+            if((j-1 >= 0) && ((j-1)%8 != 2) && ((j-1)%8 != 4) && ((j-1)%8 != 7) && (lectures[i][j].parentNode != null) && (lectures[i][j-1].innerHTML == lectures[i][j].innerHTML)){
+                lectures[i][j-1].setAttribute('colspan',(parseInt(lectures[i][j-1].getAttribute('colspan'))+1));
+                lectures[i][j].parentNode.removeChild(lectures[i][j]);
+            }
         }
         i += 1;
     });
