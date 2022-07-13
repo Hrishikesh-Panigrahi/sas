@@ -2,25 +2,26 @@
 
 {% block heading %}
 
-
-
 {% endblock %}
 
 
-
 {% block table %}
-<form action="" method="POST">
-
+{% if title == 'CourseSelection' %}
+<form action="{% url 'attendance-index' %}" method="POST">
+    {% if course %}
     {% csrf_token %}
-    <select class="select-form" aria-label=".form-select-lg">
-        <option selected value="FREE"></option>
-        {% if course %}
-        {% for i in course %}
-        <option value="{{i.name}}">{{i.name}}</option>
-        {% endfor %}
-        {% endif %}
-    </select>
+        <select class="select-form" aria-label=".form-select-lg" name="courseSelected">
+            
+            <option selected value="FREE"></option>
+            
+            {% for i in course %}
+            <option value="{{i.name}}" >{{i.name}}</option>
+            {% endfor %}
+            
+        </select>
+    {% endif %}
 
+    {% endif %}
     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
             <tr>
@@ -50,18 +51,18 @@
             {% for students in student %}
             <tr>
                 <td>
-                    <a href="{% url 'UpdateStudent' students.id %}">
+                    <a href="#">
                         {{ students.id }}
                         <!-- id -->
                     </a>
                 </td>
                 <td>{{ students.user.first_name }}</td> <!-- first_name -->
                 <td>{{ students.user.last_name }}</td> <!-- last_name -->
-                <td>{{ students.course.name }}</td> 
+                <td>{{ students.course.name }}</td>
                 <!-- <td>{# teacher.course #}</td> course assigned -->
                 <td> hh </td>
                 <!-- <td>{{ teacher.is_classteacher }}</td> is class teacher -->
-            
+
 
                 <td> <input type="checkbox" name="player_check" {% if player.player_check %} checked{% endif %}></td>
                 {% endfor %}
@@ -77,7 +78,7 @@
             <i class="fas fa-check"></i>
         </span>
         <span class="text">
-            hello
+            Submit
         </span>
     </button>
 </form>
