@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 
-from cls.filters import StudentFilter,CourseFilter
+from cls.filters import StudentFilter, CourseFilter
 from course.models import Course
 from users.models import TeacherProfile, User
 from .forms import ClassCreateForm, ClassUpdateForm
@@ -12,18 +12,21 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 
+
 @staff_member_required(login_url='/')
 def index(request):
     uDept = request.user.department
     # return render()
     return HttpResponse("helo")
 
+
 @staff_member_required(login_url='/')
 def create(request):
     uDept = request.user.department
     # getting teacher and students
     # t = User.objects.filter(department=uDept, is_classteacher=True)
-    t = TeacherProfile.objects.filter(user__department=uDept, user__is_classteacher=True, class__class_teacher=None)
+    t = TeacherProfile.objects.filter(
+        user__department=uDept, user__is_classteacher=True, class__class_teacher=None)
     s = student.objects.filter(user__department=uDept, cls=None)
     # getting course of the department
     co = Course.objects.filter(dept=uDept)
@@ -34,10 +37,10 @@ def create(request):
         'form': form,
         'filter1': filter,
         'cfilter': cfilter
-        
+
     }
     if request.method == 'POST':
-        form = ClassCreateForm(request.POST, students=s,course=co, teachers=t)
+        form = ClassCreateForm(request.POST, students=s, course=co, teachers=t)
 
         if form.is_valid():
             print(request.POST)
@@ -46,11 +49,12 @@ def create(request):
             teacher = t.get(pk=request.POST['teacher'])
             print(teacher)
             students = dict(request.POST)['students']
-            course=None
+            course = None
             if 'course' in dict(request.POST):
-                course=dict(request.POST)['course']
+                course = dict(request.POST)['course']
                 print(course)
-            c = Class(class_name=body['name'], department=uDept, class_teacher=teacher)
+            c = Class(class_name=body['name'],
+                      department=uDept, class_teacher=teacher)
             c.save()
             for obj in students:
                 s = student.objects.get(pk=obj)
@@ -72,9 +76,10 @@ def update(request, id):
 
     outStudentFilter = StudentFilter(request.GET, queryset=out_class)
     out_class = outStudentFilter.qs
-    
-    form = ClassUpdateForm(request.POST or None, instance=c, in_class=in_class, out_class=out_class)
-    
+
+    form = ClassUpdateForm(request.POST or None, instance=c,
+                           in_class=in_class, out_class=out_class)
+
     if request.method == 'POST' and form.is_valid():
         form.save()
         in_cstudents = dict(request.POST)['students in class']
@@ -82,7 +87,7 @@ def update(request, id):
         for obj in out_cstudents:
             s = student.objects.get(pk=obj)
             # AssignCourse.course_assign(s, c)
-            
+
             s.cls = c
             s.save()
         for obj in in_cstudents:
@@ -90,9 +95,8 @@ def update(request, id):
             s.cls = None
             s.save()
 
-    
     context = {
-        "form":form,
+        "form": form,
         "filter1": inStudentFilter
     }
     return render(request, 'cls/form.html', context)
