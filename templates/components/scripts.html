@@ -20,7 +20,12 @@
 {% if page == 'editTT' %}
 <script src="{% static 'js/timetable.js' %}"></script>
 <script type="text/javascript">
-	editTimeTable();
+	if (localStorage.getItem('flushtimetable') == null) {
+		window.location.href="{% url 'createTimeTable' %}";
+    }
+    else{
+		editTimeTable();
+    }
 </script>
 {% endif %}
 {% if page == 'updateTT' %}

@@ -150,16 +150,19 @@ const loadData = () => {
             lectures[i][j].childNodes[1].innerHTML = time_table.schedule[key].slots[j].teacher;
             // Check verticaly
             if((j-8 >= 0)&&(lectures[i][j-8].innerHTML == lectures[i][j].innerHTML)){
-                console.log(i,j,j-8,parseInt(lectures[i][j-8].getAttribute('rowspan'))+1);
                 if((j-16 >= 0)&&(lectures[i][j-16].innerHTML == lectures[i][j].innerHTML))
                     lectures[i][j-16].setAttribute('rowspan',(parseInt(lectures[i][j-16].getAttribute('rowspan'))+1));
                 else
                     lectures[i][j-8].setAttribute('rowspan',(parseInt(lectures[i][j-8].getAttribute('rowspan'))+1));
+                    lectures[i][j].setAttribute('rowspan',(parseInt(lectures[i][j].getAttribute('rowspan'))+1));
                 lectures[i][j].parentNode.removeChild(lectures[i][j]);
             }
             // check horizontally
-            if((j-1 >= 0) && ((j-1)%8 != 2) && ((j-1)%8 != 4) && ((j-1)%8 != 7) && (lectures[i][j].parentNode != null) && (lectures[i][j-1].innerHTML == lectures[i][j].innerHTML)){
-                lectures[i][j-1].setAttribute('colspan',(parseInt(lectures[i][j-1].getAttribute('colspan'))+1));
+            if((j-1 >= 0) && ((j-1)%8 != 2) && ((j-1)%8 != 4) && ((j-1)%8 != 7) && (lectures[i][j].parentNode != null) && (lectures[i][j-1].getAttribute("rowspan") == lectures[i][j].getAttribute("rowspan")) && (lectures[i][j-1].innerHTML == lectures[i][j].innerHTML)){
+                if((j-2 >= 0) && ((j-2)%8 != 2) && ((j-2)%8 != 4) && ((j-2)%8 != 7) && (lectures[i][j].parentNode != null) && (lectures[i][j-2].innerHTML == lectures[i][j].innerHTML))
+                    lectures[i][j-2].setAttribute('colspan',(parseInt(lectures[i][j-2].getAttribute('colspan'))+1));
+                else
+                    lectures[i][j-1].setAttribute('colspan',(parseInt(lectures[i][j-1].getAttribute('colspan'))+1));
                 lectures[i][j].parentNode.removeChild(lectures[i][j]);
             }
         }
@@ -173,11 +176,6 @@ const loadData = () => {
 // value. It is meant for subject teachers. 
 const editTimeTable = () => {
     let sub_teacher = document.getElementById('subject').childNodes[1];
-    if (localStorage.getItem('flushtimetable') == null) {
-        console.log("nothing to show");
-        // TODO: Add redirect to createTT page
-        return;
-    }
     sub_teacher.addEventListener('change', () => {
         sessionStorage.setItem('selectedItem', sub_teacher.options.selectedIndex);
         window.location.reload();
@@ -189,9 +187,8 @@ const editTimeTable = () => {
     let i = 0;
     Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 24; j++) {
-            lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
-            lectures[i][j].classList.add("d-flex", "flex-column", "align-items-center");
-            lectures[i][j].previousElementSibling.innerHTML = "Teacher";
+            lectures[i][j].childNodes[3].innerHTML = time_table.schedule[key].slots[j].course;
+            lectures[i][j].childNodes[1].innerHTML = "Teacher";
             let request = "";
             if (sub_teacher.value == time_table.schedule[key].slots[j].course) {
                 request = '<button type="submit" onclick="storeTempData(\'rel\',' + i + ',' + j + ',\'' + time_table.schedule[key].slots[j].course + '\',\'' + sub_teacher.value + '\'); this.disabled=true;" class="btn btn-warning btn-icon-split">\
@@ -210,16 +207,6 @@ const editTimeTable = () => {
                             </button>';
             }
             lectures[i][j].innerHTML += request;
-            // Check verticaly
-            if((j-7 >= 0)&&(lectures[i][j-7].innerHTML == lectures[i][j].innerHTML)){
-                lectures[i][j].parentNode.removeChild(lectures[i][j]);
-                lectures[i][j].setAttribute('rowspan',(lectures[i][j].getAttribute('rowspan')+1));
-            }
-            // check horizontally
-            else if((j-1 >= 0) && ((j-1)%8 != 2) && ((j-1)%8 != 4)){
-                lectures[i][j].parentNode.removeChild(lectures[i][j]);
-                lectures[i][j].setAttribute('colspan',(lectures[i][j].getAttribute('colspan')+1));
-            }
         }
         i += 1;
     });
