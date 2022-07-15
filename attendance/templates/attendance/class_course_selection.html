@@ -1,0 +1,82 @@
+{% extends 'tables.html' %}
+
+{% block heading %}
+
+{% endblock %}
+
+{% block table %}
+<!-- for class selection -->
+{% if title == 'ClassSelection' and teacherprofile == request.user.id %}
+{% if course %}
+
+<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Scheme</th>
+            <th>Sem</th>
+
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Scheme</th>
+            <th>Sem</th>
+
+        </tr>
+    </tfoot>
+    <tbody>
+
+        {% for i in course %}
+        <tr>
+            <td>
+                <a href="{% url 'attendance-course'  request.user.id  i.code %}">
+                    {{ i.code }}
+                </a>
+            </td>
+            <td>{{ i.name }}</td>
+            <td>{{ i.scheme }}</td>
+            <td>{{ i.sem }}</td>
+
+
+
+            {% endfor %}
+        </tr>
+
+    </tbody>
+</table>
+{% endif %}
+
+<!-- for course selection -->
+
+{% elif title == 'CourseSelection' %}
+<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Scheme</th>
+            <th>Sem</th>
+
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Scheme</th>
+            <th>Sem</th>
+
+        </tr>
+    </tfoot>
+    <tbody>
+
+
+    </tbody>
+</table>
+{% endif %}
+
+{% endblock %}

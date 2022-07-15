@@ -1,12 +1,7 @@
-from statistics import mode
 from django.db import models
 from course.models import Course
-
 from users.models import TeacherProfile
 # from student.models import student
-
-# Create your models here.
-
 
 class Class(models.Model):
 
