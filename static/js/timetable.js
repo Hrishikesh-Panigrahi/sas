@@ -29,6 +29,7 @@ lectures.push(document.querySelectorAll(`[id^="thursday"]`));
 lectures.push(document.querySelectorAll(`[id^="friday"]`));
 lectures.push(document.querySelectorAll(`[id^="saturday"]`));
 
+console.log(lectures)
 
 // ----------------------- Get Site Cookies ----------------------------
 function getCookie(name) {
@@ -100,16 +101,15 @@ let time_table = {
 // dictionary 'dict' is used to store lecture data until pushed to 'slots' array
 // in time_table object. Store in browser storage as timetable and disable button.
 const createTimeTable = async () => {
-    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00",
-        "11:15-13:15", "14:00-15:00", "15:00-16:00",
-        "16:00-17:00", "11:15-13:15", "11:15-13:15"];
+    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:15-12:15",
+                    "12:15-13:15", "14:00-15:00", "15:00-16:00", "16:00-17:00"];
     let tt = "";
     let i = 0;
     Object.keys(time_table.schedule).forEach(function (key) {
-        for (let j = 0; j < 9; j++) {
+        for (let j = 0; j < 24; j++) {
             let dict = {
-                time: time_slot[j],
-                course: lectures[i][j].childNodes[1].value,
+                time: time_slot[j%8],
+                course: lectures[i][j].childNodes[3].childNodes[1].value,
                 teacher: "XYZ"
             };
             time_table.schedule[key].slots.push(dict);
@@ -143,12 +143,28 @@ const loadData = () => {
         return;
     }
     time_table = JSON.parse(localStorage.getItem('timetable'));
-    // console.log(time_table)
     let i = 0;
     Object.keys(time_table.schedule).forEach(function (key) {
-        for (let j = 0; j < 9; j++) {
-            lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
-            lectures[i][j].previousElementSibling.innerHTML = time_table.schedule[key].slots[j].teacher;
+        for (let j = 0; j < 24; j++) {
+            lectures[i][j].childNodes[3].innerHTML = time_table.schedule[key].slots[j].course;
+            lectures[i][j].childNodes[1].innerHTML = time_table.schedule[key].slots[j].teacher;
+            // Check verticaly
+            if((j-8 >= 0)&&(lectures[i][j-8].innerHTML == lectures[i][j].innerHTML)){
+                if((j-16 >= 0)&&(lectures[i][j-16].innerHTML == lectures[i][j].innerHTML))
+                    lectures[i][j-16].setAttribute('rowspan',(parseInt(lectures[i][j-16].getAttribute('rowspan'))+1));
+                else
+                    lectures[i][j-8].setAttribute('rowspan',(parseInt(lectures[i][j-8].getAttribute('rowspan'))+1));
+                    lectures[i][j].setAttribute('rowspan',(parseInt(lectures[i][j].getAttribute('rowspan'))+1));
+                lectures[i][j].parentNode.removeChild(lectures[i][j]);
+            }
+            // check horizontally
+            if((j-1 >= 0) && ((j-1)%8 != 2) && ((j-1)%8 != 4) && ((j-1)%8 != 7) && (lectures[i][j].parentNode != null) && (lectures[i][j-1].getAttribute("rowspan") == lectures[i][j].getAttribute("rowspan")) && (lectures[i][j-1].innerHTML == lectures[i][j].innerHTML)){
+                if((j-2 >= 0) && ((j-2)%8 != 2) && ((j-2)%8 != 4) && ((j-2)%8 != 7) && (lectures[i][j].parentNode != null) && (lectures[i][j-2].innerHTML == lectures[i][j].innerHTML))
+                    lectures[i][j-2].setAttribute('colspan',(parseInt(lectures[i][j-2].getAttribute('colspan'))+1));
+                else
+                    lectures[i][j-1].setAttribute('colspan',(parseInt(lectures[i][j-1].getAttribute('colspan'))+1));
+                lectures[i][j].parentNode.removeChild(lectures[i][j]);
+            }
         }
         i += 1;
     });
@@ -160,11 +176,6 @@ const loadData = () => {
 // value. It is meant for subject teachers. 
 const editTimeTable = () => {
     let sub_teacher = document.getElementById('subject').childNodes[1];
-    if (localStorage.getItem('flushtimetable') == null) {
-        console.log("nothing to show");
-        // TODO: Add redirect to createTT page
-        return;
-    }
     sub_teacher.addEventListener('change', () => {
         sessionStorage.setItem('selectedItem', sub_teacher.options.selectedIndex);
         window.location.reload();
@@ -175,10 +186,9 @@ const editTimeTable = () => {
     time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     let i = 0;
     Object.keys(time_table.schedule).forEach(function (key) {
-        for (let j = 0; j < 9; j++) {
-            lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
-            lectures[i][j].classList.add("d-flex", "flex-column", "align-items-center");
-            lectures[i][j].previousElementSibling.innerHTML = "Teacher";
+        for (let j = 0; j < 24; j++) {
+            lectures[i][j].childNodes[3].innerHTML = time_table.schedule[key].slots[j].course;
+            lectures[i][j].childNodes[1].innerHTML = "Teacher";
             let request = "";
             if (sub_teacher.value == time_table.schedule[key].slots[j].course) {
                 request = '<button type="submit" onclick="storeTempData(\'rel\',' + i + ',' + j + ',\'' + time_table.schedule[key].slots[j].course + '\',\'' + sub_teacher.value + '\'); this.disabled=true;" class="btn btn-warning btn-icon-split">\
@@ -222,10 +232,20 @@ const loadTempData = () => {
     time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     let i = 0;
     Object.keys(time_table.schedule).forEach(function (key) {
-        for (let j = 0; j < 9; j++) {
+        for (let j = 0; j < 24; j++) {
             // TODO: create a counter with absolute positioning.
             lectures[i][j].innerHTML = time_table.schedule[key].slots[j].course;
             lectures[i][j].previousElementSibling.innerHTML = time_table.schedule[key].slots[j].teacher;
+            // Check verticaly
+            if((j-7 >= 0)&&(lectures[i][j-7].innerHTML == lectures[i][j].innerHTML)){
+                lectures[i][j].parentNode.removeChild(lectures[i][j]);
+                lectures[i][j].setAttribute('rowspan',(lectures[i][j].getAttribute('rowspan')+1));
+            }
+            // check horizontally
+            else if((j-1 >= 0) && ((j-1)%8 != 2) && ((j-1)%8 != 4)){
+                lectures[i][j].parentNode.removeChild(lectures[i][j]);
+                lectures[i][j].setAttribute('colspan',(lectures[i][j].getAttribute('colspan')+1));
+            }
         }
         i += 1;
     });
@@ -237,9 +257,8 @@ const loadRequests = () => {
     let cards = document.getElementById("cards");
     let temp_time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     req_list = JSON.parse(localStorage.getItem('reqList'));
-    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00",
-        "11:15-13:15", "14:00-15:00", "15:00-16:00",
-        "16:00-17:00", "11:15-13:15", "11:15-13:15"];
+    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:15-12:15",
+                     "12:15-13:15", "14:00-15:00", "15:00-16:00", "16:00-17:00"];
     let day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     while (req_list.length != 0) {
         req = req_list.shift();
