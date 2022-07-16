@@ -30,16 +30,16 @@
     </tfoot>
     <tbody>
 
-        {% for i in course %}
+        {% for i in cls %}
         <tr>
             <td>
-                <a href="{% url 'attendance-course'  request.user.id  i.code %}">
-                    {{ i.code }}
+                <a href="{% url 'attendance-course'  request.user.id  i.id %}">
+                    {{ i.class_name }}
                 </a>
             </td>
-            <td>{{ i.name }}</td>
-            <td>{{ i.scheme }}</td>
-            <td>{{ i.sem }}</td>
+            <td>{{ i.department }}</td>
+            <td>{{ i.class_teacher }}</td>
+            <td>{{ i.id }}</td>
 
 
 
@@ -73,6 +73,22 @@
         </tr>
     </tfoot>
     <tbody>
+
+        {% for i in course %}
+        <tr>
+            <td>
+                <a href="#">
+                    {{ i.name }}
+                </a>
+            </td>
+            <td>{{ i.code }}</td>
+            <td>{{ i.id }}</td>
+            <td>{{ i.id }}</td>
+
+
+
+            {% endfor %}
+        </tr>
 
 
     </tbody>

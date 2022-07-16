@@ -10,7 +10,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('course/', include('course.urls')),
     path('student/', include('student.urls')),
-    path('attendance/', include('attendance.urls')),
+    path('/', include('attendance.urls')),
     path('timetable/', include('timetable.urls')),
     path('class/', include('cls.urls')),
 ]
