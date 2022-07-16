@@ -7,7 +7,6 @@ from users.models import User, TeacherProfile
 
 # Create your models here.
 
-
 class Assign_cls(models.Model):
     cls = models.ForeignKey(Class, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
