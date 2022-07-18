@@ -189,7 +189,7 @@
             aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Attendance</h6>
-                <a class="collapse-item" href="{% url 'attendance-index' %}">Attendance</a>
+                <a class="collapse-item" href="{% url 'attendance-class' request.user.id %}">Attendance</a>
 
             </div>
         </div>
