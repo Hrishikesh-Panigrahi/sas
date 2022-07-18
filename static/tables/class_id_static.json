@@ -1,0 +1,749 @@
+{
+    "class": "class_id",
+    "schedule": {
+        "monday": {
+            "slots": [
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "tuesday": {
+            "slots": [
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "wednesday": {
+            "slots": [
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "thursday": {
+            "slots": [
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "PCE-II",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "SE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "TCS",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "Mini Project",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "friday": {
+            "slots": [
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "Mentoring",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Remedial",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "Mentoring",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Remedial",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "DWM",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "CN",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "IP",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "Mentoring",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "Remedial",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "saturday": {
+            "slots": [
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "8:00-9:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "9:00-10:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "10:00-11:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "11:15-12:15",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "12:15-13:15",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "14:00-15:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "15:00-16:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": "16:00-17:00",
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        }
+    }
+}

@@ -108,7 +108,8 @@ const createTimeTable = async () => {
     Object.keys(time_table.schedule).forEach(function (key) {
         for (let j = 0; j < 24; j++) {
             let dict = {
-                time: time_slot[j%8],
+                // time: time_slot[j%8],
+                time: j,
                 course: lectures[i][j].childNodes[3].childNodes[1].value,
                 teacher: "XYZ"
             };
@@ -117,12 +118,12 @@ const createTimeTable = async () => {
         i += 1;
     });
     tt = JSON.stringify(time_table);
-    console.log(tt);
-    localStorage.setItem('timetable', tt);
-    localStorage.setItem('flushtimetable', tt);
+    // console.log(tt);
+    // localStorage.setItem('timetable', tt);
+    // localStorage.setItem('flushtimetable', tt);
+    // tt = localStorage.getItem('timetable');
     document.getElementById("create-btn").disabled = true;
     const csrftoken = getCookie('csrftoken');
-    // tt = localStorage.getItem('timetable');
     let res = await fetch('http://localhost:8000/timetable/CreateTimeTable', {
         method: 'POST',
         headers: { "X-CSRFToken": csrftoken },
@@ -134,10 +135,11 @@ const createTimeTable = async () => {
 };
 
 // ----------------------- Load Data from json object --------------------------
-// Parse 'timetable' object if available. Change HTML of table to output 
+// Load 'timetable' object if available. Change HTML of table to output 
 // appropriate lectures & teachers.Displays on CreateTimeTable page once
 // time table is created.
-const loadData = () => {
+11
+const loadData = async () => {
     if (localStorage.getItem('timetable') == null) {
         console.log("nothing to show");
         return;
@@ -154,7 +156,7 @@ const loadData = () => {
                     lectures[i][j-16].setAttribute('rowspan',(parseInt(lectures[i][j-16].getAttribute('rowspan'))+1));
                 else
                     lectures[i][j-8].setAttribute('rowspan',(parseInt(lectures[i][j-8].getAttribute('rowspan'))+1));
-                    lectures[i][j].setAttribute('rowspan',(parseInt(lectures[i][j].getAttribute('rowspan'))+1));
+                lectures[i][j].setAttribute('rowspan',(parseInt(lectures[i][j].getAttribute('rowspan'))+1));
                 lectures[i][j].parentNode.removeChild(lectures[i][j]);
             }
             // check horizontally
