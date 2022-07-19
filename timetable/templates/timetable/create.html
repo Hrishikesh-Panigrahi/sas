@@ -30,9 +30,8 @@
             <td><span style="display:none">{{ slot.weekday_id }}</span>{{ slot.weekday }}</td>
             <td>{{ slot.start_time }}</td>
             <td>{{ slot.end_time }}</td>
-            <td><button class="slot-delete" id="{{ slot.weekday }}-{{ slot.course }}-{{ slot.time }}-del-btn"
-             onclick="delSlot('{{ slot.weekday }}',{{ slot.time }});">Delete</button></td>
-                                                        <!-- this.parentNode.parentNode.remove(); -->
+            <td><button class="slot-delete" onclick="delSlot('{{ slot.weekday }}',{{ slot.time }})">Delete</button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
