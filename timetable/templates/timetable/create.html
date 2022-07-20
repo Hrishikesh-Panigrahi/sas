@@ -22,6 +22,7 @@
     </thead>
     <tbody>
         {% for slot in table %}
+        <!-- <p>{{ slot.weekday_id }}-{{ slot.course }}-{{ slot.time }}</p> -->
         <tr>
             <td>{{ slot.course }}</td>
             <td>{{ slot.type }}</td>
@@ -29,7 +30,8 @@
             <td><span style="display:none">{{ slot.weekday_id }}</span>{{ slot.weekday }}</td>
             <td>{{ slot.start_time }}</td>
             <td>{{ slot.end_time }}</td>
-            <td><button class="slot-delete" id="{{ slot.weekday }}-{{ slot.course }}-{{ slot.start_time }}">Delete</button></td>
+            <td><button class="slot-delete" onclick="delSlot('{{ slot.weekday }}',{{ slot.time }})">Delete</button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

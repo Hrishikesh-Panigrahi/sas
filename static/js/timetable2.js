@@ -92,3 +92,29 @@ $("#add-btn").on("click", async () => {
         // res = await res.json();
     }
 })
+
+// let del_btns = document.querySelectorAll("[id$=del-btn]");
+
+let tabby = "";
+fetch(path)
+.then((resp) => resp.json())
+.then((json) =>{tabby = json})
+const delSlot = async (weekday,time) => {
+    console.log(weekday,time)
+    console.log(tabby['schedule'][weekday]['slots'][time]);
+    tabby['schedule'][weekday]['slots'][time]['course'] = 'FREE';
+    tabby['schedule'][weekday]['slots'][time]['teacher'] = 'NOPE';
+    console.log(tabby['schedule'][weekday]['slots'][time]);
+    tabby = JSON.stringify(tabby);
+    const csrftoken = getCookie('csrftoken');
+    let res = await fetch('http://localhost:8000/timetable/test', {
+        method: 'POST',
+        headers: {"X-CSRFToken": csrftoken},
+        body: tabby
+    });
+    res = await res.json();
+    console.log(res);
+    fetch(path)
+    .then((resp) => resp.json())
+    .then((json) =>{tabby = json})
+}

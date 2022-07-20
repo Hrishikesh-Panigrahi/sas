@@ -1,0 +1,749 @@
+{
+    "class": "class_id",
+    "schedule": {
+        "monday": {
+            "slots": [
+                {
+                    "time": 0,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 1,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 2,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 3,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 4,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 5,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 6,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 7,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 8,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 9,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 10,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 11,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 12,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 13,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 14,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 15,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 16,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 17,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 18,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 19,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 20,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 21,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 22,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 23,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "tuesday": {
+            "slots": [
+                {
+                    "time": 0,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 1,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 2,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 3,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 4,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 5,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 6,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 7,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 8,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 9,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 10,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 11,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 12,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 13,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 14,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 15,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 16,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 17,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 18,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 19,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 20,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 21,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 22,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 23,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "wednesday": {
+            "slots": [
+                {
+                    "time": 0,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 1,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 2,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 3,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 4,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 5,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 6,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 7,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 8,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 9,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 10,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 11,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 12,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 13,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 14,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 15,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 16,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 17,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 18,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 19,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 20,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 21,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 22,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 23,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "thursday": {
+            "slots": [
+                {
+                    "time": 0,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 1,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 2,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 3,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 4,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 5,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 6,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 7,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 8,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 9,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 10,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 11,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 12,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 13,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 14,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 15,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 16,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 17,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 18,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 19,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 20,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 21,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 22,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 23,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "friday": {
+            "slots": [
+                {
+                    "time": 0,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 1,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 2,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 3,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 4,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 5,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 6,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 7,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 8,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 9,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 10,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 11,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 12,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 13,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 14,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 15,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 16,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 17,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 18,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 19,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 20,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 21,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 22,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 23,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        },
+        "saturday": {
+            "slots": [
+                {
+                    "time": 0,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 1,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 2,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 3,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 4,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 5,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 6,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 7,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 8,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 9,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 10,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 11,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 12,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 13,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 14,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 15,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 16,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 17,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 18,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 19,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 20,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 21,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 22,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                },
+                {
+                    "time": 23,
+                    "course": "FREE",
+                    "teacher": "XYZ"
+                }
+            ]
+        }
+    }
+}

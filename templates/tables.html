@@ -107,7 +107,8 @@
     </script>
     {% if title == "tt_test" %}
     <script>
-        var t_json = {{ json | safe }};
+        let t_json = {{ json | safe }}
+        let path = "{% static 'tables/class_id_weekly.json' %}";
     </script>
     <script src="{% static 'js/timetable2.js' %}"></script>
     {% endif %}

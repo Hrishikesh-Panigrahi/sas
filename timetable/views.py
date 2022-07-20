@@ -8,26 +8,32 @@ from django.shortcuts import render
 # from .models import TimeTable
 from cls.models import Class
 
-path = os.path.join(os.getcwd(), 'timetable', 'tables')
+_path = os.path.join(os.getcwd(), 'static', 'tables')
 
-def read_file(path):
-    file = open(path, "r")
+def read_file(_path):
+    file = open(_path, "r")
     data = file.read()
     file.close()
     return data
 
 def test_C(request):
+    if request.method == 'POST':
+        body = json.loads(request.body)
+        with open (os.path.join(_path, '{}_weekly.json'.format(body['class'])), 'w') as fp:
+            json.dump(body, fp, indent=4)
+        return JsonResponse({"msg":"updated"})
     context = {
         'title': 'tt_test',
+        'page': 'test',
     }
     try:
-        f = open(os.path.join(path, '{}_static.json'.format('class_id')))
+        f = open(os.path.join(_path, '{}_weekly.json'.format('class_id')))
         table = json.loads(f.read())
         schedule = table['schedule']
         schedule_keys = list(schedule.keys())
         Formatted_Schedule=[]
         for key, value in schedule.items():
-            for i in value:
+            for i in value['slots']:
                 i['weekday'] = key
                 i['weekday_id'] = schedule_keys.index(key)
                 Formatted_Schedule.append(i)
@@ -51,9 +57,9 @@ def createTT(request):
     
     if request.method == 'POST':
         body = json.loads(request.body)
-        with open (os.path.join(path, '{}_static.json'.format(body['class'])), 'w') as fp:
+        with open (os.path.join(_path, '{}_static.json'.format(body['class'])), 'w') as fp:
             json.dump(body, fp, indent=4)
-        with open (os.path.join(path, '{}_weekly.json'.format(body['class'])), 'w') as fp:
+        with open (os.path.join(_path, '{}_weekly.json'.format(body['class'])), 'w') as fp:
             json.dump(body, fp, indent=4)
         return JsonResponse({"msg":"saved"})
     
