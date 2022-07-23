@@ -30,16 +30,16 @@
     </tfoot>
     <tbody>
 <h1></h1>
-        {% for i in teachercls.assign_cls_set.all %}
+        {% for assign in teachercls.assign_cls_set.all %}
         <tr>
             <td>
-                <a href="{% url 'attendance' request.user.id i.id %}">
-                    {{ i.cls }}
+                <a href="{% url 'attendance' request.user.id assign.id %}">
+                    {{ assign.cls }}
                 </a>
             </td>
-            <td>{{ i.cls.department }}</td>
-            <td>{{ i.course.id }}</td>
-            <td>{{ i.course.name }}</td>
+            <td>{{ assign.cls.department }}</td>
+            <td>{{ assign.course.id }}</td>
+            <td>{{ assign.course.name }}</td>
 
 
 
@@ -48,6 +48,12 @@
 
     </tbody>
 </table>
+
+{% elif title == 'dates' %}
+
+hello
+
+
 {% endif %}
 
 {% endblock %}

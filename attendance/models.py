@@ -7,6 +7,24 @@ from users.models import User, TeacherProfile
 
 # Create your models here.
 
+time_slots = (
+        ('9:30 - 10:30', '9:30 - 10:30'),
+        ('10:30 - 11:30', '10:30 - 11:30'),
+        ('11:30 - 12:30', '11:30 - 12:30'),
+        ('12:30 - 1:30', '12:30 - 1:30'),
+        ('2:30 - 3:30', '2:30 - 3:30'),
+        ('3:30 - 4:30', '3:30 - 4:30'),
+        ('4:30 - 5:30', '4:30 - 5:30'),
+    )
+
+day_choices = (
+        ('Monday','Monday'),
+        ('Tuesday','Tuesday'),
+        ('Wednesday','Wednesday'),
+        ('Thursday','Thursday'),
+        ('Friday','Friday')
+    )
+
 class Assign_cls(models.Model):
     cls = models.ForeignKey(Class, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -21,9 +39,15 @@ class Assign_cls(models.Model):
         te = TeacherProfile.objects.get(id=self.teacher_id)
         return '%s : %s : %s' % (te, cr.name, cl)
 
+class AssignTime(models.Model):
+    assign = models.ForeignKey(Assign_cls, on_delete=models.CASCADE)
+    period = models.CharField(max_length=50, choices=time_slots, default='11:00 - 11:50')
+    day = models.CharField(max_length=15, choices=day_choices)
+
 
 class AttendanceClass(models.Model):
     assign = models.ForeignKey(Assign_cls, on_delete=models.CASCADE)
+    date = models.DateField(default='2022-10-23')
     status = models.IntegerField(default=0)
 
     class Meta:
@@ -34,6 +58,7 @@ class AttendanceClass(models.Model):
 class Attendance(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
     student = models.ForeignKey(student, on_delete=models.CASCADE, default=1)
+    date = models.DateField(default='2022-10-23')
     attendanceclass = models.ForeignKey(
         AttendanceClass, on_delete=models.CASCADE, default=1)
     status = models.BooleanField(default='True')

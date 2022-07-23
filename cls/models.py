@@ -20,6 +20,10 @@ class Class(models.Model):
     class_teacher = models.OneToOneField(
         TeacherProfile, on_delete=models.SET_NULL, null=True, blank=True)
     # is_timetable= models.BooleanField(default=False)
-
+    
+    class Meta:
+        verbose_name_plural = 'classes'
+    
+    
     def __str__(self):
         return str(self.id) + " " + self.class_name
