@@ -6,90 +6,45 @@
 
 {% block table %}
 <!-- for class selection -->
-{% if title == 'ClassSelection' and teacherprofile == request.user.id %}
-{% if course %}
+{% if title == 'ClassSelection' %}
+
 
 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
     <thead>
         <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Scheme</th>
-            <th>Sem</th>
+            <th>name</th>
+            <th>dept</th>
+            <th>course id</th>
+            <th>course name</th>
 
         </tr>
     </thead>
     <tfoot>
         <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Scheme</th>
-            <th>Sem</th>
+            <th>name</th>
+            <th>dept</th>
+            <th>id</th>
+            <th>id</th>
 
         </tr>
     </tfoot>
     <tbody>
-
-        {% for i in cls %}
+<h1></h1>
+        {% for i in teachercls.assign_cls_set.all %}
         <tr>
             <td>
-                <a href="{% url 'attendance-course'  request.user.id  i.id %}">
-                    {{ i.class_name }}
+                <a href="{% url 'attendance' request.user.id i.id %}">
+                    {{ i.cls }}
                 </a>
             </td>
-            <td>{{ i.department }}</td>
-            <td>{{ i.class_teacher }}</td>
-            <td>{{ i.id }}</td>
+            <td>{{ i.cls.department }}</td>
+            <td>{{ i.course.id }}</td>
+            <td>{{ i.course.name }}</td>
 
 
 
             {% endfor %}
         </tr>
-
-    </tbody>
-</table>
-{% endif %}
-
-<!-- for course selection -->
-
-{% elif title == 'CourseSelection' %}
-<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Scheme</th>
-            <th>Sem</th>
-
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Scheme</th>
-            <th>Sem</th>
-
-        </tr>
-    </tfoot>
-    <tbody>
-
-        {% for i in course %}
-        <tr>
-            <td>
-                <a href="#">
-                    {{ i.name }}
-                </a>
-            </td>
-            <td>{{ i.code }}</td>
-            <td>{{ i.id }}</td>
-            <td>{{ i.id }}</td>
-
-
-
-            {% endfor %}
-        </tr>
-
 
     </tbody>
 </table>
