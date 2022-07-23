@@ -7,6 +7,7 @@ from users.models import TeacherProfile
 from .models import Assign_cls, AttendanceClass
 from course.models import Course
 from cls.models import Class
+from django.utils import timezone
 
 
 def attendanceclass(request, pk):
@@ -33,5 +34,14 @@ def attendanceclass(request, pk):
    return render(request, 'attendance/class_course_selection.html', context)
 
 
-def attendance(request, pk, cls_id):
-   return HttpResponse('nice')
+def attendance(request, pk, assign_id):
+   now = timezone.now()
+
+   ass = get_object_or_404(Assign, id=assign_id)
+
+   att_list = ass.attendanceclass_set.filter(date__lte=now).order_by('-date')
+
+   context = {'title': 'dates',
+               'ass': ass,
+               'att_list': att_list}
+   return render(request, 'attendance/class_course_selection.html', context)
