@@ -5,121 +5,145 @@
             "slots": [
                 {
                     "time": 0,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 1,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 2,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 3,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 4,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 5,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 6,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 7,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 8,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 9,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 10,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 11,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 12,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 13,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 14,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 15,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 16,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 17,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 18,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 19,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 20,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 21,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 22,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 23,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 }
@@ -129,121 +153,145 @@
             "slots": [
                 {
                     "time": 0,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 1,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 2,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 3,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 4,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 5,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 6,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 7,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 8,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 9,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 10,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 11,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 12,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 13,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 14,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 15,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 16,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 17,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 18,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 19,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 20,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 21,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 22,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 23,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 }
@@ -253,122 +301,146 @@
             "slots": [
                 {
                     "time": 0,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 1,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 2,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 3,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 4,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 5,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 6,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 7,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 8,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 9,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 10,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 11,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 12,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 13,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 14,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 15,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 16,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 17,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 18,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 19,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 20,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 21,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 22,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 23,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 }
             ]
@@ -377,122 +449,146 @@
             "slots": [
                 {
                     "time": 0,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 1,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 2,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "PCE-II",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 3,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 4,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 5,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 6,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 7,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 8,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 9,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 10,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 11,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 12,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 13,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 14,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 15,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 16,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 17,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 18,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 19,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "SE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 20,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 21,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "TCS",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 22,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 23,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mini Project",
                     "teacher": "XYZ"
                 }
             ]
@@ -501,121 +597,145 @@
             "slots": [
                 {
                     "time": 0,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 1,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 2,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 3,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 4,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 5,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mentoring",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 6,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Remedial",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 7,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 8,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 9,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 10,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 11,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 12,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 13,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mentoring",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 14,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Remedial",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 15,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 16,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 17,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "DWM",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 18,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "CN",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 19,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 20,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "IP",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 21,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Mentoring",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 22,
-                    "course": "FREE",
+                    "batch": "All",
+                    "course": "Remedial",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 23,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 }
@@ -625,121 +745,145 @@
             "slots": [
                 {
                     "time": 0,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 1,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 2,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 3,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 4,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 5,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 6,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 7,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 8,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 9,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 10,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 11,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 12,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 13,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 14,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 15,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 16,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 17,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 18,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 19,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 20,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 21,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 22,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 },
                 {
                     "time": 23,
+                    "batch": "All",
                     "course": "FREE",
                     "teacher": "XYZ"
                 }
