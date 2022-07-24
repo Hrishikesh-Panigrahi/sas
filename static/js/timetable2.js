@@ -45,8 +45,8 @@ if (t_json)
     time_table = t_json
 
 const sortByKey = (a, b) => {
-    let keyA = a.start_time
-    let keyB = b.start_time
+    let keyA = a.time % 8
+    let keyB = b.time % 8
 
     // Compare
     if (keyA < keyB) return -1;

@@ -101,7 +101,7 @@ let time_table = {
 // dictionary 'dict' is used to store lecture data until pushed to 'slots' array
 // in time_table object. Store in browser storage as timetable and disable button.
 const createTimeTable = async () => {
-    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:15-12:15",
+    let time_slot = ["08:00-09:00", "09:00-10:00", "10:00-11:00", "11:15-12:15",
                     "12:15-13:15", "14:00-15:00", "15:00-16:00", "16:00-17:00"];
     let tt = "";
     let i = 0;
@@ -119,7 +119,7 @@ const createTimeTable = async () => {
     });
     tt = JSON.stringify(time_table);
     // console.log(tt);
-    // localStorage.setItem('timetable', tt);
+    localStorage.setItem('timetable', tt);
     // localStorage.setItem('flushtimetable', tt);
     // tt = localStorage.getItem('timetable');
     document.getElementById("create-btn").disabled = true;
@@ -138,7 +138,6 @@ const createTimeTable = async () => {
 // Load 'timetable' object if available. Change HTML of table to output 
 // appropriate lectures & teachers.Displays on CreateTimeTable page once
 // time table is created.
-11
 const loadData = async () => {
     if (localStorage.getItem('timetable') == null) {
         console.log("nothing to show");
@@ -259,7 +258,7 @@ const loadRequests = () => {
     let cards = document.getElementById("cards");
     let temp_time_table = JSON.parse(localStorage.getItem('flushtimetable'));
     req_list = JSON.parse(localStorage.getItem('reqList'));
-    let time_slot = ["8:00-9:00", "9:00-10:00", "10:00-11:00", "11:15-12:15",
+    let time_slot = ["08:00-09:00", "09:00-10:00", "10:00-11:00", "11:15-12:15",
                      "12:15-13:15", "14:00-15:00", "15:00-16:00", "16:00-17:00"];
     let day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     while (req_list.length != 0) {

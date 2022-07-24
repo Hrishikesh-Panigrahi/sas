@@ -17,6 +17,8 @@ def read_file(_path):
     return data
 
 def test_C(request):
+    time_slot = ["08:00-09:00", "09:00-10:00", "10:00-11:00", "11:15-12:15", \
+    "12:15-13:15", "14:00-15:00", "15:00-16:00", "16:00-17:00"];
     if request.method == 'POST':
         body = json.loads(request.body)
         with open (os.path.join(_path, '{}_weekly.json'.format(body['class'])), 'w') as fp:
@@ -33,10 +35,29 @@ def test_C(request):
         schedule_keys = list(schedule.keys())
         Formatted_Schedule=[]
         for key, value in schedule.items():
-            for i in value['slots']:
-                i['weekday'] = key
-                i['weekday_id'] = schedule_keys.index(key)
-                Formatted_Schedule.append(i)
+            for i in range(len(value['slots'])):
+                value['slots'][i]['start_time'] = time_slot[value['slots'][i]['time'] % 8].split('-')[0] 
+                value['slots'][i]['end_time'] = time_slot[value['slots'][i]['time'] % 8].split('-')[1]              
+                value['slots'][i]['time'] = value['slots'][i]['time'] % 8
+                value['slots'][i]['weekday'] = key
+                value['slots'][i]['weekday_id'] = schedule_keys.index(key)
+                # vertical check
+                if i-8 >= 0 and value['slots'][i-8]['course'] == value['slots'][i]['course']:
+                    continue
+                # horizontal check
+                if i-1 >= 0 and value['slots'][i-1]['course'] == value['slots'][i]['course'] and (i-1)%8 != 2 and (i-1)%8 != 4 and (i-1)%8 != 7:
+                    # rowspan check not implemented
+                    Formatted_Schedule[-1]['end_time'] = time_slot[value['slots'][i]['time'] % 8].split('-')[1]
+                    continue                    
+                # fix batch number 
+                if i+8 < 24 and value['slots'][i]['course'] != value['slots'][i+8]['course']:
+                    if i < 8:
+                        value['slots'][i]['batch'] = "A"
+                    elif i< 16:
+                        value['slots'][i]['batch'] = "B"
+                if i >= 16 and value['slots'][i]['course'] != value['slots'][i-8]['course']:
+                        value['slots'][i]['batch'] = "C"
+                Formatted_Schedule.append(value['slots'][i])
         context['json'] = table
         context['table'] = Formatted_Schedule
     except:
