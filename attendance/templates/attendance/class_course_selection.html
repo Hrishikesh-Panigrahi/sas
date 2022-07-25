@@ -33,7 +33,7 @@
         {% for assign in teachercls.assign_cls_set.all %}
         <tr>
             <td>
-                <a href="{% url 'attendance' request.user.id assign.id %}">
+                <a href="{% url 'attendance-attendance_class' request.user.id assign.id %}">
                     {{ assign.cls }}
                 </a>
             </td>
@@ -41,12 +41,11 @@
             <td>{{ assign.course.id }}</td>
             <td>{{ assign.course.name }}</td>
 
-
-
             {% endfor %}
         </tr>
 
     </tbody>
+    
 </table>
 
 {% elif title == 'dates' %}
@@ -83,7 +82,7 @@
             {% if ass.status == 0 %}
             <td class="p-3 mb-2 bg-danger text-white">Not Marked</td>
             <td>
-                <a class="btn btn-primary" href="#" role="button">Enter Attendance</a>
+                <a class="btn btn-primary" href="{% url 'attendance' ass.id %}" role="button">Enter Attendance</a>
             </td>
             {% elif ass.status == 1 %}
                     <td class="p-3 mb-2 bg-success text-white">Marked</td>
