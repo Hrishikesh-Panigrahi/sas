@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -50,3 +51,14 @@ def attendance(request, pk, assign_id):
                'ass': ass,
                'att_list': att_list}
    return render(request, 'attendance/class_course_selection.html', context)
+
+
+def stu_list(request, attendancecls_id):
+   att_list = get_object_or_404(AttendanceClass, id=attendancecls_id)
+   ass = att_list.assign
+   cls = ass.cls
+   context = {'att': att_list,
+               'ass':ass,
+               'cls':cls
+            }
+   return render(request, 'attendance/attendance.html', context)
