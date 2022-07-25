@@ -29,7 +29,7 @@
         </tr>
     </tfoot>
     <tbody>
-<h1></h1>
+
         {% for assign in teachercls.assign_cls_set.all %}
         <tr>
             <td>
@@ -51,7 +51,56 @@
 
 {% elif title == 'dates' %}
 
-hello
+<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>name</th>
+            <th>dept</th>
+            <th>course id</th>
+            <th>course name</th>
+
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>name</th>
+            <th>dept</th>
+            <th>id</th>
+            <th>id</th>
+
+        </tr>
+    </tfoot>
+    <tbody>
+
+        {% for ass in att_list %}
+        <tr>
+            <td>
+                <a href="#">
+                    {{ ass.assign.cls }}
+                </a>
+            </td>
+            <td>{{ ass.date }}</td>
+            {% if ass.status == 0 %}
+            <td class="p-3 mb-2 bg-danger text-white">Not Marked</td>
+            <td>
+                <a class="btn btn-primary" href="#" role="button">Enter Attendance</a>
+            </td>
+            {% elif ass.status == 1 %}
+                    <td class="p-3 mb-2 bg-success text-white">Marked</td>
+                    <td><a class="btn btn-secondary" href="#" role="button">Edit Attendance</a> </td>
+
+            {% comment %} {% else %}
+                <td class="p-3 mb-2 bg-warning text-white">Cancelled</td>
+                <td><a class="btn btn-primary" href="#" role="button">Enter Attendance</a></td> {% endcomment %}
+            
+                {% endif %}
+
+
+            {% endfor %}
+        </tr>
+
+    </tbody>
+</table>
 
 
 {% endif %}

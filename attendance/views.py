@@ -8,11 +8,11 @@ from .models import Assign_cls, AttendanceClass
 from course.models import Course
 from cls.models import Class
 from django.utils import timezone
+import datetime
+
 
 
 def attendanceclass(request, pk):
-   # teachercls = AttendanceClass.objects.filter(assign__teacher__user__id = pk)
-   # teachercls.distinct()   
    teachercls= get_object_or_404(TeacherProfile, user__id=pk)
    context = { 'title': 'ClassSelection',
                'teachercls': teachercls,
@@ -36,10 +36,15 @@ def attendanceclass(request, pk):
 
 def attendance(request, pk, assign_id):
    now = timezone.now()
+   now1 = datetime.date.today()  
+   print(now)
+   print(now1)
 
-   ass = get_object_or_404(Assign, id=assign_id)
-
-   att_list = ass.attendanceclass_set.filter(date__lte=now).order_by('-date')
+   ass = get_object_or_404(Assign_cls, id=assign_id)
+   print(ass)
+   # order_by('-date')
+   att_list = ass.attendanceclass_set.filter(date__lte = now1).order_by('-date')
+   print(att_list)
 
    context = {'title': 'dates',
                'ass': ass,
