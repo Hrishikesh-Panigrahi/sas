@@ -33,7 +33,7 @@
         {% for assign in teachercls.assign_cls_set.all %}
         <tr>
             <td>
-                <a href="{% url 'attendance-attendance_class' request.user.id assign.id %}">
+                <a href="{% url 'attendance-attendance_date' assign.id %}">
                     {{ assign.cls }}
                 </a>
             </td>
