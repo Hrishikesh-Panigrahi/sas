@@ -1,0 +1,42 @@
+{% extends 'tables.html' %}
+
+{% block heading %}
+
+{% endblock %}
+
+{% block table %}
+<form action="" method="POST">
+  {% csrf_token %}
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Mark Attendance</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th>Name</th>
+          <th>Mark Attendance</th>
+        </tr>
+      </tfoot>
+      <tbody>
+        {% for stu in cls.student_set.all %}
+          <tr>
+            <td>{{ stu.user.first_name }}</td>
+            <td>
+              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-outline-primary active"><input type="radio" name="{{ stu.user.email }}" id="option1" autocomplete="off" value="present" checked />Present</label>
+
+                <label class="btn btn-outline-warning"><input type="radio" name="{{ stu.user.email }}" id="option2" autocomplete="off" value="absent" />Absent</label>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+      <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
+      <span class="text">Submit</span>
+    </button>
+</form>
+{% endblock %}
