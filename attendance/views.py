@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from student.models import student
 from users.models import TeacherProfile
-from .models import Assign_cls, AttendanceClass
+from .models import Assign_cls, Attendance, AttendanceClass
 from course.models import Course
 from cls.models import Class
 from django.utils import timezone
@@ -44,23 +44,47 @@ def stu_list(request, attendancecls_id):
    att_list = get_object_or_404(AttendanceClass, id=attendancecls_id)
    ass = att_list.assign
    cls = ass.cls
+   co = ass.course
 
    context = {'att': att_list,
                'ass':ass,
                'cls':cls
             }
+
    if request.method == 'POST':
-      print('hello')
+
       for i, stu in enumerate(cls.student_set.all()):
-         print(request.POST[stu.user.email])
+
+         stats = request.POST[stu.user.email]
+         if stats == 'present':
+            s = 'True'
+         elif stats == 'absent':
+            s = 'False'
+         
+         if att_list.status == 1:
+            att = Attendance.objects.get_or_create(course = co ,student = stu, date = att_list.date, attendanceclass = att_list, status = s)
+            
+            print(att)
+         else:
+            att = Attendance(course = co ,student = stu, date = att_list.date, attendanceclass = att_list, status = s)
+            att.save()
+            att_list.status=1
+            att_list.save()
+            
+            print(att.status)
+
+      return redirect('/')
 
    return render(request, 'attendance/attendance.html', context)
 
-# def confirm_attendance(request, attendancecls_id ):
-#    att_list = get_object_or_404(AttendanceClass, id=attendancecls_id)
-#    ass = att_list.assign
-#    cls = ass.cls
-   # for i, s in enumerate(cl.student_set.all()):
-   #    print(request.POST[s.USN])
+def edit_attendance(request, attendancecls_id ):
+   att_list = get_object_or_404(AttendanceClass, id=attendancecls_id)
+   ass = att_list.assign
+   cls = ass.cls
+   
+   context = {'att': att_list,
+               'ass':ass,
+               'cls':cls
+            }
 
-   # return HttpResponseRedirect(reverse('attendance-attendance_date', args=(ass.id,)))
+   return render(request, 'attendance/edit-attendance.html', context)
