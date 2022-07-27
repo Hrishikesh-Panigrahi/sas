@@ -1,16 +1,16 @@
-from multiprocessing import context
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+
 from student.models import student
 from users.models import TeacherProfile
 from .models import Assign_cls, AttendanceClass
 from course.models import Course
 from cls.models import Class
 from django.utils import timezone
-import datetime
 
+import datetime
 
 
 def attendanceclass(request, pk):
@@ -19,31 +19,18 @@ def attendanceclass(request, pk):
                'teachercls': teachercls,
                }
 
-   # for i, s in enumerate(cls.student_set.all()):
-
-   # if request.method == 'POST':
    #    try:
    #       if request.POST['courseSelected'] :
    #          c = request.POST['courseSelected']
-   #          print(c)
    #          ass = Assign_cls.objects.get(course__name=c)
-   #          print(ass) 
-   #    except:
-   #          pass
-      # return HttpResponse('success')
 
    return render(request, 'attendance/class_course_selection.html', context)
 
 
-def attendance(request, pk, assign_id):
-   now = timezone.now()
+def attendance_date(request, assign_id):
    now1 = datetime.date.today()  
-   print(now)
-   print(now1)
-
    ass = get_object_or_404(Assign_cls, id=assign_id)
-   print(ass)
-   # order_by('-date')
+
    att_list = ass.attendanceclass_set.filter(date__lte = now1).order_by('-date')
    print(att_list)
 
@@ -57,8 +44,23 @@ def stu_list(request, attendancecls_id):
    att_list = get_object_or_404(AttendanceClass, id=attendancecls_id)
    ass = att_list.assign
    cls = ass.cls
+
    context = {'att': att_list,
                'ass':ass,
                'cls':cls
             }
+   if request.method == 'POST':
+      print('hello')
+      for i, stu in enumerate(cls.student_set.all()):
+         print(request.POST[stu.user.email])
+
    return render(request, 'attendance/attendance.html', context)
+
+# def confirm_attendance(request, attendancecls_id ):
+#    att_list = get_object_or_404(AttendanceClass, id=attendancecls_id)
+#    ass = att_list.assign
+#    cls = ass.cls
+   # for i, s in enumerate(cl.student_set.all()):
+   #    print(request.POST[s.USN])
+
+   # return HttpResponseRedirect(reverse('attendance-attendance_date', args=(ass.id,)))
