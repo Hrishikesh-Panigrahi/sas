@@ -25,11 +25,12 @@ def index(request):
 @staff_member_required(login_url='/')
 def create(request):
     uDept = request.user.department
+
     # getting teacher and students
-    # t = User.objects.filter(department=uDept, is_classteacher=True)
     t = TeacherProfile.objects.filter(
         user__department=uDept, user__is_classteacher=True, class__class_teacher=None)
     s = student.objects.filter(user__department=uDept, cls=None)
+
     # getting course of the department
     co = Course.objects.filter(dept=uDept)
     filter = StudentFilter(request.GET, queryset=s)
@@ -45,11 +46,9 @@ def create(request):
         form = ClassCreateForm(request.POST, students=s, course=co, teachers=t)
 
         if form.is_valid():
-            print(request.POST)
         # if (1==2):
             body = request.POST.dict()
             teacher = t.get(pk=request.POST['teacher'])
-            print(teacher)
             students = dict(request.POST)['students']
             course = None
             if 'course' in dict(request.POST):
@@ -63,7 +62,7 @@ def create(request):
                 s.cls = c
                 if course:
                     s.course.add(*course)
-                s.save()
+                s.save()                
     return render(request, 'cls/form.html', context)
 
 
@@ -113,17 +112,18 @@ def clsCreation(request):
         'course': course
     }
     if request.method == 'POST':
-        print('hello')
+
         clsname = request.POST['ClassName']
+        cls = Class(class_name=clsname, department=uDept)
+        cls.save()
+
         if 'course' in dict(request.POST):
-            course = dict(request.POST)['course']
-            # co = Course.objects.filter(name = course)
-            # co = get_object_or_404(Course, name=course)
-            cls = Class(class_name=clsname, department=uDept)
-            cls.save()
+            courses = dict(request.POST)['course']
 
-            # ass = Assign_cls.objects.get_or_create(cls=cls, course = co)
+            for course in courses:
+                co = Course.objects.get(name = course)
+
+                Assign_cls.objects.get_or_create(cls=cls, course = co, teacher = t)
+                
             
-
-
     return render(request, 'cls/class-section1.html', context)    
