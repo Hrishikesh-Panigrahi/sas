@@ -1,0 +1,28 @@
+{% extends 'blank.html' %}
+
+{% block content %}
+<form action="{% url 'clsCreation' %}" method="POST">
+    {% csrf_token %}
+<div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">class name</span>
+    <input type="text" name = "ClassName" class="form-control" placeholder="Class Name" aria-label="Class Name" aria-describedby="basic-addon1">
+  </div>
+
+  {% for co in course %}
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1"><input type="checkbox" id="ProcessingConsultantYN" value="0" /></span>
+    <label class="form-control"><ul class="list-group">
+    <ul>
+    
+      <li class="list-group-item">{{co.name}}</li>
+    </ul>
+  </div>
+
+  
+{% endfor %}
+<div>
+  <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
+    <span class="text">Submit</span>
+  </button></div>
+  </form>
+{% endblock content %}

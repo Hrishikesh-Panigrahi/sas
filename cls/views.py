@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
 from cls.filters import StudentFilter, CourseFilter
 from course.models import Course
@@ -7,6 +8,7 @@ from users.models import TeacherProfile, User
 from .forms import ClassCreateForm, ClassUpdateForm
 from .models import Class
 from student.models import student
+from attendance.models import Assign_cls, Attendance, AttendanceClass
 
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -100,3 +102,28 @@ def update(request, id):
         "filter1": inStudentFilter
     }
     return render(request, 'cls/form.html', context)
+
+
+def clsCreation(request):
+    uDept = request.user.department
+    creater = request.user
+    t = TeacherProfile.objects.get(user = creater)
+    course = Course.objects.filter(dept = uDept)
+    context = {
+        'course': course
+    }
+    if request.method == 'POST':
+        print('hello')
+        clsname = request.POST['ClassName']
+        if 'course' in dict(request.POST):
+            course = dict(request.POST)['course']
+            # co = Course.objects.filter(name = course)
+            # co = get_object_or_404(Course, name=course)
+            cls = Class(class_name=clsname, department=uDept)
+            cls.save()
+
+            # ass = Assign_cls.objects.get_or_create(cls=cls, course = co)
+            
+
+
+    return render(request, 'cls/class-section1.html', context)    

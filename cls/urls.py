@@ -4,4 +4,6 @@ from . import views
 urlpatterns = [
     path('', views.create, name='createClass'),
     path('<int:id>', views.update),
+    path('creation', views.clsCreation, name='clsCreation'),
+    
 ]
