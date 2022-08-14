@@ -1,29 +1,29 @@
 {% extends 'blank.html' %}
 
 {% block content %}
-<form action="{% url 'clsCreation' %}" method="POST">
+  <form action="{% url 'clsCreation' %}" method="POST">
     {% csrf_token %}
-<div class="input-group mb-3">
-    <span class="input-group-text" id="basic-addon1">class name</span>
-    <input type="text" name = "ClassName" class="form-control" placeholder="Class Name" aria-label="Class Name" aria-describedby="basic-addon1">
-  </div>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="basic-addon1">class name</span>
+      <input type="text" name = "ClassName" class="form-control" placeholder="Class Name" aria-label="Class Name" aria-describedby="basic-addon1">
+    </div>
 
-  {% for co in course %}
-  <div class="input-group">
-    <span class="input-group-addon" id="basic-addon1">
-      <input type="checkbox" name="course" id="ProcessingConsultantYN" value="{{co.name}}" />
-    </span>
+    {% for co in course %}
+    <div class="input-group">
+      <span class="input-group-addon" id="basic-addon1">
+        <input type="checkbox" name="course" id="ProcessingConsultantYN" value="{{co.name}}" />
+      </span>
 
-    <ul>    
-      <li class="list-group-item">{{co.name}}</li>
-    </ul>
-  </div>
+      <ul>    
+        <li class="list-group-item">{{co.name}}</li>
+      </ul>
+    </div>
+    {% endfor %}
 
-  
-{% endfor %}
-<div>
-  <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
-    <span class="text">Submit</span>
-  </button></div>
+    <div>
+      <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
+        <span class="text">Submit</span>
+      </button>
+    </div>
   </form>
 {% endblock content %}

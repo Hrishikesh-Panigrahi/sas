@@ -8,8 +8,8 @@ from users.models import TeacherProfile
 from .models import Assign_cls, Attendance, AttendanceClass
 from course.models import Course
 from cls.models import Class
-from django.utils import timezone
 
+from django.utils import timezone
 import datetime
 
 
@@ -18,12 +18,6 @@ def attendanceclass(request, pk):
    context = { 'title': 'ClassSelection',
                'teachercls': teachercls,
                }
-
-   #    try:
-   #       if request.POST['courseSelected'] :
-   #          c = request.POST['courseSelected']
-   #          ass = Assign_cls.objects.get(course__name=c)
-
    return render(request, 'attendance/class_course_selection.html', context)
 
 
@@ -64,15 +58,12 @@ def stu_list(request, attendancecls_id):
          if att_list.status == 1:
             att = Attendance.objects.get_or_create(course = co ,student = stu, date = att_list.date, attendanceclass = att_list, status = s)
             
-            print(att)
          else:
             att = Attendance(course = co ,student = stu, date = att_list.date, attendanceclass = att_list, status = s)
             att.save()
             att_list.status=1
             att_list.save()
             
-            print(att.status)
-
       return redirect('/')
 
    return render(request, 'attendance/attendance.html', context)

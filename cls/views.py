@@ -12,13 +12,10 @@ from attendance.models import Assign_cls, Attendance, AttendanceClass
 
 from django.contrib.admin.views.decorators import staff_member_required
 
-# Create your views here.
-
 
 @staff_member_required(login_url='/')
 def index(request):
     uDept = request.user.department
-    # return render()
     return HttpResponse("helo")
 
 
@@ -46,10 +43,11 @@ def create(request):
         form = ClassCreateForm(request.POST, students=s, course=co, teachers=t)
 
         if form.is_valid():
-        # if (1==2):
+
             body = request.POST.dict()
             teacher = t.get(pk=request.POST['teacher'])
             students = dict(request.POST)['students']
+            
             course = None
             if 'course' in dict(request.POST):
                 course = dict(request.POST)['course']
@@ -57,12 +55,14 @@ def create(request):
             c = Class(class_name=body['name'],
                       department=uDept, class_teacher=teacher)
             c.save()
+            
             for obj in students:
                 s = student.objects.get(pk=obj)
                 s.cls = c
                 if course:
                     s.course.add(*course)
                 s.save()                
+    
     return render(request, 'cls/form.html', context)
 
 

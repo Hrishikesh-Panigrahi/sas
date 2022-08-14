@@ -1,4 +1,3 @@
-
 from .models import User, TeacherProfile
 from student.models import student
 from django.dispatch import receiver
@@ -44,7 +43,6 @@ def save_user_profile(sender, instance, created ,**kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    # print(instance)
     if not instance.is_staff == True:
         try:
             TeacherProfile.objects.get(user=instance).delete()
