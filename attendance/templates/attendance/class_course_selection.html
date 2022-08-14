@@ -48,58 +48,87 @@
 </table>
 
 {% elif title == 'dates' %}
+    <form action="{% url 'attendance-attendance_date' ass.id %}" method="POST">
+        {% csrf_token %}
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>name</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Enter Attendance</th>
+                    <th>ADD </th>
 
-<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>name</th>
-            <th>dept</th>
-            <th>course id</th>
-            <th>course name</th>
+                </tr>
+            </thead>
 
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>name</th>
-            <th>dept</th>
-            <th>id</th>
-            <th>id</th>
+            <tfoot>
+                <tr>
 
-        </tr>
-    </tfoot>
-    <tbody>
+                    <th>
+                        <select name="">
+                            <option selected value="">------</option>
+                            <option value="Lecture">Lecture</option>
+                            <option value="Lab">Lab</option>
+                        </select>
+                        <hr>
+                        Type
+                    </th>
 
-        {% for attcls in att_list %}
-        <tr>
-            <td>
-                <a href="#">
-                    {{ attcls.assign.cls }}
-                </a>
-            </td>
-            <td>{{ attcls.date }}</td>
-            {% if attcls.status == 0 %}
-            <td class="p-3 mb-2 bg-danger text-white">Not Marked</td>
-            <td>
-                <a class="btn btn-primary" href="{% url 'attendance' attcls.id %}" role="button">Enter Attendance</a>
-            </td>
-            {% elif attcls.status == 1 %}
-                    <td class="p-3 mb-2 bg-success text-white">Marked</td>
-                    <td><a class="btn btn-secondary" href="{% url 'edit-attendance' attcls.id %}" role="button">Edit Attendance</a> </td>
+                    <th>
+                        <input type="datetime-local" name="" />
+                        <hr>
+                        Date 
+                    </th>
+{% comment %}         
+        ('9:30 - 10:30', '9:30 - 10:30'),
+        ('10:30 - 11:30', '10:30 - 11:30'),
+        ('11:30 - 12:30', '11:30 - 12:30'),
+        ('12:30 - 1:30', '12:30 - 1:30'),
+        ('2:30 - 3:30', '2:30 - 3:30'),
+        ('3:30 - 4:30', '3:30 - 4:30'),
+        ('4:30 - 5:30', '4:30 - 5:30'),
+{% endcomment %}
+                    <th></th>
+                    <th></th>
+                    
+                    <th> <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
+                        <span class="text"> ADD </span>
+                      </button>
+                    </th>
 
-            {% comment %} {% else %}
-                <td class="p-3 mb-2 bg-warning text-white">Cancelled</td>
-                <td><a class="btn btn-primary" href="#" role="button">Enter Attendance</a></td> {% endcomment %}
-            
-                {% endif %}
+                </tr>
+            </tfoot>
+            <tbody>
+
+                {% for attcls in att_list %}
+                    <tr>
+                        <td>
+                            <a href="#">
+                                {{ attcls.assign.cls }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ attcls.date }}
+                        </td>
+                        {% if attcls.status == 0 %}
+                        <td class="p-3 mb-2 bg-danger text-white">Not Marked</td>
+                        <td>
+                            <a class="btn btn-primary" href="{% url 'attendance' attcls.id %}" role="button">Enter Attendance</a>
+                        </td>
+                        {% elif attcls.status == 1 %}
+                                <td class="p-3 mb-2 bg-success text-white">Marked</td>
+                                <td><a class="btn btn-secondary" href="{% url 'edit-attendance' attcls.id %}" role="button">Edit Attendance</a> </td>
+
+                            {% endif %}
+
+                    </tr>
+                {% endfor %}
 
 
-            {% endfor %}
-        </tr>
-
-    </tbody>
-</table>
-
+            </tbody>
+        </table>
+    </form>
 
 {% endif %}
 

@@ -21,8 +21,6 @@ def attendanceclass(request, pk):
                }
    return render(request, 'attendance/class_course_selection.html', context)
 
-# todo -> manullay dates section
-
 
 def attendance_date(request, assign_id):
    now1 = datetime.date.today()  
@@ -34,6 +32,11 @@ def attendance_date(request, assign_id):
    context = {'title': 'dates',
                'ass': ass,
                'att_list': att_list}
+
+   if request.method == 'POST':
+      print("H")
+      # todo -> manullay dates section  ->>> use assign time model for this
+
    return render(request, 'attendance/class_course_selection.html', context)
 
 
