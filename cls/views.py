@@ -108,8 +108,12 @@ def clsCreation(request):
     creater = request.user
     t = TeacherProfile.objects.get(user = creater)
     course = Course.objects.filter(dept = uDept)
+
+    s = student.objects.filter(user__department=uDept, cls=None)
+
     context = {
-        'course': course
+        'course': course,
+        'stu': s
     }
     if request.method == 'POST':
 
@@ -124,6 +128,5 @@ def clsCreation(request):
                 co = Course.objects.get(name = course)
 
                 Assign_cls.objects.get_or_create(cls=cls, course = co, teacher = t)
-                
-            
+  
     return render(request, 'cls/class-section1.html', context)    

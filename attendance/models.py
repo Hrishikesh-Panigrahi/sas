@@ -49,6 +49,7 @@ class AttendanceClass(models.Model):
     assign = models.ForeignKey(Assign_cls, on_delete=models.CASCADE)
     date = models.DateField(default='2022-10-23')
     status = models.IntegerField(default=0)
+    
 
     class Meta:
         verbose_name = 'Attendance'

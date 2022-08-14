@@ -13,7 +13,6 @@ def creater_attendanceclass(sender, instance, created, **kwargs):
         att, created = AttendanceClass.objects.update_or_create(assign = instance, date = now1)
         att.save()
         # AttendanceClass.objects.create(assign = instance)
-        print('hello')
 
 
 # @receiver(post_save, sender = Assign_cls)
