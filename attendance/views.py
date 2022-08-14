@@ -13,12 +13,15 @@ from django.utils import timezone
 import datetime
 
 
+
 def attendanceclass(request, pk):
    teachercls= get_object_or_404(TeacherProfile, user__id=pk)
    context = { 'title': 'ClassSelection',
                'teachercls': teachercls,
                }
    return render(request, 'attendance/class_course_selection.html', context)
+
+# todo -> manullay dates section
 
 
 def attendance_date(request, assign_id):

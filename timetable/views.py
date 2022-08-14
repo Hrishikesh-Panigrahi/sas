@@ -10,11 +10,6 @@ from cls.models import Class
 
 _path = os.path.join(os.getcwd(), 'static', 'tables')
 
-def read_file(_path):
-    file = open(_path, "r")
-    data = file.read()
-    file.close()
-    return data
 
 def test_C(request):
     time_slot = ["08:00-09:00", "09:00-10:00", "10:00-11:00", "11:15-12:15", \
