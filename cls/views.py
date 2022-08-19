@@ -47,7 +47,7 @@ def create(request):
             body = request.POST.dict()
             teacher = t.get(pk=request.POST['teacher'])
             students = dict(request.POST)['students']
-            
+
             course = None
             if 'course' in dict(request.POST):
                 course = dict(request.POST)['course']
@@ -55,14 +55,14 @@ def create(request):
             c = Class(class_name=body['name'],
                       department=uDept, class_teacher=teacher)
             c.save()
-            
+
             for obj in students:
                 s = student.objects.get(pk=obj)
                 s.cls = c
                 if course:
                     s.course.add(*course)
-                s.save()                
-    
+                s.save()
+
     return render(request, 'cls/form.html', context)
 
 
@@ -106,14 +106,13 @@ def update(request, id):
 def clsCreation(request):
     uDept = request.user.department
     creater = request.user
-    t = TeacherProfile.objects.get(user = creater)
-    course = Course.objects.filter(dept = uDept)
-
-    s = student.objects.filter(user__department=uDept, cls=None)
+    t = TeacherProfile.objects.get(user=creater)
+    course = Course.objects.filter(dept=uDept)
+    std = student.objects.filter(user__department=uDept, cls=None)
 
     context = {
         'course': course,
-        'stu': s
+        'stu': std
     }
     if request.method == 'POST':
 
@@ -125,8 +124,14 @@ def clsCreation(request):
             courses = dict(request.POST)['course']
 
             for course in courses:
-                co = Course.objects.get(name = course)
+                co = Course.objects.get(name=course)
+                Assign_cls.objects.get_or_create(cls=cls, course=co, teacher=t)
 
-                Assign_cls.objects.get_or_create(cls=cls, course = co, teacher = t)
-  
-    return render(request, 'cls/class-section1.html', context)    
+        if 'students' in dict(request.POST):
+            students = dict(request.POST)['students']
+
+            for obj in students:
+                sa = student.objects.get(user__first_name=obj)
+                sa.cls = cls
+                sa.save()
+    return render(request, 'cls/class-section1.html', context)
