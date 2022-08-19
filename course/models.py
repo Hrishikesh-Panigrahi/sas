@@ -36,7 +36,6 @@ class Course(models.Model):
     # Course code
     # Course scheme
     # taught_by = models.ManyToManyField(TeacherProfile)
-    # enrolled_students = models.ManyToManyField()
 
     def __str__(self):
         return self.name

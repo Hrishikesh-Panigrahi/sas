@@ -22,6 +22,7 @@ class Class(models.Model):
     # is_timetable= models.BooleanField(default=False)
     
     class Meta:
+        # unique_together = (('class_name', 'department'),)
         verbose_name_plural = 'classes'
     
     

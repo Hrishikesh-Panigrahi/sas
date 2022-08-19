@@ -1,0 +1,55 @@
+{% extends 'blank.html' %}
+
+{% block content %}
+  <form action="" method="POST">
+    {% csrf_token %}
+
+    <fieldset disabled>
+      <legend>Overview</legend>
+
+      <div class="mb-3">
+        <label for="disabledTextInput" class="form-label">Class</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{ ass.cls.class_name }}" />
+      </div>
+
+      <div class="mb-3">
+        <label for="disabledTextInput" class="form-label">Course</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{ ass.course.name }}" />
+      </div>
+
+      <div class="mb-3">
+        <label for="disabledTextInput" class="form-label">Teacher</label>
+        <input type="text" id="disabledTextInput" class="form-control" placeholder="{{ ass.teacher.user.first_name }} {{ ass.teacher.user.middle_name }} {{ ass.teacher.user.last_name }}" />
+      </div>
+    </fieldset>
+
+    <br />
+    <div>
+      <legend>Create Lecture</legend>
+    </div>
+
+    <div>
+      <label for="disabledTextInput" class="form-label">Day</label>
+      <select class="form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="disabledTextInput" class="form-label">Time slot</label>
+      <select class="form-select" aria-label="Default select example">
+        <option selected>Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+    </div>
+    <br />
+    <div>
+      <button type="submit" class="ml-3 btn btn-primary btn-icon-split"><span class="text">Create</span></button>
+    </div>
+  </form>
+{% endblock %}
