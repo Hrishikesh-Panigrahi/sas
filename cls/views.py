@@ -108,12 +108,13 @@ def clsCreation(request):
     creater = request.user
     t = TeacherProfile.objects.get(user=creater)
     course = Course.objects.filter(dept=uDept)
-    std = student.objects.filter(user__department=uDept, cls=None)
+    s = student.objects.filter(user__department=uDept, cls=None)
 
     context = {
         'course': course,
-        'stu': std
+        'stu': s
     }
+
     if request.method == 'POST':
 
         clsname = request.POST['ClassName']
@@ -131,7 +132,15 @@ def clsCreation(request):
             students = dict(request.POST)['students']
 
             for obj in students:
-                sa = student.objects.get(user__first_name=obj)
-                sa.cls = cls
-                sa.save()
+                s = student.objects.get(user__first_name=obj)
+                s.cls = cls
+                
+                if courses:
+
+                    for course in courses:
+                        co = Course.objects.get(name=course)
+                        s.course.add(co)
+
+                s.save()
+
     return render(request, 'cls/class-section1.html', context)

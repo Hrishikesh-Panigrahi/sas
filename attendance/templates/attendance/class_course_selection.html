@@ -48,8 +48,8 @@
 </table>
 
 {% elif title == 'dates' %}
-    <form action="{% url 'attendance-attendance_date' ass.id %}" method="POST">
-        {% csrf_token %}
+    {% comment %} <form action="{% url 'attendance-attendance_date' ass.id %}" method="POST">
+        {% csrf_token %} {% endcomment %}
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
             <thead>
                 <tr>
@@ -92,9 +92,12 @@
                     <th></th>
                     <th></th>
                     
-                    <th> <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
+                    <th>
+                        <a href="{% url 'create_lecture' ass.id %}"> 
+                        <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
                         <span class="text"> ADD </span>
-                      </button>
+                        </button>
+                        </a>
                     </th>
 
                 </tr>
@@ -128,7 +131,7 @@
 
             </tbody>
         </table>
-    </form>
+    {% comment %} </form> {% endcomment %}
 
 {% endif %}
 

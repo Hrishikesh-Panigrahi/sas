@@ -13,7 +13,6 @@ from django.utils import timezone
 import datetime
 
 
-
 def attendanceclass(request, pk):
    teachercls= get_object_or_404(TeacherProfile, user__id=pk)
    context = { 'title': 'ClassSelection',
@@ -27,17 +26,23 @@ def attendance_date(request, assign_id):
    ass = get_object_or_404(Assign_cls, id=assign_id)
 
    att_list = ass.attendanceclass_set.filter(date__lte = now1).order_by('-date')
-   print(att_list)
-
+   
    context = {'title': 'dates',
                'ass': ass,
                'att_list': att_list}
 
-   if request.method == 'POST':
-      print("H")
-      # todo -> manullay dates section  ->>> use assign time model for this
-
    return render(request, 'attendance/class_course_selection.html', context)
+
+
+def create_lecture(request, assign_id):
+   ass = get_object_or_404(Assign_cls, id=assign_id)
+   context = {'title': 'createLecture',
+               'ass': ass,
+               }
+   if request.method == 'POST':
+      print("Hello in post method")
+
+   return render(request, 'attendance/lecturetime.html', context)
 
 
 def stu_list(request, attendancecls_id):
