@@ -16,6 +16,7 @@ def index(request):
     teachers = TeacherProfile.objects.filter(user__department=uDept)
     context = {
         'title': 'Teachers',
+        
         'teachers': teachers,
     }
     return render(request, 'users/teachers.html', context)

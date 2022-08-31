@@ -134,7 +134,7 @@ def clsCreation(request):
             for obj in students:
                 s = student.objects.get(user__first_name=obj)
                 s.cls = cls
-                
+
                 if courses:
 
                     for course in courses:
@@ -142,5 +142,24 @@ def clsCreation(request):
                         s.course.add(co)
 
                 s.save()
+        return redirect('courseteach', name=clsname)
 
     return render(request, 'cls/class-section1.html', context)
+
+
+def assigncourse(request, name):
+    assclass = Assign_cls.objects.filter(cls__class_name=name)
+    context = {'assclass': assclass}
+
+    for i in assclass:
+        y = 1
+        temp = i.cls.class_name
+        if(y > 1):
+            continue
+        context.update({'temp': temp})
+        y += 1
+
+    
+        
+
+    return render(request, 'cls/course-teacher-section.html', context)

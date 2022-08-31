@@ -1,7 +1,32 @@
-{% extends 'blank.html' %}
+{% extends 'blank.html' %} {% block content %}
+<form action="{% url 'clsCreation' %}" method="POST">
+  <fieldset disabled>
+    <legend>Overview</legend>
 
-{% block content %}
-    <form action="{% url 'clsCreation' %}" method="POST">
+    
+    <div class="mb-3">
+      <label for="disabledTextInput" class="form-label">Class</label>
+      <input
+        type="text"
+        id="disabledTextInput"
+        class="form-control"
+        placeholder="{{ temp }}"  
 
-    </form>
+      />
+    </div>
+  </fieldset>
+<!-- checkbox with dropdown -->
+<div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Dropdown button
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="#">Action</a></li>
+      <li><a class="dropdown-item" href="#">Another action</a></li>
+      <li><a class="dropdown-item" href="#">Something else here</a></li>
+    </ul>
+  </div>
+
+  
+</form>
 {% endblock content %}
