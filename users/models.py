@@ -61,7 +61,6 @@ class CustomUserManager(BaseUserManager):
             )
         return User
 
-
 # User model start 
 class User(AbstractUser):
     department_choices = [
