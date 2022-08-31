@@ -1,32 +1,37 @@
 {% extends 'blank.html' %} {% block content %}
-<form action="{% url 'clsCreation' %}" method="POST">
+<form action="" method="POST">
+  {% csrf_token %}
   <fieldset disabled>
     <legend>Overview</legend>
 
-    
+
     <div class="mb-3">
       <label for="disabledTextInput" class="form-label">Class</label>
-      <input
-        type="text"
-        id="disabledTextInput"
-        class="form-control"
-        placeholder="{{ temp }}"  
-
-      />
+      <input type="text" id="disabledTextInput" class="form-control" placeholder="{{ temp }}" />
     </div>
   </fieldset>
-<!-- checkbox with dropdown -->
-<div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Dropdown button
-    </button>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Action</a></li>
-      <li><a class="dropdown-item" href="#">Another action</a></li>
-      <li><a class="dropdown-item" href="#">Something else here</a></li>
-    </ul>
-  </div>
 
-  
+{% for i in assclass %}
+  <ul style="padding-left: 0px;">
+    <li>
+      
+        <div >
+          <label name="course" value="{{ i.course.name }}" for="cars">{{ i.course.name }}</label>
+
+          <select name="teacher" id="teacher">
+            {% for teach in t %}
+            <option value="{{ teach.user.first_name }}">{{ teach.user.first_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endfor %}
+        
+      </li>
+    </ul>
+    <div>
+      <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
+        <span class="text">Submit</span>
+      </button>
+    </div>
 </form>
 {% endblock content %}
