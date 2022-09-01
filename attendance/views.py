@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from student.models import student
 from users.models import TeacherProfile
-from .models import Assign_cls, Attendance, AttendanceClass
+from .models import Assign_cls, AssignTime, Attendance, AttendanceClass
 from course.models import Course
 from cls.models import Class
 
@@ -36,11 +36,15 @@ def attendance_date(request, assign_id):
 
 def create_lecture(request, assign_id):
    ass = get_object_or_404(Assign_cls, id=assign_id)
+
    context = {'title': 'createLecture',
                'ass': ass,
                }
    if request.method == 'POST':
-      print("Hello in post method")
+         day=request.POST['day']
+         time = request.POST['timeslot']
+
+         AssignTime.objects.get_or_create(assign = ass , day = day, period = time)
 
    return render(request, 'attendance/lecturetime.html', context)
 

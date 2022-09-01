@@ -2,7 +2,7 @@
 
 {% block content %}
   <form action="{% url 'clsCreation' %}" method="POST">
-    {% csrf_token %}
+    {% csrf_token %}                
     <div class="input-group mb-3">
       <span class="input-group-text" id="basic-addon1">class name</span>
       <input type="text" name = "ClassName" class="form-control" placeholder="Class Name" aria-label="Class Name" aria-describedby="basic-addon1">
@@ -12,14 +12,23 @@
     <h1>Course</h1>
     {% for co in course %}
     <div class="input-group">
-      <span class="input-group-addon" id="basic-addon1">
+      <span class="input-group-addon" id="basic-addon1 " >
         <input type="checkbox" name="course" id="ProcessingConsultantYN" value="{{co.name}}" />
       </span>
 
       <ul>    
-        <li class="list-group-item">{{co.name}}</li>
+        <li style="margin-right:50px ;" class="list-group-item">{{co.name}}</li>
       </ul>
+
+      <select name="teacher" id="teacher">
+        {% for teach in t %}
+        <option value="{{ teach.user.first_name }}">{{ teach.user.first_name }}</option>
+        {% endfor %}
+      </select>
+      
     </div>
+
+
     {% endfor %}
 
     <h1>Student</h1> 
