@@ -149,7 +149,10 @@ def clsCreation(request):
 
 def assigncourse(request, name):
     assclass = Assign_cls.objects.filter(cls__class_name=name)
-    context = {'assclass': assclass}
+    uDept = request.user.department
+    t = TeacherProfile.objects.filter(user__department=uDept)
+    context = {'assclass': assclass,
+               't': t}
 
     for i in assclass:
         y = 1
@@ -159,7 +162,27 @@ def assigncourse(request, name):
         context.update({'temp': temp})
         y += 1
 
-    
-        
+    if request.method == 'POST':
+# assclass -> array , course -> condition, teacher -> value
+
+        if 'course' in dict(request.POST):
+            course = dict(request.POST)['course']
+            if 'teacher' in dict(request.POST):
+                teacher = dict(request.POST)['teacher']
+
+            # queryset ka teacher
+
+                for i in assclass:
+                    if course in i.course__name:
+                        k=TeacherProfile.objects.filter(user__first_name=teacher)
+                        print(k)
+                        i.teacher = k
+                        i.save()
+                    
+
+                    # for teacher in teacher:
+                    #     teach = TeacherProfile.objects.get(user__first_name=teacher)
+                    #     i.teacher = teach
+                    #     i.save()
 
     return render(request, 'cls/course-teacher-section.html', context)
