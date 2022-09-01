@@ -4,7 +4,6 @@
   <fieldset disabled>
     <legend>Overview</legend>
 
-
     <div class="mb-3">
       <label for="disabledTextInput" class="form-label">Class</label>
       <input type="text" id="disabledTextInput" class="form-control" placeholder="{{ temp }}" />
@@ -15,8 +14,11 @@
   <ul style="padding-left: 0px;">
     <li>
       
-        <div >
-          <label name="course" value="{{ i.course.name }}" for="cars">{{ i.course.name }}</label>
+          <div class="input-group">
+            <span class="input-group-addon" id="basic-addon1">
+              <input type="checkbox" name="course" id="ProcessingConsultantYN" value="{{ i.course.name }}" />
+            </span>
+          <label  style="padding: ;" for="cars">{{ i.course.name }}</label>
 
           <select name="teacher" id="teacher">
             {% for teach in t %}

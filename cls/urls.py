@@ -5,6 +5,6 @@ urlpatterns = [
     path('', views.create, name='createClass'),
     path('<int:id>', views.update),
     path('creation', views.clsCreation, name='clsCreation'),
-    path('<str:name>/courseteachass',views.assigncourse,name='courseteach' )
+    # path('<str:name>/courseteachass',views.assigncourse,name='courseteach' )
     
 ]

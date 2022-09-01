@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 
-from .models import Assign_cls, Attendance, AttendanceClass
+from .models import Assign_cls, AssignTime, Attendance, AttendanceClass
 
 # Register your models here.
 class AssignAdmin(admin.ModelAdmin):
@@ -32,5 +32,6 @@ class AttendanceClassAdmin(admin.ModelAdmin):
 admin.site.register(Assign_cls, AssignAdmin)
 admin.site.register(AttendanceClass, AttendanceClassAdmin)
 admin.site.register(Attendance)
+admin.site.register(AssignTime)
 
 # Register your models here.

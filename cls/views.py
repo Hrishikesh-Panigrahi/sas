@@ -105,14 +105,14 @@ def update(request, id):
 
 def clsCreation(request):
     uDept = request.user.department
-    creater = request.user
-    t = TeacherProfile.objects.get(user=creater)
+    t = TeacherProfile.objects.filter(user__department=uDept)
     course = Course.objects.filter(dept=uDept)
     s = student.objects.filter(user__department=uDept, cls=None)
 
     context = {
         'course': course,
-        'stu': s
+        'stu': s,
+        't':t
     }
 
     if request.method == 'POST':
@@ -123,11 +123,15 @@ def clsCreation(request):
 
         if 'course' in dict(request.POST):
             courses = dict(request.POST)['course']
-
-            for course in courses:
-                co = Course.objects.get(name=course)
-                Assign_cls.objects.get_or_create(cls=cls, course=co, teacher=t)
-
+            if 'teacher' in dict(request.POST):
+                teacher =  dict(request.POST)['teacher']
+                              
+                for course,t in zip(courses,teacher):
+                    co = Course.objects.get(name=course)
+                    print(t)
+                    te = TeacherProfile.objects.get(user__first_name=t)
+                    Assign_cls.objects.get_or_create(cls=cls, course=co, teacher = te)
+                    
         if 'students' in dict(request.POST):
             students = dict(request.POST)['students']
 
@@ -142,12 +146,13 @@ def clsCreation(request):
                         s.course.add(co)
 
                 s.save()
-        return redirect('courseteach', name=clsname)
+        # return redirect('courseteach', name=clsname)
+        return redirect("/")
 
     return render(request, 'cls/class-section1.html', context)
 
 
-def assigncourse(request, name):
+'''def assigncourse(request, name):
     assclass = Assign_cls.objects.filter(cls__class_name=name)
     uDept = request.user.department
     t = TeacherProfile.objects.filter(user__department=uDept)
@@ -185,4 +190,4 @@ def assigncourse(request, name):
                     #     i.teacher = teach
                     #     i.save()
 
-    return render(request, 'cls/course-teacher-section.html', context)
+    return render(request, 'cls/course-teacher-section.html', context)'''
