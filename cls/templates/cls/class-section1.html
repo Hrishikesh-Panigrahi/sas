@@ -4,42 +4,49 @@
   <form action="{% url 'clsCreation' %}" method="POST">
     {% csrf_token %}                
     <div class="input-group mb-3">
-      <span class="input-group-text" id="basic-addon1">class name</span>
+      <!-- <span class="input-group-text" id="basic-addon1"></span> -->
       <input type="text" name = "ClassName" class="form-control" placeholder="Class Name" aria-label="Class Name" aria-describedby="basic-addon1">
     </div>
 
     {% comment %} name="course" value="{{co.name}}" {% endcomment %}
-    <h1>Course</h1>
+    <h2>Course Selection</h2><br>
+
     {% for co in course %}
+    
     <div class="input-group">
       <span class="input-group-addon" id="basic-addon1 " >
         <input type="checkbox" name="course" id="ProcessingConsultantYN" value="{{co.name}}" />
       </span>
 
       <ul>    
-        <li style="margin-right:50px ;" class="list-group-item">{{co.name}}</li>
+        <li style="margin-right:15px ; bottom: 15px ;" class="list-group-item">{{co.name}}</li>
       </ul>
-
+   
+      <ul>
+        <li style="bottom: 15px ; display: flex;" class="list-group-item">
       <select name="teacher" id="teacher">
+        <option value="">--- Select Teacher ---</option>
         {% for teach in t %}
-        <option value="{{ teach.user.first_name }}">{{ teach.user.first_name }}</option>
+        <option  value="{{ teach.user.first_name }}">{{ teach.user.first_name  }} {{teach.user.last_name}}</option>
         {% endfor %}
       </select>
+    </li>
+    </ul>
       
     </div>
 
-
-    {% endfor %}
-
-    <h1>Student</h1> 
+  {% endfor %}
+  
+  <hr style="width:50%">
+    <h2>Student Selection</h2> <br>
     {% for stu in stu %}
-    <div class="input-group">
+    <div  class="input-group">
       <span class="input-group-addon" id="basic-addon1">
         <input type="checkbox" name="students" id="ProcessingConsultantYN" value="{{stu.user.first_name}}" />
       </span>
 
       <ul>    
-        <li class="list-group-item">{{stu.user.first_name}}</li>
+        <li style="margin-right:25px ; bottom: 15px ;" class="list-group-item">{{stu.user.first_name }} {{stu.user.last_name}}</li>
       </ul>
     </div>
     {% endfor %}
