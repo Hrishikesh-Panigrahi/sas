@@ -100,7 +100,7 @@ class TeacherProfile(models.Model):
     id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
-    course = models.ManyToManyField(Course, blank=True)
+    # course = models.ManyToManyField(Course, blank=True)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name

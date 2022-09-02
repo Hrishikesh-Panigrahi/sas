@@ -24,12 +24,19 @@ def attendanceclass(request, pk):
 def attendance_date(request, assign_id):
    now1 = datetime.date.today()  
    ass = get_object_or_404(Assign_cls, id=assign_id)
+   # asstime = AssignTime.objects.get(assign = ass)
+   # print(asstime)
 
-   att_list = ass.attendanceclass_set.filter(date__lte = now1).order_by('-date')
-   
    context = {'title': 'dates',
                'ass': ass,
-               'att_list': att_list}
+               }
+
+   try:
+      att_list = ass.attendanceclass_set.filter(date__lte = now1).order_by('-date')
+      context.update({'att_list': att_list})
+   except:
+      pass
+   
 
    return render(request, 'attendance/class_course_selection.html', context)
 
@@ -43,8 +50,12 @@ def create_lecture(request, assign_id):
    if request.method == 'POST':
          day=request.POST['day']
          time = request.POST['timeslot']
+         date = request.POST['date']
 
-         AssignTime.objects.get_or_create(assign = ass , day = day, period = time)
+         AttendanceClass.objects.get_or_create(assign = ass , day = day, period = time, date=date)
+         
+         # AttendanceClass.objects.get_or_create(assign = ass, assigntime = asstime)
+
 
    return render(request, 'attendance/lecturetime.html', context)
 
