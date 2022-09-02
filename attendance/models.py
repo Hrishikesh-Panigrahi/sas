@@ -3,7 +3,6 @@ from cls.models import Class
 from course.models import Course
 from student.models import student
 from users.models import User, TeacherProfile
-# attendance models
 
 # Create your models here.
 
@@ -43,11 +42,21 @@ class AssignTime(models.Model):
     assign = models.ForeignKey(Assign_cls, on_delete=models.CASCADE)
     period = models.CharField(max_length=50, choices=time_slots, default='11:00 - 11:50')
     day = models.CharField(max_length=15, choices=day_choices)
+    date = models.DateField(default='2022-10-23')
 
+    class Meta:
+        unique_together = (('assign', 'period', 'day'),)
+
+    def __str__(self):
+        return str(self.assign)
 
 class AttendanceClass(models.Model):
     assign = models.ForeignKey(Assign_cls, on_delete=models.CASCADE)
+    # date = models.DateField(default='2022-10-23')
+    period = models.CharField(max_length=50, choices=time_slots, default='11:00 - 11:50')
+    day = models.CharField(max_length=15, choices=day_choices, default=1)
     date = models.DateField(default='2022-10-23')
+    # assigntime = models.ForeignKey(AssignTime, on_delete=models.CASCADE)
     status = models.IntegerField(default=0)
     
 
