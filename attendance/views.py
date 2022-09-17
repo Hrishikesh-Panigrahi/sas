@@ -53,9 +53,6 @@ def create_lecture(request, assign_id):
          date = request.POST['date']
 
          AttendanceClass.objects.get_or_create(assign = ass , day = day, period = time, date=date)
-         
-         # AttendanceClass.objects.get_or_create(assign = ass, assigntime = asstime)
-
 
    return render(request, 'attendance/lecturetime.html', context)
 
