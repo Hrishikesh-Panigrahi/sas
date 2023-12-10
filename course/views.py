@@ -23,6 +23,7 @@ def index(request):
     # TODO: filter institute level courses as well
     courses = Course.objects.filter(dept=uDept)
     context = {
+        'department':uDept,
         'title': 'Courses',
         'page': 'table',
         'courses': courses,

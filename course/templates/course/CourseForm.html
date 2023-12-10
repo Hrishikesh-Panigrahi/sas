@@ -1,26 +1,110 @@
 {% extends 'blank.html' %}
 
 {% block content %}
+<style>
+    .container {
+        margin-top: 40px;
+    }
+
+    .course-title {
+        color: #333;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .course-form-group {
+        max-width: 500px;
+        margin: 0 auto;
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+       
+    }
+
+
+    .btn-success,
+    .btn-danger {
+        width: 30%;
+      
+        margin: 0 70px;
+     
+    }
+
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        
+    }
+
+    .btn-danger .icon {
+        margin-right: 5px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+</style>
+
 <div class="container">
     <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">{{ type }} Course</h1>
-    <form action="" method="post" class="form-group">
+    <h1 class="course-title h3 mb-4 text-gray-800">{{ type }} Course</h1>
+    <form action="" method="post" class="course-form-group">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-success btn-icon-split mr-3">
-            <span class="icon text-white-50">
-                <i class="fas fa-check"></i>
-            </span>
-            <span class="text">{{ type }}</span>
-        </button>
-        {% if type == 'Update' %}
-        <a href="{% url 'delete' id=id %}" class="btn btn-danger btn-icon-split">
-            <span class="icon text-white-50">
-                <i class="fas fa-trash"></i>
-            </span>
-            <span class="text">Delete</span>
-        </a>
-        {% endif %}
+
+        <div class="button-container">
+
+
+
+            <button type="submit" class="btn btn-success btn-icon-split mr-3">
+                <span class="icon text-white-50">
+                    <i class="fas fa-check"></i>
+                </span>
+                <span class="text">{{ type }}</span>
+            </button>
+            {% if type == 'Update' %}
+            <a href="{% url 'delete' id=id %}" class="btn btn-danger btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-trash"></i>
+                </span>
+                <span class="text">Delete</span>
+            </a>
+            {% endif %}
+        </div>
+
     </form>
 </div>
 {% endblock %}
