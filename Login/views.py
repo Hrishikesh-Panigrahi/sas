@@ -15,6 +15,7 @@ def loginUser(request):
     #     return render(request, 'Login\login.html', {'cookies1': request.COOKIES['email'], 'cookies2': request.COOKIES['password']})
         
     if request.method == 'POST':
+        print("its wotking")
         email= request.POST['email']
         password= request.POST['password']
         user = auth.authenticate(email=email, password=password)
