@@ -61,6 +61,8 @@ class AttendanceClass(models.Model):
     day = models.CharField(max_length=15, blank=True, default='')
     date = models.DateField(default='2022-10-23')
     status = models.IntegerField(default=0)
+    # "All" for the whole class, or the lab batch ("A", "B", "C") this lecture is for.
+    batch = models.CharField(max_length=3, default='All')
 
     class Meta:
         verbose_name = 'Attendance'
@@ -68,6 +70,11 @@ class AttendanceClass(models.Model):
 
     def __str__(self):
         return '%s on %s %s' % (self.assign, self.date, self.period)
+
+    def students(self):
+        """Students expected at this lecture: the whole class, or one lab batch."""
+        qs = self.assign.cls.student_set.all()
+        return qs if self.batch == 'All' else qs.filter(batch=self.batch)
 
     @property
     def is_marked(self):

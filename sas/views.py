@@ -34,7 +34,7 @@ def index(request):
                                       cls__in={a.cls_id for a in assignments})
              .select_related('cls', 'course').order_by('start_time'))
     marked = {
-        (lec.assign_id, lec.period): lec
+        (lec.assign_id, lec.period, lec.batch): lec
         for lec in AttendanceClass.objects.filter(assign__in=assignments, date=today)
     }
     today_slots = []
@@ -42,7 +42,7 @@ def index(request):
         assign = by_pair.get((slot.cls_id, slot.course_id))
         if assign:
             today_slots.append({'slot': slot, 'assign': assign,
-                                'lecture': marked.get((assign.id, slot.period))})
+                                'lecture': marked.get((assign.id, slot.period, slot.batch))})
 
     context.update({
         'assignments': assignments,

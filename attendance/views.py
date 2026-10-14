@@ -93,7 +93,7 @@ def create_lecture(request, assign_id):
     date = form.cleaned_data['date']
     lecture, created = AttendanceClass.objects.get_or_create(
         assign=assign, date=date, period=form.cleaned_data['period'],
-        defaults={'day': date.strftime('%A')})
+        batch=form.cleaned_data['batch'], defaults={'day': date.strftime('%A')})
     if not created:
         messages.info(request, 'That lecture already exists, so it has been opened for you.')
     return redirect('attendance', attendancecls_id=lecture.id)
@@ -110,7 +110,8 @@ def start_from_slot(request, slot_id):
         raise PermissionDenied
     today = timezone.localdate()
     lecture, _ = AttendanceClass.objects.get_or_create(
-        assign=assign, date=today, period=slot.period, defaults={'day': today.strftime('%A')})
+        assign=assign, date=today, period=slot.period, batch=slot.batch,
+        defaults={'day': today.strftime('%A')})
     return redirect('attendance', attendancecls_id=lecture.id)
 
 
@@ -118,8 +119,7 @@ def start_from_slot(request, slot_id):
 def mark(request, attendancecls_id):
     lecture = get_object_or_404(AttendanceClass, pk=attendancecls_id)
     assign = _get_assignment(request, lecture.assign_id, mark=True)
-    students = list(assign.cls.student_set.select_related('user')
-                    .order_by(*ROLL_ORDER))
+    students = list(lecture.students().select_related('user').order_by(*ROLL_ORDER))
 
     if request.method == 'POST':
         records = []

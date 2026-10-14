@@ -15,6 +15,8 @@ class student(models.Model):
     id = models.BigAutoField(primary_key=True)
     course = models.ManyToManyField(Course, blank=True)
     cls = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True, blank=True)
+    batch = models.CharField(max_length=3, blank=True, default='',
+                             choices=[('A', 'A'), ('B', 'B'), ('C', 'C')], verbose_name='Lab batch')
 
     def __str__(self):
         return str(self.user)

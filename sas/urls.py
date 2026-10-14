@@ -17,6 +17,7 @@ urlpatterns = [
     path('', include('attendance.urls')),
     path('timetable/', include('timetable.urls')),
     path('class/', include('cls.urls')),
+    path('insights/', include('insights.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

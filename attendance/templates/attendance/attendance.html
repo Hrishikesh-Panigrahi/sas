@@ -2,7 +2,7 @@
 
 {% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'attendance-home' %}">Attendance</a><span class="sep">/</span><a href="{% url 'attendance-attendance_date' assign.id %}">{{ assign.course.name }} · {{ assign.cls.class_name }}</a><span class="sep">/</span></nav>{% endblock %}
 {% block page_title %}{% if lecture.is_marked %}Edit attendance{% else %}Take attendance{% endif %}{% endblock %}
-{% block subtitle %}<p class="page-subtitle">{{ lecture.date|date:"l, j F Y" }}{% if lecture.period %} · {{ lecture.period }}{% endif %} · {{ assign.course.name }}, {{ assign.cls.class_name }}</p>{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{{ lecture.date|date:"l, j F Y" }}{% if lecture.period %} · {{ lecture.period }}{% endif %} · {{ assign.course.name }}, {{ assign.cls.class_name }}{% if lecture.batch != 'All' %} · Batch {{ lecture.batch }}{% endif %}</p>{% endblock %}
 
 {% block content %}
 {% if rows %}

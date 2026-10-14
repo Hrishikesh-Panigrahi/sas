@@ -16,8 +16,9 @@
         {% if num_students %}
         <form method="post" action="{% url 'create_lecture' assign.id %}" class="row align-items-end">
             {% csrf_token %}
-            <div class="col-sm-5 col-lg-4">{% include 'partials/field.html' with field=form.date %}</div>
-            <div class="col-sm-7 col-lg-5">{% include 'partials/field.html' with field=form.period %}</div>
+            <div class="col-sm-4 col-lg-3">{% include 'partials/field.html' with field=form.date %}</div>
+            <div class="col-sm-5 col-lg-4">{% include 'partials/field.html' with field=form.period %}</div>
+            <div class="col-sm-3 col-lg-2">{% include 'partials/field.html' with field=form.batch %}</div>
             <div class="col-lg-3 form-group">
                 <button class="btn btn-primary btn-block" type="submit">Start <i class="fas fa-arrow-right ml-1 mr-0"></i></button>
             </div>
@@ -44,7 +45,7 @@
                 {% for lec in lectures %}
                 <tr>
                     <td><div class="fw-600">{{ lec.date|date:"D, j M Y" }}</div></td>
-                    <td class="tabular">{{ lec.period|default:"—" }}</td>
+                    <td class="tabular">{{ lec.period|default:"—" }}{% if lec.batch != 'All' %} <span class="badge badge-soft-info">Batch {{ lec.batch }}</span>{% endif %}</td>
                     <td>{% if lec.is_marked %}<span class="badge badge-soft-success"><i class="fas fa-check"></i> Marked</span>{% else %}<span class="badge badge-soft-warning">Not marked</span>{% endif %}</td>
                     <td>
                         {% if lec.is_marked %}

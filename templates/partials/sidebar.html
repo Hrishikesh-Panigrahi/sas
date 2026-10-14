@@ -9,6 +9,9 @@
         <a class="nav-item{% if nav == 'sas' %} active{% endif %}" href="{% url 'index' %}">
             <i class="fas fa-home"></i><span>Dashboard</span>
         </a>
+        <a class="nav-item{% if nav == 'insights' %} active{% endif %}" href="{% url 'insights' %}">
+            <i class="fas fa-magic"></i><span>Insights</span>
+        </a>
 
         {% if u.is_staff or u.is_superuser %}
         <div class="nav-section">Teaching</div>

@@ -68,7 +68,7 @@
                     <span class="avatar">{{ stu.user.initials }}</span>
                     <div class="grow">
                         <div class="title text-truncate">{{ stu.user.full_name|default:stu.user.email }}</div>
-                        <div class="meta text-truncate">{{ stu.user.email }}</div>
+                        <div class="meta text-truncate">{{ stu.user.email }}{% if stu.batch %} · Batch {{ stu.batch }}{% endif %}</div>
                     </div>
                 </a>
                 {% endfor %}

@@ -128,6 +128,13 @@
     </div>
 
     <div class="col-lg-5 col-xl-4">
+        <a class="card card-link-block ai-card mb-4" href="{% url 'insights' %}">
+            <div class="card-body" data-ai-panel data-url="{% url 'insights-analysis' %}?view={% if user.can_manage_students %}department{% else %}teaching{% endif %}&amp;format=teaser">
+                <span class="ai-badge"><i class="fas fa-magic"></i> AI analysis</span>
+                <div class="skeleton w-75 mt-3"></div><div class="skeleton w-50"></div>
+            </div>
+            <div class="card-footer small fw-600 text-primary">Open insights <i class="fas fa-arrow-right ml-1"></i></div>
+        </a>
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">My classes</h2>

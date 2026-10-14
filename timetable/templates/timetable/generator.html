@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}<link href="{% static 'css/generator.css' %}" rel="stylesheet">{% endblock %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'timetable' %}">Timetable</a><span class="sep">/</span><a href="{% url 'timetable-class' cls.id %}">{{ cls.class_name }}</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}Timetable generator{% endblock %}
+{% block subtitle %}<p class="page-subtitle">Build a clash-free week for {{ cls.class_name }}: set how often each course meets, add any rules, and generate.</p>{% endblock %}
+{% block actions %}
+<a class="btn btn-light" href="{% url 'timetable-class' cls.id %}"><i class="far fa-calendar-alt"></i>Current timetable{% if existing %} ({{ existing }} slot{{ existing|pluralize }}){% endif %}</a>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+{% if not config.courses %}
+<div class="card"><div class="empty">
+    <div class="empty-icon"><i class="fas fa-book"></i></div>
+    <h3>{{ cls.class_name }} has no courses yet</h3>
+    <p>Assign courses and teachers to the class first; the generator schedules those.</p>
+    <a class="btn btn-primary" href="{% url 'class-edit' cls.id %}">Assign courses</a>
+</div></div>
+{% else %}
+<div class="gen" id="generator"
+     data-run="{% url 'timetable-generator-run' cls.id %}"
+     data-assist="{% url 'timetable-generator-assist' cls.id %}"
+     data-apply="{% url 'timetable-generator-apply' cls.id %}"
+     data-class="{{ cls.class_name }}" data-existing="{{ existing }}">
+
+    <aside class="gen-setup">
+        <section class="card ai-card">
+            <div class="card-body">
+                <div class="ai-head"><span class="ai-badge"><i class="fas fa-magic"></i> Assistant</span>
+                    <span class="small text-muted">{% if claude %}Powered by Claude{% else %}Built-in{% endif %}</span></div>
+                <label for="gen-ask" class="mb-1">Describe any rules in plain English</label>
+                <textarea id="gen-ask" class="form-control" rows="3" placeholder="e.g. Meera can't teach on Friday afternoons. Keep Wednesday after lunch free for sports. No more than 6 lectures a day."></textarea>
+                <div class="gen-examples" aria-label="Examples">
+                    <button type="button" class="chip" data-example="Keep Wednesday afternoon free for sports">Wednesday afternoon free</button>
+                    <button type="button" class="chip" data-example="No more than 5 lectures a day">Max 5 a day</button>
+                    <button type="button" class="chip" data-example="Avoid the first period">No 9 am starts</button>
+                </div>
+                <button type="button" class="btn btn-soft btn-block mt-2" data-action="assist"><i class="fas fa-magic"></i>Add these rules</button>
+                <div class="gen-assist-result" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><h2 class="card-title">Week</h2>
+                <button type="button" class="btn btn-sm btn-light" data-action="reset-periods">Standard day</button></div>
+            <div class="card-body">
+                <div class="gen-label">Working days</div>
+                <div class="gen-days" data-days></div>
+                <div class="gen-label mt-3">Periods <span class="text-muted font-weight-normal">· gaps between periods are breaks</span></div>
+                <div class="gen-periods" data-periods></div>
+                <button type="button" class="btn btn-sm btn-light mt-2" data-action="add-period"><i class="fas fa-plus"></i>Add period</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><div><h2 class="card-title">Courses</h2><p class="card-subtitle">Lectures are for the whole class; labs run once per batch</p></div></div>
+            <div class="gen-courses" data-courses></div>
+        </section>
+
+        <section class="card">
+            <div class="card-header"><h2 class="card-title">Rules</h2></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 form-group"><label for="gen-maxday">Periods a day</label>
+                        <select id="gen-maxday" class="custom-select" data-rule="max_periods_per_day"></select></div>
+                    <div class="col-6 form-group"><label for="gen-maxrow">In a row, at most</label>
+                        <select id="gen-maxrow" class="custom-select" data-rule="max_consecutive"></select></div>
+                </div>
+                <div class="custom-control custom-switch mb-2"><input type="checkbox" class="custom-control-input" id="gen-first" data-rule="avoid_first_period"><label class="custom-control-label" for="gen-first">Avoid the first period</label></div>
+                <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="gen-last" data-rule="avoid_last_period"><label class="custom-control-label" for="gen-last">Avoid the last period</label></div>
+
+                <div class="gen-label mt-3">Blocked times and preferences</div>
+                <ul class="gen-rules" data-rules></ul>
+
+                <details class="gen-block-form">
+                    <summary>Block a time by hand</summary>
+                    <div class="row mt-2">
+                        <div class="col-12 form-group"><label for="gen-who">Who</label><select id="gen-who" class="custom-select" data-block="who"></select></div>
+                        <div class="col-12 form-group"><label for="gen-day">Day</label><select id="gen-day" class="custom-select" data-block="day"></select></div>
+                        <div class="col-6 form-group"><label for="gen-from">From</label><input id="gen-from" type="time" class="form-control" data-block="start" value="14:00"></div>
+                        <div class="col-6 form-group"><label for="gen-to">To</label><input id="gen-to" type="time" class="form-control" data-block="end" value="17:00"></div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-light" data-action="add-block"><i class="fas fa-plus"></i>Add blocked time</button>
+                </details>
+            </div>
+        </section>
+        <div class="gen-setup-generate">
+            <button type="button" class="btn btn-primary btn-lg btn-block" data-action="generate"><i class="fas fa-bolt"></i><span>Generate timetable</span></button>
+        </div>
+    </aside>
+
+    <section class="gen-preview">
+        <div class="card">
+            <div class="card-header gen-toolbar">
+                <div class="d-flex flex-wrap align-items-center" style="gap:.5rem">
+                    <button type="button" class="btn btn-primary" data-action="generate"><i class="fas fa-bolt"></i><span>Generate timetable</span></button>
+                    <button type="button" class="btn btn-light" data-action="variation" hidden><i class="fas fa-random"></i>Try another</button>
+                </div>
+                <div class="gen-quality" data-quality hidden></div>
+            </div>
+            <div class="card-body">
+                <div class="gen-error alert alert-danger" role="alert" hidden></div>
+                <div class="gen-empty" data-empty>
+                    <div class="empty-icon"><i class="far fa-calendar-alt"></i></div>
+                    <h3>Your week will appear here</h3>
+                    <p>Adjust the setup if you like, then press <strong>Generate timetable</strong>. Teachers' lectures in other classes are avoided automatically.</p>
+                </div>
+                <div data-result hidden>
+                    <ul class="gen-highlights" data-highlights></ul>
+                    <div class="gen-unplaced" data-unplaced hidden></div>
+                    <div class="gen-grid-wrap"><div class="gen-grid" data-grid></div></div>
+                    <div class="gen-legend" data-legend></div>
+                    <details class="gen-details">
+                        <summary>Load per day and per teacher</summary>
+                        <div class="row mt-3" data-stats></div>
+                    </details>
+                </div>
+            </div>
+            <div class="card-footer gen-apply" data-apply-bar hidden>
+                <span class="small text-muted" data-apply-note></span>
+                <button type="button" class="btn btn-success" data-action="apply"><i class="fas fa-check"></i>Use this timetable</button>
+            </div>
+        </div>
+    </section>
+</div>
+{{ config|json_script:"gen-config" }}
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/generator.js' %}"></script>{% endblock %}

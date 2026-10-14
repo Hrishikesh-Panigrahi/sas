@@ -1,0 +1,25 @@
+<div class="card h-100">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">{{ chart_title }}</h2>
+            {% if chart_subtitle %}<p class="card-subtitle">{{ chart_subtitle }}</p>{% endif %}
+        </div>
+    </div>
+    <div class="card-body pb-2">
+        {% if rows %}
+        <div class="chart" data-chart="{{ chart_type }}" data-source="{{ source }}" data-threshold="{{ attendance_threshold }}"
+            data-label="{{ chart_prefix|default:'' }}" aria-label="{{ chart_title }} chart; values in the table below"></div>
+        <details class="chart-table">
+            <summary>Show as table</summary>
+            <table class="table table-sm mt-2">
+                <thead><tr><th>{{ chart_axis }}</th><th class="text-right">Attended</th><th class="text-right">Rate</th></tr></thead>
+                <tbody>
+                    {% for r in rows %}<tr><td>{{ r.label }}</td><td class="text-right tabular">{{ r.present }} / {{ r.total }}</td><td class="text-right tabular">{% if r.percent is None %}—{% else %}{{ r.percent }}%{% endif %}</td></tr>{% endfor %}
+                </tbody>
+            </table>
+        </details>
+        {% else %}
+        <p class="text-muted small mb-0">Not enough data yet.</p>
+        {% endif %}
+    </div>
+</div>

@@ -30,6 +30,12 @@
         </div>
     </div>
     <div class="col-lg-8">
+        <div class="card ai-card">
+            <div class="card-body" data-ai-panel data-url="{% url 'insights-analysis' %}?student={{ stu.id }}">
+                <span class="ai-badge"><i class="fas fa-magic"></i> AI analysis</span>
+                <div class="skeleton w-75 mt-3"></div><div class="skeleton"></div><div class="skeleton w-50"></div>
+            </div>
+        </div>
         <div class="card">
             <div class="card-header"><h2 class="card-title">Attendance by course</h2></div>
             {% include 'partials/course_attendance.html' %}

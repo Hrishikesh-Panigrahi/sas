@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block subtitle %}
+<p class="page-subtitle">
+    {% if kind == 'department' %}Attendance across {{ facts.name }}, with an analysis of what needs attention.
+    {% elif kind == 'teacher' %}How attendance is going in the courses you teach.
+    {% else %}How your attendance is going, and what to do about it.{% endif %}
+</p>
+{% endblock %}
+
+{% block actions %}
+{% if views|length > 1 %}
+<nav class="segmented" aria-label="Insight views">
+    {% for key, name in views %}
+    <a href="?view={{ key }}" class="{% if key == view %}active{% endif %}"{% if key == view %} aria-current="page"{% endif %}>{{ name }}</a>
+    {% endfor %}
+</nav>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if not facts %}
+<div class="card"><div class="empty">
+    <div class="empty-icon"><i class="fas fa-chart-line"></i></div>
+    <h3>Nothing to analyse yet</h3>
+    <p>Insights appear once attendance has been recorded.</p>
+</div></div>
+{% else %}
+
+{# ---------- KPI row ---------- #}
+<div class="row row-gap mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat"><span class="stat-icon"><i class="fas fa-percentage"></i></span>
+            <div><div class="stat-value">{% if facts.overall.percent is None %}—{% else %}{{ facts.overall.percent }}%{% endif %}</div>
+                <div class="stat-label">Overall attendance</div></div></div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat">
+            {% with ch=facts.recent_change %}
+            <span class="stat-icon {% if ch and ch.delta < 0 %}amber{% else %}green{% endif %}"><i class="fas {% if ch and ch.delta < 0 %}fa-arrow-down{% else %}fa-arrow-up{% endif %}"></i></span>
+            <div><div class="stat-value">{% if ch %}{{ ch.recent }}%{% else %}—{% endif %}</div>
+                <div class="stat-label">Last 2 weeks{% if ch %} · {% if ch.delta >= 0 %}+{% endif %}{{ ch.delta }} pts{% endif %}</div></div>
+            {% endwith %}
+        </div></div>
+    </div>
+    {% if kind == 'department' %}
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat"><span class="stat-icon red"><i class="fas fa-user-clock"></i></span>
+            <div><div class="stat-value">{{ facts.at_risk.count }}</div><div class="stat-label">Students below {{ attendance_threshold }}%</div></div></div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat"><span class="stat-icon sky"><i class="fas fa-chalkboard"></i></span>
+            <div><div class="stat-value">{{ facts.classes|length }}</div><div class="stat-label">Classes</div></div></div></div>
+    </div>
+    {% elif kind == 'teacher' %}
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat"><span class="stat-icon red"><i class="fas fa-user-clock"></i></span>
+            <div><div class="stat-value">{{ facts.students_below }}</div><div class="stat-label">Students below {{ attendance_threshold }}%</div></div></div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat"><span class="stat-icon amber"><i class="far fa-clock"></i></span>
+            <div><div class="stat-value">{{ facts.unmarked|add:facts.missed_slots }}</div><div class="stat-label">Lectures not recorded</div></div></div></div>
+    </div>
+    {% else %}
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat"><span class="stat-icon {% if facts.overall.needed %}red{% else %}green{% endif %}"><i class="fas fa-flag-checkered"></i></span>
+            <div><div class="stat-value">{{ facts.overall.needed }}</div><div class="stat-label">Lectures needed to reach {{ attendance_threshold }}%</div></div></div></div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card"><div class="stat"><span class="stat-icon sky"><i class="fas fa-users"></i></span>
+            <div><div class="stat-value">{% if facts.class_average is None %}—{% else %}{{ facts.class_average }}%{% endif %}</div><div class="stat-label">Class average</div></div></div></div>
+    </div>
+    {% endif %}
+</div>
+
+{# ---------- Analysis + trend ---------- #}
+<div class="row row-gap mb-4">
+    <div class="col-xl-5">
+        <div class="card ai-card h-100">
+            <div class="card-body" {% if not analysis %}data-ai-panel data-url="{{ analysis_url }}"{% endif %}>
+                {% if analysis %}
+                {% include 'insights/_analysis.html' %}
+                {% else %}
+                <div class="ai-loading" role="status">
+                    <span class="ai-badge"><i class="fas fa-magic"></i> AI analysis</span>
+                    <p class="text-muted small mt-3 mb-3">Claude is reading the numbers…</p>
+                    <div class="skeleton w-75"></div><div class="skeleton"></div><div class="skeleton w-50"></div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-7">
+        {% include 'insights/_chart.html' with chart_title='Weekly attendance' chart_subtitle='Last 8 weeks · amber line is the requirement' chart_type='line' source='trend-data' rows=facts.trend chart_axis='Week of' chart_prefix='Week of' %}
+    </div>
+</div>
+
+<div class="row row-gap mb-4">
+    <div class="col-lg-6">
+        {% include 'insights/_chart.html' with chart_title='By day of the week' chart_type='columns' source='weekday-data' rows=facts.by_weekday chart_axis='Day' %}
+    </div>
+    <div class="col-lg-6">
+        {% include 'insights/_chart.html' with chart_title='By time of day' chart_subtitle='Lecture start time' chart_type='columns' source='time-data' rows=facts.by_time chart_axis='Starts at' chart_prefix='Starts' %}
+    </div>
+</div>
+
+{# ---------- Department detail ---------- #}
+{% if kind == 'department' %}
+<div class="row row-gap">
+    <div class="col-xl-7">
+        <div class="card">
+            <div class="card-header"><h2 class="card-title">Classes</h2></div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead><tr><th>Class</th><th>Attendance</th><th class="text-right">2-week change</th><th class="text-right">Below {{ attendance_threshold }}%</th><th>Setup</th></tr></thead>
+                    <tbody>
+                        {% for c in facts.classes %}
+                        <tr>
+                            <td><a class="fw-600" href="{% url 'class-detail' c.id %}">{{ c.name }}</a><div class="small text-muted">{{ c.students }} students · {{ c.class_teacher|default:"no class teacher" }}</div></td>
+                            <td style="min-width:160px">{% include 'partials/meter.html' with percent=c.percent short=c.short present=c.present total=c.total %}</td>
+                            <td class="text-right tabular">{% if c.change %}<span class="{% if c.change.delta < 0 %}text-danger{% else %}text-success{% endif %}">{% if c.change.delta >= 0 %}+{% endif %}{{ c.change.delta }} pts</span>{% else %}—{% endif %}</td>
+                            <td class="text-right tabular">{{ c.num_below }}</td>
+                            <td>{% if c.has_timetable %}<span class="badge badge-soft-success">Timetable</span>{% else %}<a class="badge badge-soft-warning" href="{% url 'timetable-generator' c.id %}">No timetable</a>{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><div><h2 class="card-title">Lowest-attended courses</h2><p class="card-subtitle">Courses with at least 3 lectures</p></div></div>
+            {% if facts.lowest_courses %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead><tr><th>Course</th><th>Teacher</th><th style="width:35%">Attendance</th></tr></thead>
+                    <tbody>
+                        {% for c in facts.lowest_courses %}
+                        <tr><td><div class="fw-600">{{ c.course }}</div><div class="small text-muted">{{ c.class_name }}</div></td><td>{{ c.teacher }}</td>
+                            <td>{% include 'partials/meter.html' with percent=c.percent short=c.short present=c.present total=c.total %}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}<div class="empty compact"><p class="mb-0">Not enough lectures yet.</p></div>{% endif %}
+        </div>
+    </div>
+    <div class="col-xl-5">
+        <div class="card">
+            <div class="card-header"><div><h2 class="card-title">Students at risk</h2><p class="card-subtitle">Below {{ attendance_threshold }}% overall</p></div><span class="badge badge-soft-danger">{{ facts.at_risk.count }}</span></div>
+            {% if facts.at_risk.students %}
+            <div class="list">
+                {% for s in facts.at_risk.students %}
+                <a class="list-row" href="{% url 'student-detail' s.id %}">
+                    <span class="avatar">{{ s.name|slice:":1" }}</span>
+                    <div class="grow"><div class="title text-truncate">{{ s.name }}</div><div class="meta">{{ s.class|default:"No class" }} · {{ s.present }}/{{ s.total }}{% if s.trailing >= 3 %} · missed last {{ s.trailing }}{% endif %}</div></div>
+                    <span class="badge badge-soft-danger">{{ s.percent }}%</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}<div class="empty compact"><p class="mb-0">Nobody is below {{ attendance_threshold }}%.</p></div>{% endif %}
+        </div>
+
+        <div class="card">
+            <div class="card-header"><div><h2 class="card-title">Record keeping</h2><p class="card-subtitle">Unmarked lectures and timetabled lectures with no record, last 2 weeks</p></div></div>
+            <div class="list">
+                {% for t in facts.teachers %}
+                <div class="list-row">
+                    <div class="grow"><div class="title">{{ t.name }}</div><div class="meta">{{ t.courses }} course{{ t.courses|pluralize }}{% if t.expected_slots %} · {{ t.expected_slots }} timetabled{% endif %}</div></div>
+                    {% if t.unmarked or t.missed_slots %}
+                    {% if t.unmarked %}<span class="badge badge-soft-warning">{{ t.unmarked }} unmarked</span>{% endif %}
+                    {% if t.missed_slots %}<span class="badge badge-soft-danger">{{ t.missed_slots }} not recorded</span>{% endif %}
+                    {% else %}<span class="badge badge-soft-success"><i class="fas fa-check"></i> Up to date</span>{% endif %}
+                </div>
+                {% empty %}<div class="empty compact"><p class="mb-0">No teachers assigned yet.</p></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ---------- Teacher detail ---------- #}
+{% elif kind == 'teacher' %}
+<h2 class="section-title">By course</h2>
+<div class="row row-gap">
+    {% for c in facts.courses %}
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <div><h3 class="card-title">{{ c.course }}</h3><p class="card-subtitle">{{ c.class_name }} · {{ c.lectures }} lecture{{ c.lectures|pluralize }} · {{ c.students }} students</p></div>
+                <a class="btn btn-sm btn-light" href="{% url 'attendance-report' c.assign_id %}">Report</a>
+            </div>
+            <div class="card-body">
+                {% include 'partials/meter.html' with percent=c.percent short=c.short present=c.present total=c.total %}
+                <div class="d-flex flex-wrap mt-3" style="gap:.4rem">
+                    {% if c.change %}<span class="badge {% if c.change.delta < 0 %}badge-soft-warning{% else %}badge-soft-success{% endif %}">{% if c.change.delta >= 0 %}+{% endif %}{{ c.change.delta }} pts in 2 weeks</span>{% endif %}
+                    {% if c.unmarked %}<span class="badge badge-soft-warning">{{ c.unmarked }} unmarked</span>{% endif %}
+                    {% if c.slots.missed %}<span class="badge badge-soft-danger">{{ c.slots.missed }} timetabled, not recorded</span>{% endif %}
+                </div>
+                {% if c.below %}
+                <div class="small fw-600 mt-3 mb-1">Below {{ attendance_threshold }}%</div>
+                <div class="chip-list">{% for s in c.below %}<a class="badge badge-soft-danger" href="{% url 'student-detail' s.id %}">{{ s.name }} · {{ s.percent }}%</a>{% endfor %}</div>
+                {% endif %}
+                {% if c.streaks %}
+                <div class="small fw-600 mt-3 mb-1">Missed the last 3+ lectures</div>
+                <div class="chip-list">{% for s in c.streaks %}<a class="badge badge-soft-warning" href="{% url 'student-detail' s.id %}">{{ s.name }} · {{ s.trailing }} in a row</a>{% endfor %}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="card"><div class="empty compact"><p class="mb-0">You aren't teaching any course yet.</p></div></div></div>
+    {% endfor %}
+</div>
+
+{# ---------- Student detail ---------- #}
+{% else %}
+<div class="card">
+    <div class="card-header"><h2 class="card-title">By course</h2></div>
+    {% with summary=facts %}{% include 'partials/course_attendance.html' %}{% endwith %}
+</div>
+{% endif %}
+
+{{ facts.trend|json_script:"trend-data" }}
+{{ facts.by_weekday|json_script:"weekday-data" }}
+{{ facts.by_time|json_script:"time-data" }}
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/charts.js' %}"></script>{% endblock %}

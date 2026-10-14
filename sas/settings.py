@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'timetable.apps.TimetableConfig',
     'cls.apps.ClsConfig',
     'Login.apps.LoginConfig',
+    'insights.apps.InsightsConfig',
 
     # PIP packages
     'django_extensions',
@@ -183,3 +184,8 @@ GRAPH_MODELS = {
 
 # Attendance below this percentage is highlighted as a shortfall.
 ATTENDANCE_THRESHOLD = 75
+
+# AI features (insights, timetable assistant). With AI_TOKEN (an Anthropic API
+# key) they run on Claude; without it a built-in analyst produces the results.
+AI_TOKEN = env('AI_TOKEN', default=env('ANTHROPIC_API_KEY', default=''))
+AI_MODEL = env('AI_MODEL', default='claude-opus-5-5')

@@ -90,6 +90,27 @@
   });
   $('.course-row input[data-check]').trigger('change');
 
+  // AI analysis panels load after the page so charts never wait on the AI.
+  function loadPanel(panel, refresh) {
+    var url = panel.getAttribute('data-url') + (refresh ? '&refresh=1' : '');
+    panel.classList.add('is-loading');
+    fetch(url, { credentials: 'same-origin' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (html) { panel.innerHTML = html; })
+      .catch(function () {
+        panel.textContent = '';
+        var p = document.createElement('p');
+        p.className = 'text-muted small mb-0';
+        p.textContent = "Couldn't load the analysis. Reload the page to try again.";
+        panel.appendChild(p);
+      })
+      .then(function () { panel.classList.remove('is-loading'); });
+  }
+  $('[data-ai-panel][data-url]').each(function () { loadPanel(this, false); });
+  $(document).on('click', '[data-ai-refresh]', function () {
+    loadPanel($(this).closest('[data-ai-panel]')[0], true);
+  });
+
   // Attendance marking.
   var $mark = $('[data-mark-form]');
   if ($mark.length) {
