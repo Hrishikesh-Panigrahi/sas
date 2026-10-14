@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Hi{% if user.first_name %}, {{ user.first_name }}{% endif %}{% endblock %}
+{% block subtitle %}
+<p class="page-subtitle">
+    {% if profile.cls %}{{ profile.cls.class_name }}{% if profile.roll_no %} · Roll no. {{ profile.roll_no }}{% endif %}{% else %}You haven't been added to a class yet{% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+{% if summary %}
+<div class="row row-gap">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body d-flex flex-column align-items-center text-center">
+                <h2 class="card-title align-self-start mb-3">Overall attendance</h2>
+                {% if summary.percent is not None %}
+                <div class="ring{% if summary.short %} short{% endif %}" style="--p: {{ summary.percent }}">
+                    <div class="ring-inner">
+                        <div><div class="ring-value">{{ summary.percent }}%</div><div class="ring-label">{{ summary.present }} of {{ summary.total }}</div></div>
+                    </div>
+                </div>
+                {% if summary.short %}
+                <p class="mt-3 mb-0"><span class="badge badge-soft-danger">Below {{ attendance_threshold }}%</span></p>
+                <p class="text-muted small mt-2 mb-0">Attend the next <strong>{{ summary.needed }}</strong> lecture{{ summary.needed|pluralize }} in a row to get back to {{ attendance_threshold }}%.</p>
+                {% else %}
+                <p class="mt-3 mb-0"><span class="badge badge-soft-success">On track</span></p>
+                <p class="text-muted small mt-2 mb-0">You're at or above the {{ attendance_threshold }}% requirement.</p>
+                {% endif %}
+                {% else %}
+                <div class="empty compact"><p class="mb-0">No lectures recorded yet.</p></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header"><h2 class="card-title">By course</h2></div>
+            {% include 'partials/course_attendance.html' %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card">
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-user-graduate"></i></div>
+        <h3>Your student profile isn't set up</h3>
+        <p>Ask your class teacher to add you to a class. Your attendance will appear here after that.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

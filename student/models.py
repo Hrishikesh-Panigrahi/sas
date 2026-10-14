@@ -1,5 +1,6 @@
 from users.models import User
 from django.db import models
+from django.db.models import F
 from course.models import Course
 from cls.models import Class
 
@@ -16,8 +17,8 @@ class student(models.Model):
     cls = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return str(self.user.first_name) + " " + str(self.user.last_name)
+        return str(self.user)
 
 
-
- 
+# Roll number first (students without one last, on every database), then name.
+ROLL_ORDER = (F('roll_no').asc(nulls_last=True), 'user__first_name', 'user__last_name')

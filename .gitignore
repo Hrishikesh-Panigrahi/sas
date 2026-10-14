@@ -21,3 +21,8 @@ tests/report/
 
 venv-win/
 venv/
+# Local virtualenv, collected static files and editor tooling
+env/
+.venv/
+staticfiles_build/
+.claude/

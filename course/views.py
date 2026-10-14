@@ -1,79 +1,68 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views import View
-from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+
 from course.forms import CourseForm
 from course.models import Course
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
+from attendance.models import AttendanceClass
+from sas.permissions import hod_required, in_department, linked_records, staff_required
 
 
-# class Index(View):
-#     def get(self, request):
-#         # return HttpResponse("hello world")
-#         return render(request, 'course/create.html')
-
-# def index(request):
-#     c = Course.objects.all()
-#     return render(request, 'course/index.html', {'courses': c})
+def _courses_for(user):
+    return in_department(Course.objects.all(), user, 'dept')
 
 
-@login_required(login_url='/')
+@staff_required
 def index(request):
-    uDept = request.user.department
-    # TODO: filter institute level courses as well
-    courses = Course.objects.filter(dept=uDept)
     context = {
-        'department':uDept,
         'title': 'Courses',
-        'page': 'table',
-        'courses': courses,
+        'department': request.user.department,
+        'courses': _courses_for(request.user).order_by('sem', 'code'),
     }
     return render(request, 'course/courses.html', context)
 
-@staff_member_required(login_url='/')
+
+@hod_required
 def create(request):
-    uDept = request.user.department
-    form = CourseForm(request.POST or None, dept=uDept)
-    context = {
-        'title': 'Courses',
-        'type': 'Create',
-        'form': form
-    }
-
-    if request.method == 'POST':
-        form = CourseForm(request.POST, dept=uDept)
-        if form.is_valid():
-            form.save()
-        return redirect(index)
+    form = CourseForm(request.POST or None, dept=request.user.department)
+    if request.method == 'POST' and form.is_valid():
+        course = form.save()
+        messages.success(request, 'Course "%s" was added.' % course.name)
+        if 'add_another' in request.POST:
+            return redirect('course-create')
+        return redirect('chome')
+    context = {'title': 'Add course', 'form': form, 'type': 'Create'}
     return render(request, 'course/CourseForm.html', context)
 
-@staff_member_required(login_url='/')
+
+@hod_required
 def update(request, id):
-    course = Course.objects.get(pk=id)
-    form = CourseForm(instance=course)
-    context = {
-        'title': 'Courses',
-        'form': form,
-        'type': 'Update',
-        'id': course.id
-    }
-
-    if request.method == 'POST':
-        form = CourseForm(request.POST, instance=course)
-        if form.is_valid():
-            print("success")
-            form.save()
-            return redirect(update, id)
+    course = get_object_or_404(_courses_for(request.user), pk=id)
+    form = CourseForm(request.POST or None, instance=course, dept=request.user.department)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Course "%s" was updated.' % course.name)
+        return redirect('chome')
+    context = {'title': 'Edit course', 'form': form, 'type': 'Update', 'course': course}
     return render(request, 'course/CourseForm.html', context)
 
-@staff_member_required(login_url='/')
+
+@hod_required
 def delete(request, id):
-    course = Course.objects.get(pk=id)
-    context = {
-        'title': 'Courses',
-        'id': course.id
-    }
+    course = get_object_or_404(_courses_for(request.user), pk=id)
     if request.method == 'POST':
+        name = course.name
         course.delete()
-        return redirect(index)
-    return render(request, 'course/delete.html', context)
+        messages.success(request, 'Course "%s" was deleted.' % name)
+        return redirect('chome')
+    context = {
+        'title': 'Delete course',
+        'object_name': '%s (%s)' % (course.name, course.code),
+        'cancel_url': reverse('course-update', args=[course.id]),
+        'consequences': linked_records(
+            (course.assign_cls_set.count(), 'class assignment'),
+            (AttendanceClass.objects.filter(assign__course=course).count(), 'lecture'),
+            (course.attendance_set.count(), 'attendance record'),
+        ),
+    }
+    return render(request, 'confirm_delete.html', context)

@@ -1,95 +1,56 @@
-{% extends 'tables.html' %}
+{% extends 'base.html' %}
 
-{% block heading %}
-<!-- <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1> -->
-<p class="mb-4">List of all Courses for {{ department }}</p>
+{% block subtitle %}<p class="page-subtitle">{{ courses|length }} course{{ courses|length|pluralize }}{% if department %} in {{ department }}{% endif %}</p>{% endblock %}
+
+{% block actions %}
+{% if user.can_manage_department %}
+<a class="btn btn-primary" href="{% url 'course-create' %}"><i class="fas fa-plus"></i>Add course</a>
+{% endif %}
 {% endblock %}
 
-{% block table %}
-<style>
-    .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
-        border-collapse: collapse;
-    }
-
-    .table th,
-    .table td {
-        padding: 0.75rem;
-        vertical-align: top;
-        border-top: 1px solid #dee2e6;
-    }
-
-    .table thead th {
-        vertical-align: bottom;
-        border-bottom: 2px solid #dee2e6;
-    }
-
-    .table tbody + tbody {
-        border-top: 2px solid #dee2e6;
-    }
-
-    .table-sm th,
-    .table-sm td {
-        padding: 0.3rem;
-    }
-
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
-
-    .table-bordered th,
-    .table-bordered td {
-        border: 1px solid #dee2e6;
-    }
-
-    .table-bordered thead th,
-    .table-bordered thead td {
-        border-bottom-width: 2px;
-    }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-
-    .table-hover tbody tr:hover {
-        color: #212529;
-        background-color: rgba(0, 0, 0, 0.075);
-    }
-</style>
-<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Scheme</th>
-            <th>Name</th>
-            <th>Deptartment</th>
-            <!-- <th>Start date</th>
-            <th>Salary</th> -->
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>Code</th>
-            <th>Scheme</th>
-            <th>Name</th>
-            <th>Deptartment</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for course in courses %}
-        <tr>
-            <td>
-                <a href="{% url 'update' id=course.id %}">
-                    {{ course.code }}
-                </a>
-            </td>
-            <td>{{ course.scheme }}</td>
-            <td>{{ course.name }}</td>
-            <td>{{ course.dept }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+<div class="card">
+    {% if courses %}
+    <div class="table-responsive">
+        <table class="table table-hover" data-datatable data-search="Search courses…" data-order='[[2,"asc"],[0,"asc"]]'>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Semester</th>
+                    <th>Scheme</th>
+                    <th>Type</th>
+                    {% if user.can_manage_department %}<th class="no-sort actions"><span class="sr-only">Actions</span></th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td class="fw-600">{{ course.code }}</td>
+                    <td>{{ course.name }}</td>
+                    <td data-order="{{ course.sem }}">Sem {{ course.sem }}</td>
+                    <td>{{ course.scheme }}</td>
+                    <td>
+                        {% if course.is_elective %}<span class="badge badge-soft-info">Elective</span>{% else %}<span class="badge badge-soft">Core</span>{% endif %}
+                        {% if course.institue_level %}<span class="badge badge-soft-primary">Institute</span>{% endif %}
+                    </td>
+                    {% if user.can_manage_department %}
+                    <td class="actions">
+                        <a class="btn btn-sm btn-light" href="{% url 'course-update' course.id %}"><i class="fas fa-pen"></i>Edit</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-book"></i></div>
+        <h3>No courses yet</h3>
+        <p>Add the courses your department teaches. You'll then assign them, with a teacher, to each class.</p>
+        {% if user.can_manage_department %}<a class="btn btn-primary" href="{% url 'course-create' %}"><i class="fas fa-plus"></i>Add the first course</a>{% endif %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

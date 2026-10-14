@@ -1,120 +1,106 @@
-from django.shortcuts import redirect, render
-from .forms import TeacherForm, UserForm, UserUpdateForm
-
-from .models import TeacherProfile, User
-from course.models import Course
-
-from .filters import CourseFilter
-
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
-from .decorators import hod_allowed
+from django.db.models import Prefetch
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
-@login_required(login_url='/')
+from attendance.models import Assign_cls, Attendance, AttendanceClass
+from sas.permissions import hod_required, in_department, linked_records, staff_required
+from .forms import ProfileForm, StyledPasswordChangeForm, TeacherForm
+from .models import TeacherProfile
+
+
+def _teachers_for(user):
+    return in_department(TeacherProfile.objects.filter(user__is_staff=True),
+                         user, 'user__department')
+
+
+@staff_required
 def index(request):
-    uDept = request.user.department
-    teachers = TeacherProfile.objects.filter(user__department=uDept)
-    context = {
-        'title': 'Teachers',
-        
-        'teachers': teachers,
-    }
+    teachers = (_teachers_for(request.user)
+                .select_related('user', 'class')
+                .prefetch_related(Prefetch('assign_cls_set',
+                                           queryset=Assign_cls.objects.select_related('cls', 'course')))
+                .order_by('user__first_name', 'user__last_name'))
+    context = {'title': 'Teachers', 'teachers': teachers}
     return render(request, 'users/teachers.html', context)
 
-@staff_member_required(login_url="/")
-def profile(request):
-    return render(request, 'users/profile.html')
 
-@staff_member_required(login_url='/')
-@hod_allowed
+@hod_required
 def register(request):
-    
-    uDept = request.user.department
-
-    courses = Course.objects.filter(dept=uDept)
-    courseFilter = CourseFilter(request.GET, queryset=courses)
-    courses = courseFilter.qs
-    userForm = UserForm(request.POST or None)
-    teacherForm = TeacherForm(courseSet=courses)
-    context = {
-        'title': 'Teachers',
-        'type': 'Create',
-        'form': userForm,
-        'tForm': teacherForm,
-        'filter': courseFilter
-    }
-
-    if request.method == 'POST':
-        userForm = UserForm(request.POST, department=uDept)
-        # userForm = UserForm(request.POST, department=uDept)
-        if userForm.is_valid():
-            try:
-                userForm.save()
-                c_ids = request.POST.getlist('course')
-                u = User.objects.get(email=request.POST['email'])
-                t = TeacherProfile.objects.get(user=u)
-
-                for id in c_ids:
-                    c = Course.objects.get(pk=id)
-                    t.course.add(c)
-                t.save()
-                return redirect(index)
-            except Exception as e:
-                context = {'e': e}
-                print('user not saved')
-                print(e)
-                print('%s' % type(e))
-
+    form = TeacherForm(request.POST or None, dept=request.user.department)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        messages.success(request, '%s can now sign in with %s.' % (user.full_name, user.email))
+        if 'add_another' in request.POST:
+            return redirect('FacultyRegister')
+        return redirect('teachers')
+    context = {'title': 'Register teacher', 'form': form, 'type': 'Create'}
     return render(request, 'users/TeacherForm.html', context)
 
-@staff_member_required(login_url='/')
+
+@hod_required
 def update(request, id):
-    uDept = request.user.department
-    courses = Course.objects.filter(dept=uDept)
-    teacher = TeacherProfile.objects.get(pk=id)
-    courseFilter = CourseFilter(request.GET, queryset=courses)
-    courses = courseFilter.qs
-    userForm = UserUpdateForm(instance=teacher.user)
-    teacherForm = TeacherForm(instance=teacher, courseSet=courses)
-
-    if request.method == 'POST':
-        print(request.POST)
-        userForm = UserUpdateForm(request.POST, instance=teacher.user)
-        teacherForm = TeacherForm(
-            request.POST, instance=teacher, courseSet=courses)
-        if userForm.is_valid():
-            # try:
-                print('user valid')
-                userForm.save()
-                if teacherForm.is_valid():
-                    print('vali')
-                    teacherForm.save()
-            # except Exception as e:
-            #     print(e)
-            #     print('%s' % type(e))
-            #     # TODO: handle exceptions
-    
+    teacher = get_object_or_404(_teachers_for(request.user).select_related('user'), pk=id)
+    form = TeacherForm(request.POST or None, instance=teacher.user, dept=request.user.department)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, '%s was updated.' % teacher.user.full_name)
+        return redirect('teachers')
     context = {
-        'title': 'Teachers',
+        'title': 'Edit teacher',
+        'form': form,
         'type': 'Update',
-        'form': userForm,
-        'tForm': teacherForm,
-        'filter': courseFilter,
-        'id': teacher.id
+        'teacher': teacher,
+        'assignments': teacher.assign_cls_set.select_related('cls', 'course'),
     }
-
     return render(request, 'users/TeacherForm.html', context)
 
-@staff_member_required(login_url='/')
+
+@hod_required
 def delete(request, id):
-    teacher = TeacherProfile.objects.get(pk=id)
-    context = {
-        'title': 'Teachers',
-        'id': id
-    }
+    teacher = get_object_or_404(_teachers_for(request.user).select_related('user'), pk=id)
+    if teacher.user == request.user:
+        messages.error(request, "You can't delete your own account.")
+        return redirect('teachers')
     if request.method == 'POST':
-        user = teacher.user
-        teacher.delete()
-        user.delete()
-        return redirect(index)
-    return render(request, 'users/delete.html', context)
+        name = teacher.user.full_name
+        teacher.user.delete()
+        messages.success(request, '%s was deleted.' % name)
+        return redirect('teachers')
+    lectures = AttendanceClass.objects.filter(assign__teacher=teacher)
+    context = {
+        'title': 'Delete teacher',
+        'object_name': '%s (%s)' % (teacher.user.full_name, teacher.user.email),
+        'cancel_url': reverse('updateTeacher', args=[teacher.id]),
+        'consequences': linked_records(
+            (teacher.assign_cls_set.count(), 'class assignment'),
+            (lectures.count(), 'lecture'),
+            (Attendance.objects.filter(attendanceclass__in=lectures).count(), 'attendance record'),
+        ),
+    }
+    return render(request, 'confirm_delete.html', context)
+
+
+@login_required
+def profile(request):
+    form = ProfileForm(request.POST or None, instance=request.user)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Your profile was updated.')
+        return redirect('profile')
+    context = {'title': 'My profile', 'form': form}
+    return render(request, 'users/profile.html', context)
+
+
+@login_required
+def password_change(request):
+    form = StyledPasswordChangeForm(request.user, request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)
+        messages.success(request, 'Your password was changed.')
+        return redirect('profile')
+    context = {'title': 'Change password', 'form': form}
+    return render(request, 'users/password_change.html', context)

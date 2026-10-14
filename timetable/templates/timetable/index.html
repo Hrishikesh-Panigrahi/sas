@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}<p class="page-subtitle">Your weekly lectures, and every class's timetable.</p>{% endblock %}
+
+{% block content %}
+<h2 class="section-title">My week</h2>
+{% if week %}
+<div class="mb-4">{% include 'timetable/week.html' with show_class=True can_edit=False %}</div>
+{% else %}
+<div class="card mb-4">
+    <div class="empty compact">
+        <div class="empty-icon"><i class="far fa-calendar-alt"></i></div>
+        <h3>Nothing scheduled for you yet</h3>
+        <p class="mb-0">When your courses are added to a class timetable, your week will appear here and your dashboard will list each day's lectures.</p>
+    </div>
+</div>
+{% endif %}
+
+<h2 class="section-title">Class timetables</h2>
+{% if classes %}
+<div class="card">
+    <div class="list">
+        {% for cls in classes %}
+        <a class="list-row" href="{% url 'timetable-class' cls.id %}">
+            <span class="avatar">{{ cls.class_name|slice:":2"|upper }}</span>
+            <div class="grow"><div class="title">{{ cls.class_name }}</div></div>
+            <span class="text-muted small">{% if user.can_manage_students %}View and edit{% else %}View{% endif %}</span>
+            <i class="fas fa-chevron-right text-muted small"></i>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="card"><div class="empty compact"><p class="mb-0">No classes have been created yet.</p></div></div>
+{% endif %}
+{% endblock %}

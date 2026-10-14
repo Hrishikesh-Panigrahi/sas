@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'attendance-home' %}">Attendance</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}{{ assign.course.name }}{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{{ assign.cls.class_name }} · {{ assign.teacher.user.full_name }} · {{ num_students }} student{{ num_students|pluralize }}</p>{% endblock %}
+
+{% block actions %}
+<a class="btn btn-light" href="{% url 'attendance-report' assign.id %}"><i class="fas fa-chart-bar"></i>Report</a>
+{% endblock %}
+
+{% block content %}
+{% if can_mark %}
+<div class="card">
+    <div class="card-header"><h2 class="card-title">Take attendance</h2></div>
+    <div class="card-body">
+        {% if num_students %}
+        <form method="post" action="{% url 'create_lecture' assign.id %}" class="row align-items-end">
+            {% csrf_token %}
+            <div class="col-sm-5 col-lg-4">{% include 'partials/field.html' with field=form.date %}</div>
+            <div class="col-sm-7 col-lg-5">{% include 'partials/field.html' with field=form.period %}</div>
+            <div class="col-lg-3 form-group">
+                <button class="btn btn-primary btn-block" type="submit">Start <i class="fas fa-arrow-right ml-1 mr-0"></i></button>
+            </div>
+        </form>
+        {% else %}
+        <p class="mb-0 text-muted">{{ assign.cls.class_name }} has no students yet. {% if user.can_manage_students %}<a href="{% url 'class-edit' assign.cls.id %}">Add students to the class</a> first.{% endif %}</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Lectures</h2>
+        <span class="badge badge-soft">{{ lectures|length }}</span>
+    </div>
+    {% if lectures %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr><th>Date</th><th>Time</th><th>Status</th><th>Present</th><th class="actions"></th></tr>
+            </thead>
+            <tbody>
+                {% for lec in lectures %}
+                <tr>
+                    <td><div class="fw-600">{{ lec.date|date:"D, j M Y" }}</div></td>
+                    <td class="tabular">{{ lec.period|default:"—" }}</td>
+                    <td>{% if lec.is_marked %}<span class="badge badge-soft-success"><i class="fas fa-check"></i> Marked</span>{% else %}<span class="badge badge-soft-warning">Not marked</span>{% endif %}</td>
+                    <td>
+                        {% if lec.is_marked %}
+                        {% widthratio lec.num_present lec.num_marked 100 as pct %}
+                        <div class="meter" style="max-width:220px"><div class="meter-bar neutral"><span style="width: {{ pct }}%"></span></div><span class="meter-value tabular" style="min-width:3.5rem">{{ lec.num_present }}/{{ lec.num_marked }}</span></div>
+                        {% else %}<span class="text-muted">—</span>{% endif %}
+                    </td>
+                    <td class="actions">
+                        {% if can_mark %}
+                        <a class="btn btn-sm {% if lec.is_marked %}btn-light{% else %}btn-primary{% endif %}" href="{% url 'attendance' lec.id %}">{% if lec.is_marked %}<i class="fas fa-pen"></i>Edit{% else %}Mark now{% endif %}</a>
+                        <form method="post" action="{% url 'attendance-lecture-delete' lec.id %}" class="d-inline" data-confirm="Delete the lecture on {{ lec.date|date:'j M Y' }}{% if lec.is_marked %} and its attendance{% endif %}?">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-link-muted icon-only" type="submit" title="Delete lecture"><i class="far fa-trash-alt"></i><span class="sr-only">Delete</span></button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty compact">
+        <div class="empty-icon"><i class="far fa-calendar-plus"></i></div>
+        <h3>No lectures yet</h3>
+        <p class="mb-0">{% if can_mark %}Choose a date and time above, then press Start to take attendance for the first lecture.{% else %}Lectures will appear here once the teacher takes attendance.{% endif %}</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

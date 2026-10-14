@@ -27,4 +27,4 @@ class Class(models.Model):
     
     
     def __str__(self):
-        return str(self.id) + " " + self.class_name
+        return self.class_name

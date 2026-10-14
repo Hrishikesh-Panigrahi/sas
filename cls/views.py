@@ -1,197 +1,106 @@
-from multiprocessing import context
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
-from cls.filters import StudentFilter, CourseFilter
+from attendance.models import Attendance, AttendanceClass
 from course.models import Course
-from users.models import TeacherProfile, User
-from .forms import ClassCreateForm, ClassUpdateForm
+from sas.permissions import in_department, linked_records, manager_required, staff_required
+from student.models import ROLL_ORDER, student
+from users.models import TeacherProfile
+from .forms import ClassForm
 from .models import Class
-from student.models import student
-from attendance.models import Assign_cls, Attendance, AttendanceClass
-
-from django.contrib.admin.views.decorators import staff_member_required
 
 
-@staff_member_required(login_url='/')
-def index(request):
-    uDept = request.user.department
-    return HttpResponse("helo")
+def _classes_for(user):
+    return in_department(Class.objects.all(), user)
 
 
-@staff_member_required(login_url='/')
-def create(request):
-    uDept = request.user.department
+def _form_for(request, instance=None):
+    user = request.user
+    return ClassForm(
+        request.POST or None,
+        instance=instance,
+        courses=in_department(Course.objects.all(), user, 'dept').order_by('sem', 'code'),
+        teachers=in_department(TeacherProfile.objects.filter(user__is_staff=True),
+                               user, 'user__department')
+        .select_related('user').order_by('user__first_name', 'user__last_name'),
+        students=in_department(student.objects.filter(user__is_staff=False),
+                               user, 'user__department')
+        .select_related('user', 'cls').order_by(*ROLL_ORDER),
+    )
 
-    # getting teacher and students
-    t = TeacherProfile.objects.filter(
-        user__department=uDept, user__is_classteacher=True, class__class_teacher=None)
-    s = student.objects.filter(user__department=uDept, cls=None)
 
-    # getting course of the department
-    co = Course.objects.filter(dept=uDept)
-    filter = StudentFilter(request.GET, queryset=s)
-    cfilter = CourseFilter(request.GET, queryset=co)
-    form = ClassCreateForm(None, students=s, course=co, teachers=t)
+@staff_required
+def AllClass(request):
+    classes = (_classes_for(request.user)
+               .select_related('class_teacher__user')
+               .annotate(num_students=Count('student', distinct=True),
+                         num_courses=Count('assign_cls', distinct=True))
+               .order_by('class_name'))
+    context = {'title': 'Classes', 'classes': classes}
+    return render(request, 'cls/Allclass.html', context)
+
+
+@staff_required
+def detail(request, id):
+    cls = get_object_or_404(_classes_for(request.user).select_related('class_teacher__user'), pk=id)
     context = {
-        'form': form,
-        'filter1': filter,
-        'cfilter': cfilter
-
+        'title': cls.class_name,
+        'cls': cls,
+        'students': cls.student_set.select_related('user').order_by(*ROLL_ORDER),
+        'assignments': (cls.assign_cls_set.select_related('course', 'teacher__user')
+                        .annotate(num_lectures=Count('attendanceclass'))
+                        .order_by('course__name')),
     }
-    if request.method == 'POST':
-        form = ClassCreateForm(request.POST, students=s, course=co, teachers=t)
+    return render(request, 'cls/detail.html', context)
 
-        if form.is_valid():
 
-            body = request.POST.dict()
-            teacher = t.get(pk=request.POST['teacher'])
-            students = dict(request.POST)['students']
-
-            course = None
-            if 'course' in dict(request.POST):
-                course = dict(request.POST)['course']
-                print(course)
-            c = Class(class_name=body['name'],
-                      department=uDept, class_teacher=teacher)
-            c.save()
-
-            for obj in students:
-                s = student.objects.get(pk=obj)
-                s.cls = c
-                if course:
-                    s.course.add(*course)
-                s.save()
-
+@manager_required
+def clsCreation(request):
+    form = _form_for(request)
+    if request.method == 'POST' and form.is_valid():
+        cls = form.save(department=request.user.department)
+        messages.success(request, 'Class "%s" was created.' % cls.class_name)
+        return redirect('class-detail', id=cls.id)
+    context = {'title': 'Create class', 'form': form, 'type': 'Create'}
     return render(request, 'cls/form.html', context)
 
 
-@staff_member_required(login_url='/')
+@manager_required
 def update(request, id):
-    uDept = request.user.department
-    c = Class.objects.get(pk=id)
-    in_class = student.objects.filter(cls=c, user__department=uDept)
-    out_class = student.objects.filter(cls=None, user__department=uDept)
-    inStudentFilter = StudentFilter(request.GET, queryset=in_class)
-    in_class = inStudentFilter.qs
-
-    outStudentFilter = StudentFilter(request.GET, queryset=out_class)
-    out_class = outStudentFilter.qs
-
-    form = ClassUpdateForm(request.POST or None, instance=c,
-                           in_class=in_class, out_class=out_class)
-
+    cls = get_object_or_404(_classes_for(request.user), pk=id)
+    form = _form_for(request, instance=cls)
     if request.method == 'POST' and form.is_valid():
         form.save()
-        in_cstudents = dict(request.POST)['students in class']
-        out_cstudents = dict(request.POST)['students not in class']
-        for obj in out_cstudents:
-            s = student.objects.get(pk=obj)
-            s.cls = c
-            s.save()
-        for obj in in_cstudents:
-            s = student.objects.get(pk=obj)
-            s.cls = None
-            s.save()
-
-    context = {
-        "form": form,
-        "filter1": inStudentFilter
-    }
+        messages.success(request, 'Class "%s" was updated.' % cls.class_name)
+        if form.kept_courses:
+            messages.warning(request, 'Kept %s because attendance has already been recorded for it.'
+                             % ', '.join(c.name for c in form.kept_courses))
+        return redirect('class-detail', id=cls.id)
+    context = {'title': 'Edit class', 'form': form, 'type': 'Update', 'cls': cls}
     return render(request, 'cls/form.html', context)
 
 
-def clsCreation(request):
-    uDept = request.user.department
-    t = TeacherProfile.objects.filter(user__department=uDept)
-    course = Course.objects.filter(dept=uDept)
-    s = student.objects.filter(user__department=uDept, cls=None)
-
+@manager_required
+def delete(request, id):
+    cls = get_object_or_404(_classes_for(request.user), pk=id)
+    if request.method == 'POST':
+        name = cls.class_name
+        cls.delete()
+        messages.success(request, 'Class "%s" was deleted.' % name)
+        return redirect('viewcls')
+    lectures = AttendanceClass.objects.filter(assign__cls=cls)
     context = {
-        'course': course,
-        'stu': s,
-        't':t
+        'title': 'Delete class',
+        'object_name': cls.class_name,
+        'cancel_url': reverse('class-detail', args=[cls.id]),
+        'consequences': linked_records(
+            (cls.assign_cls_set.count(), 'course assignment'),
+            (cls.timetable_set.count(), 'timetable slot'),
+            (lectures.count(), 'lecture'),
+            (Attendance.objects.filter(attendanceclass__in=lectures).count(), 'attendance record'),
+        ),
+        'note': 'Students in this class are not deleted; they just become unassigned.',
     }
-
-    if request.method == 'POST':
-
-        clsname = request.POST['ClassName']
-        cls = Class(class_name=clsname, department=uDept)
-        cls.save()
-
-        if 'course' in dict(request.POST):
-            courses = dict(request.POST)['course']
-            if 'teacher' in dict(request.POST):
-                teacher =  dict(request.POST)['teacher']
-                              
-                for course,t in zip(courses,teacher):
-                    co = Course.objects.get(name=course)
-                    te = TeacherProfile.objects.get(user__first_name=t)
-                    Assign_cls.objects.get_or_create(cls=cls, course=co, teacher = te)
-                    
-        if 'students' in dict(request.POST):
-            students = dict(request.POST)['students']
-
-            for obj in students:
-                s = student.objects.get(user__first_name=obj)
-                s.cls = cls
-
-                if courses:
-
-                    for course in courses:
-                        co = Course.objects.get(name=course)
-                        s.course.add(co)
-
-                s.save()
-        
-        return redirect("/")
-
-    return render(request, 'cls/class-section1.html', context)
-
-def AllClass(request):
-    uDept = request.user.department
-    cls = Class.objects.filter(department = uDept)
-    context = {'cls': cls}
-    return render (request, 'cls/Allclass.html', context)
-
-
-'''def assigncourse(request, name):
-    assclass = Assign_cls.objects.filter(cls__class_name=name)
-    uDept = request.user.department
-    t = TeacherProfile.objects.filter(user__department=uDept)
-    context = {'assclass': assclass,
-               't': t}
-
-    for i in assclass:
-        y = 1
-        temp = i.cls.class_name
-        if(y > 1):
-            continue
-        context.update({'temp': temp})
-        y += 1
-
-    if request.method == 'POST':
-# assclass -> array , course -> condition, teacher -> value
-
-        if 'course' in dict(request.POST):
-            course = dict(request.POST)['course']
-            if 'teacher' in dict(request.POST):
-                teacher = dict(request.POST)['teacher']
-
-            # queryset ka teacher
-
-                for i in assclass:
-                    if course in i.course__name:
-                        k=TeacherProfile.objects.filter(user__first_name=teacher)
-                        print(k)
-                        i.teacher = k
-                        i.save()
-                    
-
-                    # for teacher in teacher:
-                    #     teach = TeacherProfile.objects.get(user__first_name=teacher)
-                    #     i.teacher = teach
-                    #     i.save()
-
-    return render(request, 'cls/course-teacher-section.html', context)'''
+    return render(request, 'confirm_delete.html', context)

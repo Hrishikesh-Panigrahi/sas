@@ -1,0 +1,37 @@
+{% with u=request.user %}
+<header class="topbar">
+    <button class="btn-icon d-lg-none" type="button" data-toggle-sidebar aria-label="Open menu">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="topbar-context">
+        {% if u.department %}
+        <span class="dept-chip" title="{{ u.department }}"><i class="far fa-building"></i>{{ u.department }}</span>
+        {% endif %}
+    </div>
+
+    <div class="topbar-right">
+        <span class="topbar-date d-none d-md-inline">{% now "l, j F" %}</span>
+        <div class="dropdown">
+            <button class="user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="avatar">{{ u.initials }}</span>
+                <span class="user-meta d-none d-sm-flex">
+                    <strong>{{ u.full_name|default:u.email }}</strong>
+                    <small>{{ u.role_label }}</small>
+                </span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-header">{{ u.email }}</div>
+                <a class="dropdown-item" href="{% url 'profile' %}"><i class="far fa-user"></i>My profile</a>
+                <a class="dropdown-item" href="{% url 'password-change' %}"><i class="fas fa-key"></i>Change password</a>
+                <div class="dropdown-divider"></div>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="dropdown-item text-danger" type="submit"><i class="fas fa-sign-out-alt"></i>Sign out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</header>
+{% endwith %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'viewcls' %}">Classes</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}{{ cls.class_name }}{% endblock %}
+{% block subtitle %}<p class="page-subtitle">Class teacher: {% if cls.class_teacher %}{{ cls.class_teacher.user.full_name }}{% else %}not set{% endif %}</p>{% endblock %}
+
+{% block actions %}
+<a class="btn btn-light" href="{% url 'timetable-class' cls.id %}"><i class="far fa-calendar-alt"></i>Timetable</a>
+{% if user.can_manage_students %}
+<a class="btn btn-primary" href="{% url 'class-edit' cls.id %}"><i class="fas fa-pen"></i>Edit class</a>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row row-gap">
+    <div class="col-xl-7">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Courses</h2>
+                    <p class="card-subtitle">Who teaches what in this class</p>
+                </div>
+                <span class="badge badge-soft">{{ assignments|length }}</span>
+            </div>
+            {% if assignments %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead><tr><th>Course</th><th>Teacher</th><th class="text-right">Lectures</th><th class="actions"></th></tr></thead>
+                    <tbody>
+                        {% for a in assignments %}
+                        <tr>
+                            <td><div class="fw-600">{{ a.course.name }}</div><div class="small text-muted">{{ a.course.code }}</div></td>
+                            <td>{{ a.teacher.user.full_name }}</td>
+                            <td class="text-right tabular">{{ a.num_lectures }}</td>
+                            <td class="actions">
+                                {% if a.teacher.user_id == user.id or user.can_manage_students %}
+                                <a class="btn btn-sm btn-light" href="{% url 'attendance-attendance_date' a.id %}">Lectures</a>
+                                <a class="btn btn-sm btn-light" href="{% url 'attendance-report' a.id %}">Report</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty compact">
+                <div class="empty-icon"><i class="fas fa-book"></i></div>
+                <h3>No courses assigned</h3>
+                <p>Pick the courses this class takes and who teaches each one.</p>
+                {% if user.can_manage_students %}<a class="btn btn-soft" href="{% url 'class-edit' cls.id %}">Assign courses</a>{% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-xl-5">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Students</h2>
+                <span class="badge badge-soft">{{ students|length }}</span>
+            </div>
+            {% if students %}
+            <div class="list checklist">
+                {% for stu in students %}
+                <a class="list-row" href="{% url 'student-detail' stu.id %}">
+                    <span class="roll">{{ stu.roll_no|default:"" }}</span>
+                    <span class="avatar">{{ stu.user.initials }}</span>
+                    <div class="grow">
+                        <div class="title text-truncate">{{ stu.user.full_name|default:stu.user.email }}</div>
+                        <div class="meta text-truncate">{{ stu.user.email }}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty compact">
+                <div class="empty-icon"><i class="fas fa-user-graduate"></i></div>
+                <h3>No students in this class</h3>
+                {% if user.can_manage_students %}<a class="btn btn-soft" href="{% url 'class-edit' cls.id %}">Add students</a>{% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% if user.can_manage_students %}
+        <div class="card danger-zone">
+            <div class="card-body">
+                <div>
+                    <div class="fw-600">Delete this class</div>
+                    <div class="small text-muted">Students are kept; course assignments and attendance are removed.</div>
+                </div>
+                <a class="btn btn-outline-danger" href="{% url 'class-delete' cls.id %}"><i class="far fa-trash-alt"></i>Delete</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

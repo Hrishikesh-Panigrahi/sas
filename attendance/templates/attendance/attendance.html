@@ -1,42 +1,64 @@
-{% extends 'tables.html' %}
+{% extends 'base.html' %}
 
-{% block heading %}
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'attendance-home' %}">Attendance</a><span class="sep">/</span><a href="{% url 'attendance-attendance_date' assign.id %}">{{ assign.course.name }} · {{ assign.cls.class_name }}</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}{% if lecture.is_marked %}Edit attendance{% else %}Take attendance{% endif %}{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{{ lecture.date|date:"l, j F Y" }}{% if lecture.period %} · {{ lecture.period }}{% endif %} · {{ assign.course.name }}, {{ assign.cls.class_name }}</p>{% endblock %}
 
-{% endblock %}
+{% block content %}
+{% if rows %}
+<form method="post" data-mark-form>
+    {% csrf_token %}
+    <div class="card">
+        <div class="card-header mark-toolbar">
+            <div class="tally" aria-live="polite">
+                <span><i class="dot green"></i><span data-tally-present>{{ num_present }}</span> present</span>
+                <span><i class="dot red"></i><span data-tally-absent>0</span> absent</span>
+                <span class="text-muted"><i class="dot gray"></i>{{ rows|length }} total</span>
+            </div>
+            <div class="d-flex flex-wrap" style="gap:.5rem">
+                <div class="search-input"><i class="fas fa-search"></i><input type="search" class="form-control" style="height:34px;font-size:.875rem" placeholder="Find a student" data-filter="#mark-list" aria-label="Find a student"></div>
+                <button type="button" class="btn btn-sm btn-light" data-mark-all="present"><i class="fas fa-check text-success"></i>All present</button>
+                <button type="button" class="btn btn-sm btn-light" data-mark-all="absent"><i class="fas fa-times text-danger"></i>All absent</button>
+            </div>
+        </div>
+        <ul class="list" id="mark-list">
+            {% for row in rows %}
+            {% with stu=row.student %}
+            <li class="list-row mark-row" data-item data-search="{{ stu.user.full_name }} {{ stu.user.email }} {{ stu.roll_no|default:'' }}">
+                <span class="roll">{{ stu.roll_no|default:"" }}</span>
+                <span class="avatar">{{ stu.user.initials }}</span>
+                <div class="grow">
+                    <div class="title text-truncate">{{ stu.user.full_name|default:stu.user.email }}</div>
+                    <div class="meta sub text-truncate">{{ stu.user.email }}</div>
+                </div>
+                <div class="toggle" role="radiogroup" aria-label="Attendance for {{ stu.user.full_name }}">
+                    <input class="present" type="radio" id="p{{ stu.id }}" name="status_{{ stu.id }}" value="present"{% if row.present %} checked{% endif %}>
+                    <label for="p{{ stu.id }}"><i class="fas fa-check"></i><span class="lbl">Present</span></label>
+                    <input class="absent" type="radio" id="a{{ stu.id }}" name="status_{{ stu.id }}" value="absent"{% if not row.present %} checked{% endif %}>
+                    <label for="a{{ stu.id }}"><i class="fas fa-times"></i><span class="lbl">Absent</span></label>
+                </div>
+            </li>
+            {% endwith %}
+            {% endfor %}
+        </ul>
+    </div>
 
-{% block table %}
-<form action="" method="POST">
-  {% csrf_token %}
-    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Mark Attendance</th>
-        </tr>
-      </thead>
-      <tfoot>
-        <tr>
-          <th>Name</th>
-          <th>Mark Attendance</th>
-        </tr>
-      </tfoot>
-      <tbody>
-        {% for stu in cls.student_set.all %}
-          <tr>
-            <td>{{ stu.user.first_name }}</td>
-            <td>
-              <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-outline-primary active"><input type="radio" name="{{ stu.user.email }}" id="option1" autocomplete="off" value="present" checked />Present</label>
-
-                <label class="btn btn-outline-warning"><input type="radio" name="{{ stu.user.email }}" id="option2" autocomplete="off" value="absent" />Absent</label>
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-      <button type="submit" class="ml-3 btn btn-primary btn-icon-split">
-      <span class="text">Submit</span>
-    </button>
+    <div class="save-bar">
+        <span class="text-muted small d-none d-sm-inline">Everyone starts as present. Tap <strong>Absent</strong> for anyone who isn't here.</span>
+        <div class="d-flex ml-auto" style="gap:.5rem">
+            <a class="btn btn-light" href="{% url 'attendance-attendance_date' assign.id %}">Cancel</a>
+            <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i>Save attendance</button>
+        </div>
+    </div>
 </form>
+{% else %}
+<div class="card">
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-user-graduate"></i></div>
+        <h3>{{ assign.cls.class_name }} has no students</h3>
+        <p>Add students to the class, then come back to take attendance.</p>
+        {% if user.can_manage_students %}<a class="btn btn-primary" href="{% url 'class-edit' assign.cls.id %}">Add students</a>{% endif %}
+    </div>
+</div>
+{% endif %}
 {% endblock %}

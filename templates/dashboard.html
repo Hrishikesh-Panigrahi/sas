@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Good {{ greeting }}{% if user.first_name %}, {{ user.first_name }}{% endif %}{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{{ today|date:"l, j F Y" }}</p>{% endblock %}
+
+{% block actions %}
+<a class="btn btn-primary" href="{% url 'attendance-home' %}"><i class="fas fa-clipboard-check"></i>Take attendance</a>
+{% if user.can_manage_students %}
+<div class="dropdown">
+    <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-plus"></i>New
+    </button>
+    <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item" href="{% url 'clsCreation' %}"><i class="fas fa-chalkboard"></i>Class</a>
+        <a class="dropdown-item" href="{% url 'StudentRegister' %}"><i class="fas fa-user-graduate"></i>Student</a>
+        {% if user.can_manage_department %}
+        <a class="dropdown-item" href="{% url 'FacultyRegister' %}"><i class="fas fa-chalkboard-teacher"></i>Teacher</a>
+        <a class="dropdown-item" href="{% url 'course-create' %}"><i class="fas fa-book"></i>Course</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if counts %}
+<div class="row row-gap mb-4">
+    <div class="col-6 col-xl-3">
+        <a class="card card-link-block" href="{% url 'viewcls' %}">
+            <div class="stat"><span class="stat-icon"><i class="fas fa-chalkboard"></i></span>
+                <div><div class="stat-value">{{ counts.classes }}</div><div class="stat-label">Classes</div></div></div>
+        </a>
+    </div>
+    <div class="col-6 col-xl-3">
+        <a class="card card-link-block" href="{% url 'StudentList' %}">
+            <div class="stat"><span class="stat-icon green"><i class="fas fa-user-graduate"></i></span>
+                <div><div class="stat-value">{{ counts.students }}</div><div class="stat-label">Students</div></div></div>
+        </a>
+    </div>
+    <div class="col-6 col-xl-3">
+        <a class="card card-link-block" href="{% url 'teachers' %}">
+            <div class="stat"><span class="stat-icon sky"><i class="fas fa-chalkboard-teacher"></i></span>
+                <div><div class="stat-value">{{ counts.teachers }}</div><div class="stat-label">Teachers</div></div></div>
+        </a>
+    </div>
+    <div class="col-6 col-xl-3">
+        <a class="card card-link-block" href="{% url 'chome' %}">
+            <div class="stat"><span class="stat-icon amber"><i class="fas fa-book"></i></span>
+                <div><div class="stat-value">{{ counts.courses }}</div><div class="stat-label">Courses</div></div></div>
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<div class="row row-gap">
+    <div class="col-lg-7 col-xl-8">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Today's lectures</h2>
+                    <p class="card-subtitle">From your timetable for {{ today|date:"l" }}</p>
+                </div>
+                <a class="btn btn-sm btn-light" href="{% url 'timetable' %}">My week</a>
+            </div>
+            {% if today_slots %}
+            <ul class="list">
+                {% for item in today_slots %}
+                <li class="list-row">
+                    <span class="time-chip">{{ item.slot.period }}</span>
+                    <div class="grow">
+                        <div class="title">{{ item.slot.course.name }}</div>
+                        <div class="meta">{{ item.slot.cls.class_name }} · {{ item.slot.lec_type }}{% if item.slot.batch != 'All' %} · Batch {{ item.slot.batch }}{% endif %}</div>
+                    </div>
+                    {% if item.lecture and item.lecture.is_marked %}
+                    <span class="badge badge-soft-success d-none d-sm-inline-block"><i class="fas fa-check"></i> Marked</span>
+                    <a class="btn btn-sm btn-light" href="{% url 'attendance' item.lecture.id %}">Edit</a>
+                    {% else %}
+                    <form method="post" action="{% url 'attendance-start' item.slot.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-primary" type="submit">
+                            {% if item.lecture %}Continue{% else %}Take attendance{% endif %}
+                        </button>
+                    </form>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% elif assignments %}
+            <div class="empty compact">
+                <div class="empty-icon"><i class="far fa-calendar-check"></i></div>
+                <h3>No lectures on your timetable today</h3>
+                <p>Taking an extra or rescheduled lecture? Start it from the class's attendance page.</p>
+                <a class="btn btn-soft" href="{% url 'attendance-home' %}">Choose a class</a>
+            </div>
+            {% else %}
+            <div class="empty compact">
+                <div class="empty-icon"><i class="fas fa-chalkboard"></i></div>
+                <h3>You haven't been assigned to a class yet</h3>
+                <p>Once your HOD or class teacher adds you as the teacher of a course in a class, it will show up here.</p>
+                {% if user.can_manage_students %}<a class="btn btn-soft" href="{% url 'viewcls' %}">Go to classes</a>{% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        {% if pending %}
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Waiting to be marked</h2>
+                    <p class="card-subtitle">Lectures you created but haven't saved attendance for</p>
+                </div>
+                <span class="badge badge-soft-warning">{{ pending|length }}</span>
+            </div>
+            <ul class="list">
+                {% for lecture in pending %}
+                <li class="list-row">
+                    <span class="date-chip"><span class="d">{{ lecture.date|date:"j" }}</span><span class="m">{{ lecture.date|date:"M" }}</span></span>
+                    <div class="grow">
+                        <div class="title">{{ lecture.assign.course.name }}</div>
+                        <div class="meta">{{ lecture.assign.cls.class_name }}{% if lecture.period %} · {{ lecture.period }}{% endif %}</div>
+                    </div>
+                    <a class="btn btn-sm btn-primary" href="{% url 'attendance' lecture.id %}">Mark now</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-5 col-xl-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">My classes</h2>
+                <a class="btn btn-sm btn-light" href="{% url 'attendance-home' %}">All</a>
+            </div>
+            {% if assignments %}
+            <div class="list">
+                {% for a in assignments %}
+                <a class="list-row" href="{% url 'attendance-attendance_date' a.id %}">
+                    <span class="avatar">{{ a.course.code|slice:":3"|upper }}</span>
+                    <div class="grow">
+                        <div class="title text-truncate">{{ a.course.name }}</div>
+                        <div class="meta">{{ a.cls.class_name }}</div>
+                    </div>
+                    <i class="fas fa-chevron-right text-muted small"></i>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty compact"><p class="mb-0">No classes assigned to you yet.</p></div>
+            {% endif %}
+        </div>
+
+        {% if counts %}
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Low attendance</h2>
+                    <p class="card-subtitle">Students below {{ attendance_threshold }}% overall</p>
+                </div>
+            </div>
+            {% if low_attendance %}
+            <div class="list">
+                {% for row in low_attendance %}
+                <a class="list-row" href="{% url 'student-detail' row.student.id %}">
+                    <span class="avatar">{{ row.student.user.initials }}</span>
+                    <div class="grow">
+                        <div class="title text-truncate">{{ row.student.user.full_name|default:row.student.user.email }}</div>
+                        <div class="meta">{{ row.student.cls.class_name|default:"No class" }} · {{ row.present }}/{{ row.total }} lectures</div>
+                    </div>
+                    <span class="badge badge-soft-danger">{{ row.percent }}%</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty compact">
+                <div class="empty-icon" style="background:var(--success-soft);color:var(--success)"><i class="fas fa-thumbs-up"></i></div>
+                <p class="mb-0">Everyone is at or above {{ attendance_threshold }}%.</p>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

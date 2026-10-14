@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'timetable' %}">Timetable</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}{{ cls.class_name }}{% endblock %}
+{% block subtitle %}<p class="page-subtitle">Weekly timetable</p>{% endblock %}
+
+{% block actions %}
+<a class="btn btn-light" href="{% url 'class-detail' cls.id %}"><i class="fas fa-chalkboard"></i>Class details</a>
+{% endblock %}
+
+{% block content %}
+{% if can_edit %}
+<div class="card mb-4">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Add a slot</h2>
+            <p class="card-subtitle">Clashes with this class's other slots, or with the teacher's other classes, are caught for you.</p>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if has_courses %}
+        {% include 'partials/form_errors.html' %}
+        <form method="post" class="slot-form" novalidate>
+            {% csrf_token %}
+            <div>{% include 'partials/field.html' with field=form.day %}</div>
+            <div>{% include 'partials/field.html' with field=form.start_time %}</div>
+            <div>{% include 'partials/field.html' with field=form.end_time %}</div>
+            <div class="wide">{% include 'partials/field.html' with field=form.course %}</div>
+            <div>{% include 'partials/field.html' with field=form.lec_type %}</div>
+            <div>{% include 'partials/field.html' with field=form.batch %}</div>
+            <div class="form-group submit"><button class="btn btn-primary btn-block" type="submit"><i class="fas fa-plus"></i>Add slot</button></div>
+        </form>
+        {% else %}
+        <p class="mb-0 text-muted">This class has no courses yet. <a href="{% url 'class-edit' cls.id %}">Assign courses and teachers</a> first, then schedule them here.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% include 'timetable/week.html' with show_class=False %}
+{% endblock %}

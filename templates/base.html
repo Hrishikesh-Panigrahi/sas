@@ -1,2 +1,50 @@
-<!-- this can be used as a base html -->
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ title|default:"SAS" }}{% endblock %} · SAS</title>
+    <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/app.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        {% include 'partials/sidebar.html' %}
+        <div class="sidebar-backdrop" data-toggle-sidebar></div>
 
+        <div class="main">
+            {% include 'partials/topbar.html' %}
+
+            <main class="content">
+                {% include 'partials/messages.html' %}
+
+                {% block header %}
+                <div class="page-header">
+                    <div class="min-w-0">
+                        {% block breadcrumbs %}{% endblock %}
+                        <h1 class="page-title">{% block page_title %}{{ title }}{% endblock %}</h1>
+                        {% block subtitle %}{% endblock %}
+                    </div>
+                    <div class="page-actions">{% block actions %}{% endblock %}</div>
+                </div>
+                {% endblock %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

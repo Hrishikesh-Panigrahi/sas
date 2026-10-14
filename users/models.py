@@ -91,7 +91,42 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return str(self.email)
+        return self.full_name or str(self.email)
+
+    @property
+    def full_name(self):
+        return ' '.join(n for n in (self.first_name, self.last_name) if n)
+
+    @property
+    def initials(self):
+        letters = ''.join(n[0] for n in (self.first_name, self.last_name) if n)
+        return (letters or self.email[:1]).upper()
+
+    @property
+    def is_student(self):
+        return not (self.is_staff or self.is_superuser)
+
+    @property
+    def can_manage_department(self):
+        """HODs and superusers manage courses and teachers."""
+        return self.is_superuser or (self.is_staff and self.is_hod)
+
+    @property
+    def can_manage_students(self):
+        """HODs, class teachers and superusers manage classes and students."""
+        return self.can_manage_department or (self.is_staff and self.is_classteacher)
+
+    @property
+    def role_label(self):
+        if self.is_superuser:
+            return 'Administrator'
+        if self.is_hod:
+            return 'Head of Department'
+        if self.is_classteacher:
+            return 'Class Teacher'
+        if self.is_staff:
+            return 'Teacher'
+        return 'Student'
 
 # User model end
 
@@ -103,7 +138,4 @@ class TeacherProfile(models.Model):
     # course = models.ManyToManyField(Course, blank=True)
 
     def __str__(self):
-        return self.user.first_name + ' ' + self.user.last_name
-
-
-
+        return str(self.user)

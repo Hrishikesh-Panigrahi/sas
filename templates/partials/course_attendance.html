@@ -1,0 +1,27 @@
+{% if summary.courses %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr><th>Course</th><th class="text-right d-none d-sm-table-cell">Attended</th><th style="width: 40%">Attendance</th></tr>
+        </thead>
+        <tbody>
+            {% for c in summary.courses %}
+            <tr>
+                <td>
+                    <div class="fw-600">{{ c.name }}</div>
+                    <div class="small text-muted">{{ c.code }}<span class="d-sm-none"> · {{ c.present }}/{{ c.total }}</span>{% if c.needed %} · <span class="text-danger">attend the next {{ c.needed }} to reach {{ attendance_threshold }}%</span>{% endif %}</div>
+                </td>
+                <td class="text-right tabular d-none d-sm-table-cell">{{ c.present }} / {{ c.total }}</td>
+                <td>{% include 'partials/meter.html' with percent=c.percent short=c.short present=c.present total=c.total %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty compact">
+    <div class="empty-icon"><i class="far fa-clipboard"></i></div>
+    <h3>No attendance recorded yet</h3>
+    <p class="mb-0">Attendance will appear here once teachers start marking lectures.</p>
+</div>
+{% endif %}

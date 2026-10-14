@@ -1,0 +1,22 @@
+{% if field.is_hidden %}{{ field }}{% else %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+    {% if field.widget_type == 'checkbox' %}
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" name="{{ field.html_name }}" id="{{ field.id_for_label }}"{% if field.value %} checked{% endif %}>
+        <label class="custom-control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    </div>
+    {% else %}
+    <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} <span class="req" aria-hidden="true">*</span>{% endif %}</label>
+    {% if field.widget_type == 'password' %}
+    <div class="password-wrap">
+        {{ field }}
+        <button type="button" class="password-toggle" aria-label="Show password"><i class="fas fa-eye"></i></button>
+    </div>
+    {% else %}
+    {{ field }}
+    {% endif %}
+    {% endif %}
+    {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+    {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text|safe }}</small>{% endif %}
+</div>
+{% endif %}

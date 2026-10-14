@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'attendance-home' %}">Attendance</a><span class="sep">/</span><a href="{% url 'attendance-attendance_date' assign.id %}">{{ assign.course.name }} · {{ assign.cls.class_name }}</a><span class="sep">/</span></nav>{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{{ assign.course.name }} ({{ assign.course.code }}) · {{ assign.cls.class_name }} · {{ assign.teacher.user.full_name }}</p>{% endblock %}
+
+{% block actions %}
+<a class="btn btn-light" href="?format=csv"><i class="fas fa-download"></i>Download CSV</a>
+<a class="btn btn-primary" href="{% url 'attendance-attendance_date' assign.id %}"><i class="fas fa-clipboard-check"></i>Take attendance</a>
+{% endblock %}
+
+{% block content %}
+<div class="row row-gap mb-4">
+    <div class="col-sm-4">
+        <div class="card"><div class="stat"><span class="stat-icon"><i class="far fa-calendar-check"></i></span>
+            <div><div class="stat-value">{{ total_lectures }}</div><div class="stat-label">Lectures marked</div></div></div></div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card"><div class="stat"><span class="stat-icon green"><i class="fas fa-percentage"></i></span>
+            <div><div class="stat-value">{% if average is not None %}{{ average }}%{% else %}—{% endif %}</div><div class="stat-label">Class average</div></div></div></div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card"><div class="stat"><span class="stat-icon {% if num_short %}red{% else %}green{% endif %}"><i class="fas fa-user-clock"></i></span>
+            <div><div class="stat-value">{{ num_short }}</div><div class="stat-label">Below {{ attendance_threshold }}%</div></div></div></div>
+    </div>
+</div>
+
+<div class="card">
+    {% if rows %}
+    <div class="table-responsive">
+        <table class="table table-hover" data-datatable data-search="Search students…" data-order='[[0,"asc"]]' data-page-length="100">
+            <thead>
+                <tr><th>Roll no.</th><th>Student</th><th class="text-right">Attended</th><th style="width:35%">Attendance</th></tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td class="tabular" data-order="{{ row.student.roll_no|default:99999 }}">{{ row.student.roll_no|default:"—" }}</td>
+                    <td>
+                        <div class="person">
+                            <span class="avatar">{{ row.student.user.initials }}</span>
+                            <div class="min-w-0">
+                                <a class="name" href="{% url 'student-detail' row.student.id %}">{{ row.student.user.full_name|default:row.student.user.email }}</a>
+                                <div class="sub">{{ row.student.user.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-right tabular">{{ row.present }} / {{ row.total }}</td>
+                    <td data-order="{{ row.percent|default_if_none:'-1' }}">{% include 'partials/meter.html' with percent=row.percent short=row.short present=row.present total=row.total %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-user-graduate"></i></div>
+        <h3>No students in {{ assign.cls.class_name }}</h3>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

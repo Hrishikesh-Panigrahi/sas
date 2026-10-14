@@ -1,22 +1,102 @@
-{% extends 'blank.html' %}
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'viewcls' %}">Classes</a><span class="sep">/</span>{% if cls %}<a href="{% url 'class-detail' cls.id %}">{{ cls.class_name }}</a><span class="sep">/</span>{% endif %}</nav>{% endblock %}
+{% block page_title %}{% if type == 'Update' %}Edit class{% else %}Create a class{% endif %}{% endblock %}
 
 {% block content %}
-<form action="" method="post" id="class-form">
+<form method="post" novalidate>
     {% csrf_token %}
-    {{ form.as_p }}
-</form>
-<form method="get" id="filter-form">
-    {{ filter1.form }}
-    <button type="submit" form="filter-form">Filter</button>
-</form>
-<form method="get" id="filter-form">
-    {{ cfilter.form }}
-    <button type="submit" form="filter-form">Filter</button>
-</form>
+    {% include 'partials/form_errors.html' %}
 
-<button type="submit" form="class-form">Submit</button>
-{% comment %} <form action="" method="get">
-    {{ filter2.form }}
-    <button type="submit">Filter</button>
-</form> {% endcomment %}
-{% endblock content %}
+    <div class="card">
+        <div class="card-header"><h2 class="card-title">1. Basics</h2></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">{% include 'partials/field.html' with field=form.class_name %}</div>
+                <div class="col-md-6">{% include 'partials/field.html' with field=form.class_teacher %}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">2. Courses and teachers</h2>
+                <p class="card-subtitle">Tick each course this class takes and choose who teaches it.</p>
+            </div>
+        </div>
+        {% with rows=form.course_rows %}
+        {% if rows %}
+        <div class="toolbar">
+            <div class="search-input"><i class="fas fa-search"></i><input type="search" class="form-control" placeholder="Filter by name, code or semester…" data-filter="#course-list" aria-label="Filter courses"></div>
+        </div>
+        <div class="checklist" id="course-list" data-checklist>
+            {% for row in rows %}
+            <div class="check-item course-row" data-item data-search="{{ row.course.name }} {{ row.course.code }} sem {{ row.course.sem }}">
+                <input type="checkbox" id="course_{{ row.course.id }}" name="course_{{ row.course.id }}" data-check{% if row.checked %} checked{% endif %}>
+                <label for="course_{{ row.course.id }}" class="mb-0 min-w-0" style="cursor:pointer">
+                    <span class="fw-600 d-block text-truncate">{{ row.course.name }}</span>
+                    <span class="small text-muted">{{ row.course.code }} · Sem {{ row.course.sem }}</span>
+                </label>
+                <select class="custom-select" name="teacher_{{ row.course.id }}" aria-label="Teacher for {{ row.course.name }}">
+                    <option value="">Choose teacher…</option>
+                    {% for t in form.teachers %}
+                    <option value="{{ t.pk }}"{% if row.teacher_id == t.pk|stringformat:"s" %} selected{% endif %}>{{ t.user.full_name|default:t.user.email }}</option>
+                    {% endfor %}
+                </select>
+                {% if row.error %}<div class="row-error" style="grid-column: 2 / -1">{{ row.error }}</div>{% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty compact">
+            <p>Your department doesn't have any courses yet.</p>
+            {% if user.can_manage_department %}<a class="btn btn-soft" href="{% url 'course-create' %}">Add a course</a>{% endif %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div>
+                <h2 class="card-title">3. Students</h2>
+                <p class="card-subtitle">Only students who aren't already in another class are listed.</p>
+            </div>
+            <span class="count-pill" data-count-for="#student-list"></span>
+        </div>
+        {% with selected=form.selected_student_ids %}
+        {% if form.fields.students.queryset %}
+        <div class="toolbar">
+            <div class="search-input"><i class="fas fa-search"></i><input type="search" class="form-control" placeholder="Filter by name, email or roll no…" data-filter="#student-list" aria-label="Filter students"></div>
+            <button type="button" class="btn btn-sm btn-light" data-check-all="#student-list" data-value="true">Select all shown</button>
+            <button type="button" class="btn btn-sm btn-light" data-check-all="#student-list" data-value="false">Clear</button>
+        </div>
+        <div class="checklist" id="student-list" data-checklist>
+            {% for stu in form.fields.students.queryset %}
+            <label class="check-item" data-item data-search="{{ stu.user.full_name }} {{ stu.user.email }} {{ stu.roll_no|default:'' }}">
+                <input type="checkbox" name="students" value="{{ stu.pk }}" data-check{% if stu.pk|stringformat:"s" in selected %} checked{% endif %}>
+                <span class="roll">{{ stu.roll_no|default:"" }}</span>
+                <span class="avatar">{{ stu.user.initials }}</span>
+                <span class="min-w-0">
+                    <span class="fw-600 d-block text-truncate">{{ stu.user.full_name|default:stu.user.email }}</span>
+                    <span class="small text-muted">{{ stu.user.email }}</span>
+                </span>
+            </label>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty compact">
+            <p>There are no unassigned students in your department.</p>
+            <a class="btn btn-soft" href="{% url 'StudentRegister' %}">Register a student</a>
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="form-actions mt-4">
+        <a class="btn btn-light" href="{% if cls %}{% url 'class-detail' cls.id %}{% else %}{% url 'viewcls' %}{% endif %}">Cancel</a>
+        <button class="btn btn-primary btn-lg" type="submit"><i class="fas fa-check"></i>{% if type == 'Create' %}Create class{% else %}Save changes{% endif %}</button>
+    </div>
+</form>
+{% endblock %}

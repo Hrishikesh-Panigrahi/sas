@@ -1,125 +1,86 @@
-# from django.http import HttpResponse, HttpResponseRedirect
-# from django.views import View
-import json
-import os
-from unicodedata import name
-from django.http import JsonResponse
-from django.shortcuts import render
-# from .models import TimeTable
+from django.contrib import messages
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
+from attendance.models import Assign_cls
 from cls.models import Class
+from sas.permissions import in_department, staff_required
+from .forms import SlotForm
+from .models import TimeTable
 
-_path = os.path.join(os.getcwd(), 'static', 'tables')
+DAYS = [day for day, _ in TimeTable.day_choices]
 
 
-def test_C(request):
-    time_slot = ["08:00-09:00", "09:00-10:00", "10:00-11:00", "11:15-12:15", \
-    "12:15-13:15", "14:00-15:00", "15:00-16:00", "16:00-17:00"];
+def _week(slots, teachers):
+    """Group slots by weekday, attaching the teacher of each class + course."""
+    week = {day: [] for day in DAYS}
+    for slot in slots:
+        slot.teachers = teachers.get((slot.cls_id, slot.course_id), [])
+        week.setdefault(slot.day, []).append(slot)
+    return [(day, week[day]) for day in DAYS]
+
+
+def _teachers_by_pair(assignments):
+    teachers = {}
+    for a in assignments.select_related('teacher__user'):
+        teachers.setdefault((a.cls_id, a.course_id), []).append(a.teacher.user.full_name)
+    return teachers
+
+
+@staff_required
+def index(request):
+    user = request.user
+    mine = Assign_cls.objects.filter(teacher__user=user)
+    pairs = {(a.cls_id, a.course_id) for a in mine}
+    my_slots = [s for s in TimeTable.objects.filter(cls__in={c for c, _ in pairs})
+                .select_related('cls', 'course').order_by('start_time')
+                if (s.cls_id, s.course_id) in pairs]
+    context = {
+        'title': 'Timetable',
+        'week': _week(my_slots, {}) if my_slots else None,
+        'today': timezone.localdate().strftime('%A'),
+        'classes': in_department(Class.objects.all(), user).order_by('class_name'),
+    }
+    return render(request, 'timetable/index.html', context)
+
+
+@staff_required
+def class_timetable(request, cls_id):
+    cls = get_object_or_404(in_department(Class.objects.all(), request.user), pk=cls_id)
+    can_edit = request.user.can_manage_students
+    form = SlotForm(request.POST or None, cls=cls)
     if request.method == 'POST':
-        body = json.loads(request.body)
-        with open (os.path.join(_path, '{}_weekly.json'.format(body['class'])), 'w') as fp:
-            json.dump(body, fp, indent=4)
-        return JsonResponse({"msg":"updated"})
+        if not can_edit:
+            raise PermissionDenied
+        if form.is_valid():
+            slot = form.save(commit=False)
+            slot.cls = cls
+            slot.save()
+            messages.success(request, 'Added %s on %s, %s.' % (slot.course, slot.day, slot.period))
+            return redirect('timetable-class', cls_id=cls.id)
+
+    slots = cls.timetable_set.select_related('cls', 'course').order_by('start_time')
     context = {
-        'title': 'tt_test',
-        'page': 'test',
+        'title': 'Timetable · %s' % cls.class_name,
+        'cls': cls,
+        'week': _week(slots, _teachers_by_pair(cls.assign_cls_set.all())),
+        'today': timezone.localdate().strftime('%A'),
+        'can_edit': can_edit,
+        'form': form,
+        'has_courses': cls.assign_cls_set.exists(),
     }
-    try:
-        f = open(os.path.join(_path, '{}_weekly.json'.format('class_id')))
-        table = json.loads(f.read())
-        schedule = table['schedule']
-        schedule_keys = list(schedule.keys())
-        Formatted_Schedule=[]
-        for key, value in schedule.items():
-            for i in range(len(value['slots'])):
-                value['slots'][i]['start_time'] = time_slot[value['slots'][i]['time'] % 8].split('-')[0] 
-                value['slots'][i]['end_time'] = time_slot[value['slots'][i]['time'] % 8].split('-')[1]              
-                value['slots'][i]['time'] = value['slots'][i]['time'] % 8
-                value['slots'][i]['weekday'] = key
-                value['slots'][i]['weekday_id'] = schedule_keys.index(key)
-                # vertical check
-                if i-8 >= 0 and value['slots'][i-8]['course'] == value['slots'][i]['course']:
-                    continue
-                # horizontal check
-                if i-1 >= 0 and value['slots'][i-1]['course'] == value['slots'][i]['course'] and (i-1)%8 != 2 and (i-1)%8 != 4 and (i-1)%8 != 7:
-                    # rowspan check not implemented
-                    Formatted_Schedule[-1]['end_time'] = time_slot[value['slots'][i]['time'] % 8].split('-')[1]
-                    continue                    
-                # fix batch number 
-                if i+8 < 24 and value['slots'][i]['course'] != value['slots'][i+8]['course']:
-                    if i < 8:
-                        value['slots'][i]['batch'] = "A"
-                    elif i< 16:
-                        value['slots'][i]['batch'] = "B"
-                if i >= 16 and value['slots'][i]['course'] != value['slots'][i-8]['course']:
-                        value['slots'][i]['batch'] = "C"
-                Formatted_Schedule.append(value['slots'][i])
-        context['json'] = table
-        context['table'] = Formatted_Schedule
-    except:
-        table = None
-    return render(request, 'timetable/create.html', context)
-
-def createTT(request):
-    context = {
-        'title': 'Timetable',
-        'page': 'createTT',
-    }
-    # print(request.method)
-    # cls = Class.objects.filter(is_timetable=False)
-    # print(cls)
-    # tt = TimeTable.objects.get(faculty__user__id = request.user.id)
-    # print(tt)
-    # print(request.body)
-    
-    if request.method == 'POST':
-        body = json.loads(request.body)
-        with open (os.path.join(_path, '{}_static.json'.format(body['class'])), 'w') as fp:
-            json.dump(body, fp, indent=4)
-        with open (os.path.join(_path, '{}_weekly.json'.format(body['class'])), 'w') as fp:
-            json.dump(body, fp, indent=4)
-        return JsonResponse({"msg":"saved"})
-    
-    # commented to test post
-    # if request.user.is_classteacher:
-        
-    #     print(request.method=='GET')
-    #     tt = TimeTable.objects.get_or_create(user = request.user)
-                
-    #     if request.method == 'POST':
-        
-    #         # tt = TimeTable()
-    #         name = request.POST('course1')
-
-    #         tt.name=name
-    #         tt.save()
-    #         print(tt)
-            
-    #         return JsonResponse("saved", safe=False)
+    return render(request, 'timetable/class.html', context)
 
 
-        # read_file('')
-        # with open('path to json', 'r') as f:
-        #     my_json_obj = json.load(f)
-
-    return render(request, 'timetable/tt.html', context)
-
-def editTT(request):
-    context = {
-        'title': 'Timetable',
-        'page': 'editTT',
-    }
-    return render(request, 'timetable/tt.html', context)
-
-def updateTT(request):
-    context = {
-        'title': 'Timetable',
-        'page': 'updateTT',
-    }
-    return render(request, 'timetable/tt.html', context)
-
-def requests(request):
-    context = {
-        'title': 'Timetable',
-        'page': 'request',
-    }
-    return render(request, 'timetable/requests.html', context)
+@staff_required
+@require_POST
+def delete_slot(request, id):
+    slot = get_object_or_404(TimeTable.objects.select_related('cls', 'course'), pk=id)
+    in_scope = in_department(Class.objects.filter(pk=slot.cls_id), request.user).exists()
+    if not (request.user.can_manage_students and in_scope):
+        raise PermissionDenied
+    slot.delete()
+    messages.success(request, 'Removed %s on %s, %s.' % (slot.course, slot.day, slot.period))
+    return redirect('timetable-class', cls_id=slot.cls_id)

@@ -1,110 +1,48 @@
-{% extends 'blank.html' %}
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'chome' %}">Courses</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}{% if type == 'Update' %}Edit {{ course.name }}{% else %}Add a course{% endif %}{% endblock %}
 
 {% block content %}
-<style>
-    .container {
-        margin-top: 40px;
-    }
-
-    .course-title {
-        color: #333;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-
-    .course-form-group {
-        max-width: 500px;
-        margin: 0 auto;
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .course-form-group {
-        margin-bottom: 20px;
-    }
-
-    label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-    }
-
-    .button-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-       
-    }
-
-
-    .btn-success,
-    .btn-danger {
-        width: 30%;
-      
-        margin: 0 70px;
-     
-    }
-
-
-    .btn-danger {
-        background-color: #dc3545;
-        color: #fff;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-        
-    }
-
-    .btn-danger .icon {
-        margin-right: 5px;
-    }
-
-    .btn-success {
-        background-color: #28a745;
-        color: #fff;
-    }
-
-</style>
-
-<div class="container">
-    <!-- Page Heading -->
-    <h1 class="course-title h3 mb-4 text-gray-800">{{ type }} Course</h1>
-    <form action="" method="post" class="course-form-group">
+<div class="form-narrow">
+    <form method="post" class="card" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
-
-        <div class="button-container">
-
-
-
-            <button type="submit" class="btn btn-success btn-icon-split mr-3">
-                <span class="icon text-white-50">
-                    <i class="fas fa-check"></i>
-                </span>
-                <span class="text">{{ type }}</span>
-            </button>
-            {% if type == 'Update' %}
-            <a href="{% url 'delete' id=id %}" class="btn btn-danger btn-icon-split">
-                <span class="icon text-white-50">
-                    <i class="fas fa-trash"></i>
-                </span>
-                <span class="text">Delete</span>
-            </a>
-            {% endif %}
+        <div class="card-body">
+            {% include 'partials/form_errors.html' %}
+            <div class="form-section">
+                <div class="row">
+                    <div class="col-sm-4">{% include 'partials/field.html' with field=form.code %}</div>
+                    <div class="col-sm-8">{% include 'partials/field.html' with field=form.name %}</div>
+                    <div class="col-sm-6">{% include 'partials/field.html' with field=form.sem %}</div>
+                    <div class="col-sm-6">{% include 'partials/field.html' with field=form.scheme %}</div>
+                    {% if form.dept %}<div class="col-12">{% include 'partials/field.html' with field=form.dept %}</div>{% endif %}
+                </div>
+            </div>
+            <div class="form-section">
+                <div class="form-section-title">Options</div>
+                <div class="form-section-help">Most courses are core, department-level courses.</div>
+                {% include 'partials/field.html' with field=form.is_elective %}
+                {% include 'partials/field.html' with field=form.dept_level %}
+                {% include 'partials/field.html' with field=form.institue_level %}
+            </div>
         </div>
-
+        <div class="card-footer form-actions">
+            <a class="btn btn-light" href="{% url 'chome' %}">Cancel</a>
+            {% if type == 'Create' %}<button class="btn btn-light" type="submit" name="add_another">Save and add another</button>{% endif %}
+            <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i>{% if type == 'Create' %}Add course{% else %}Save changes{% endif %}</button>
+        </div>
     </form>
+
+    {% if type == 'Update' %}
+    <div class="card danger-zone">
+        <div class="card-body">
+            <div>
+                <div class="fw-600">Delete this course</div>
+                <div class="small text-muted">Also removes it from every class, along with its attendance.</div>
+            </div>
+            <a class="btn btn-outline-danger" href="{% url 'course-delete' course.id %}"><i class="far fa-trash-alt"></i>Delete course</a>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

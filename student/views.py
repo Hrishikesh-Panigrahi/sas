@@ -1,112 +1,78 @@
-from django.shortcuts import redirect, render
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
-from student.forms import  UserForm, UserUpdateForm, StudentForm
-from student.models import student
+from attendance.stats import student_summary
+from cls.models import Class
+from sas.permissions import in_department, linked_records, manager_required, staff_required
+from student.forms import StudentForm
+from student.models import ROLL_ORDER, student
 
-from users.models import User
-from course.models import Course
 
-# from users.forms import UserForm
+def _students_for(user):
+    return in_department(student.objects.filter(user__is_staff=False),
+                         user, 'user__department')
 
-@staff_member_required(login_url='/')
+
+def _classes_for(user):
+    return in_department(Class.objects.all(), user).order_by('class_name')
+
+
+@manager_required
 def register(request):
-    uDept = request.user.department
-    context = {}
-    
-    userform = UserForm(request.POST or None)
-    courses = Course.objects.all()
-    studentForm = StudentForm(courseSet=courses)
+    form = StudentForm(request.POST or None, dept=request.user.department,
+                       classes=_classes_for(request.user))
+    if request.method == 'POST' and form.is_valid():
+        user = form.save()
+        messages.success(request, '%s was registered.' % user.full_name)
+        if 'add_another' in request.POST:
+            return redirect('StudentRegister')
+        return redirect('StudentList')
+    context = {'title': 'Register student', 'form': form, 'type': 'Create'}
+    return render(request, 'student/studentRegister.html', context)
 
 
-
-    if request.method == 'POST':
-        userform = UserForm(request.POST)
-        
-        if userform.is_valid():
-            userform.save()
-            c_ids = request.POST.getlist('course')
-            print('2')
-            
-            s = User.objects.get(email=request.POST['email'])
-            s.department = uDept
-            s.save()
-            stu = student.objects.get(user=s)
-            print(c_ids)
-            for i in c_ids:
-                # c = Course.objects.get(pk=i)
-                # stu.course.add(c)
-                stu.course.add(course=i)
-                print('course added saved')
-            stu.save()
-
-            return redirect(studentList)
-        else:
-            print('not valid')
-    context = {
-        'userform': userform,
-        'type': 'Register',
-        'sform': studentForm,
-        'title': 'Students'
-    }
-    return render(request, 'student/studentRegister.html ', context)
-
-
-@login_required(login_url='/')
+@staff_required
 def studentList(request):
-    stu = student.objects.all()
-    context = {'student': stu,
-                'title' : 'Students'
-    }
+    students = (_students_for(request.user)
+                .select_related('user', 'cls')
+                .order_by('cls__class_name', *ROLL_ORDER))
+    context = {'title': 'Students', 'students': students}
     return render(request, 'student/Studentlist.html', context)
 
-@staff_member_required(login_url='/')
-def delete(request, pk):
-    stu = student.objects.get(id=pk)
-    context = {}
-    if request.method == 'POST':
-        user = stu.user
-        stu.delete()
-        user.delete()
-        return redirect("/")
 
-    context = {
-        'id': stu.id,
-        'type': 'delete',
-        'title': 'Students'
-    }
+@staff_required
+def detail(request, pk):
+    stu = get_object_or_404(_students_for(request.user).select_related('user', 'cls'), pk=pk)
+    context = {'title': stu.user.full_name, 'stu': stu, 'summary': student_summary(stu)}
+    return render(request, 'student/detail.html', context)
 
-    return render(request, 'student/delete.html ', context)
 
-@staff_member_required(login_url='/')
+@manager_required
 def update(request, pk):
-    uDept = request.user.department
-    course = Course.objects.filter(dept=uDept)
-    stu = student.objects.get(id=pk)
-    userform = UserUpdateForm(instance=stu.user)
-    sform = StudentForm(instance=stu, courseSet=course)
+    stu = get_object_or_404(_students_for(request.user).select_related('user'), pk=pk)
+    form = StudentForm(request.POST or None, instance=stu.user, profile=stu,
+                       dept=request.user.department, classes=_classes_for(request.user))
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, '%s was updated.' % stu.user.full_name)
+        return redirect('student-detail', pk=stu.pk)
+    context = {'title': 'Edit student', 'form': form, 'type': 'Update', 'stu': stu}
+    return render(request, 'student/studentRegister.html', context)
+
+
+@manager_required
+def delete(request, pk):
+    stu = get_object_or_404(_students_for(request.user).select_related('user'), pk=pk)
     if request.method == 'POST':
-        print(request.POST)
-        userform = UserUpdateForm(request.POST, instance=stu.user)
-        sform = StudentForm(request.POST, instance=stu, courseSet=course)
-        try:
-            if userform.is_valid():
-                userform.save()
-                if sform.is_valid():
-                    sform.save()
-                    print('student saved')
-                    return redirect(update, pk)
-        except Exception as e:
-            print(e)
-
+        name = stu.user.full_name
+        stu.user.delete()
+        messages.success(request, '%s was deleted.' % name)
+        return redirect('StudentList')
     context = {
-        'userform': userform,
-        'sform': sform,
-        'type': 'Update',
-        'id': stu.id,
-        'title': 'Students'
+        'title': 'Delete student',
+        'object_name': '%s (%s)' % (stu.user.full_name, stu.user.email),
+        'cancel_url': reverse('student-detail', args=[stu.pk]),
+        'consequences': linked_records((stu.attendance_set.count(), 'attendance record')),
     }
-
-    return render(request, 'student/studentRegister.html ', context)
+    return render(request, 'confirm_delete.html', context)

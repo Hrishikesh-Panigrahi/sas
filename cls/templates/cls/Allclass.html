@@ -1,8 +1,50 @@
-{% extends 'blank.html' %}
+{% extends 'base.html' %}
+
+{% block subtitle %}<p class="page-subtitle">{{ classes|length }} class{{ classes|length|pluralize:"es" }}{% if user.department %} in {{ user.department }}{% endif %}</p>{% endblock %}
+
+{% block actions %}
+{% if user.can_manage_students %}
+<a class="btn btn-primary" href="{% url 'clsCreation' %}"><i class="fas fa-plus"></i>Create class</a>
+{% endif %}
+{% endblock %}
 
 {% block content %}
-{% for cls in cls %}
-<h1>{{cls}}</h1>
-{% endfor %}
-
-{% endblock content %}
+{% if classes %}
+<div class="row row-gap">
+    {% for cls in classes %}
+    <div class="col-sm-6 col-xl-4">
+        <div class="card class-card h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="min-w-0">
+                        <h2 class="class-name text-truncate"><a class="text-reset" href="{% url 'class-detail' cls.id %}">{{ cls.class_name }}</a></h2>
+                        <div class="small text-muted mt-1">
+                            <i class="fas fa-user-tie mr-1"></i>{% if cls.class_teacher %}{{ cls.class_teacher.user.full_name }}{% else %}No class teacher{% endif %}
+                        </div>
+                    </div>
+                    <span class="avatar">{{ cls.class_name|slice:":2"|upper }}</span>
+                </div>
+                <div class="class-stats">
+                    <div><strong>{{ cls.num_students }}</strong>student{{ cls.num_students|pluralize }}</div>
+                    <div><strong>{{ cls.num_courses }}</strong>course{{ cls.num_courses|pluralize }}</div>
+                </div>
+                <div class="d-flex mt-auto" style="gap:.5rem">
+                    <a class="btn btn-sm btn-soft flex-fill" href="{% url 'class-detail' cls.id %}">Open</a>
+                    <a class="btn btn-sm btn-light flex-fill" href="{% url 'timetable-class' cls.id %}"><i class="far fa-calendar-alt"></i>Timetable</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-chalkboard"></i></div>
+        <h3>No classes yet</h3>
+        <p>A class groups students together and sets which teacher takes each course. Create one to start taking attendance.</p>
+        {% if user.can_manage_students %}<a class="btn btn-primary" href="{% url 'clsCreation' %}"><i class="fas fa-plus"></i>Create the first class</a>{% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,101 +1,82 @@
-{% extends 'blank.html' %}
+{% extends 'base.html' %}
 
-{% comment %}
-<div class="container">
-    <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">{{ type }} Teacher</h1>
-    <form action="" method="post" class="form-group">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ tForm.as_p }}
-        <button type="submit" class="btn btn-success btn-icon-split mr-3">
-            <span class="icon text-white-50">
-                <i class="fas fa-check"></i>
-            </span>
-            <span class="text">{{ type }}</span>
-        </button>
-        {% if type == 'Update' %}
-        <a href="{% url 'deleteTeacher' id=id %}" class="btn btn-danger btn-icon-split">
-            <span class="icon text-white-50">
-                <i class="fas fa-trash"></i>
-            </span>
-            <span class="text">Delete</span>
-        </a>
-        <style>
-            #id_password {
-                display: none;
-            }
-        </style>
-        {% endif %}
-        <style>
-            .errorlist {
-                color: red;
-            }
-        </style>
-    </form>
-    <!-- TODO: hoist filter form before tForm -->
-    <form id="filter" action="" method="get">
-        {{ filter.form }}
-        <button type="submit" form="filter">Search</button>
-    </form>
-
-</div>
-{% endcomment %}
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'teachers' %}">Teachers</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}{% if type == 'Update' %}Edit {{ teacher.user.full_name|default:teacher.user.email }}{% else %}Register a teacher{% endif %}{% endblock %}
+{% block subtitle %}{% if type == 'Create' %}<p class="page-subtitle">They'll sign in with this email and password.</p>{% endif %}{% endblock %}
 
 {% block content %}
-<div class="container mb-5">
-    <!-- page heading -->
-    <h1 class="h3 mb-4 text-gray-800">{{ type }} Teacher</h1>
-    <!-- userForm holder -->
-    <form id="userForm" method="post">{% csrf_token %}</form>
+<div class="row row-gap">
+    <div class="{% if type == 'Update' %}col-lg-7{% else %}col-lg-8 col-xl-7{% endif %}">
+        <form method="post" class="card" novalidate>
+            {% csrf_token %}
+            <div class="card-body">
+                {% include 'partials/form_errors.html' %}
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.first_name %}</div>
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.last_name %}</div>
+                        <div class="col-12">{% include 'partials/field.html' with field=form.email %}</div>
+                        {% if form.department %}<div class="col-12">{% include 'partials/field.html' with field=form.department %}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Permissions</div>
+                    {% include 'partials/field.html' with field=form.is_classteacher %}
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">{% if type == 'Update' %}Reset password{% else %}Password{% endif %}</div>
+                    <div class="row">
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.password1 %}</div>
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.password2 %}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer form-actions">
+                <a class="btn btn-light" href="{% url 'teachers' %}">Cancel</a>
+                {% if type == 'Create' %}<button class="btn btn-light" type="submit" name="add_another">Save and add another</button>{% endif %}
+                <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i>{% if type == 'Create' %}Register teacher{% else %}Save changes{% endif %}</button>
+            </div>
+        </form>
+    </div>
 
-    <!-- userForm -->
-    {{ form.as_p }}
-    <!-- userForm break -->
-
-    <!-- filterForm starts -->
-    <br>
-    <h3>Assign Course</h3>
-    <p>seacrch Term should be exact</p><br>
-    <form id="filterForm" method="get">
-        {{ filter.form }}
-        <button type="submit" form="filterForm" class="ml-3 btn btn-primary btn-icon-split">
-            <span class="icon text-white-50">
-                <i class="fas fa-search"></i>
-            </span>
-            <span class="text">Search</span>
-        </button>
-    </form>
-    <br><br>
-    <!-- filterForm ends -->
-
-    <!-- userForm continues -->
-    {{ tForm.as_p }}
-    <button form="userForm" type="submit" class="btn btn-success btn-icon-split mr-3">
-        <span class="icon text-white-50">
-            <i class="fas fa-check"></i>
-        </span>
-        <span class="text">{{ type }}</span>
-    </button>
     {% if type == 'Update' %}
-    <a href="{% url 'deleteTeacher' id=id %}" class="btn btn-danger btn-icon-split">
-        <span class="icon text-white-50">
-            <i class="fas fa-trash"></i>
-        </span>
-        <span class="text">Delete</span>
-    </a>
-    <style>
-        #id_password {
-            display: none;
-        }
-    </style>
-    {% endif %}
-    <style>
-        .errorlist {
-            color: red;
-        }
-    </style>
-    <!-- userForm ends -->
-</div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Teaching</h2>
+                    <p class="card-subtitle">Assign courses from a class's edit page.</p>
+                </div>
+            </div>
+            {% if assignments %}
+            <ul class="list">
+                {% for a in assignments %}
+                <li class="list-row">
+                    <div class="grow">
+                        <div class="title">{{ a.course.name }}</div>
+                        <div class="meta">{{ a.cls.class_name }}</div>
+                    </div>
+                    <a class="btn btn-sm btn-light" href="{% url 'class-detail' a.cls.id %}">View class</a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="empty compact"><p class="mb-0">Not teaching any class yet.</p></div>
+            {% endif %}
+        </div>
 
+        {% if teacher.user != user %}
+        <div class="card danger-zone">
+            <div class="card-body">
+                <div>
+                    <div class="fw-600">Delete this teacher</div>
+                    <div class="small text-muted">Removes their account and the attendance they recorded.</div>
+                </div>
+                <a class="btn btn-outline-danger" href="{% url 'deleteTeacher' teacher.id %}"><i class="far fa-trash-alt"></i>Delete</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

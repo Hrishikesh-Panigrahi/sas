@@ -1,9 +1,11 @@
-
 from django.contrib import admin
 from django.urls import path, include
 from sas.views import index
 from django.conf import settings
 from django.conf.urls.static import static
+
+admin.site.site_header = 'SAS administration'
+admin.site.site_title = 'SAS admin'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,9 +14,9 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('course/', include('course.urls')),
     path('student/', include('student.urls')),
-    path('/', include('attendance.urls')),
+    path('', include('attendance.urls')),
     path('timetable/', include('timetable.urls')),
     path('class/', include('cls.urls')),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

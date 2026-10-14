@@ -1,58 +1,35 @@
-from http import cookies
-from urllib import response
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import auth
 from django.contrib import messages
-# from django.conf import settings
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 
-# Create your views here.
+
 def loginUser(request):
-    
-
-    # if request.COOKIES.get("email"):
-    #     return render(request, 'Login\login.html', {'cookies1': request.COOKIES['email'], 'cookies2': request.COOKIES['password']})
-        
-    if request.method == 'POST':
-        print("its wotking")
-        email= request.POST['email']
-        password= request.POST['password']
-        user = auth.authenticate(email=email, password=password)
-        if user is not None:
-            if user.is_active:
-                # if user.is_staff:
-                auth.login(request, user)
-                if 'next' in request.POST:
-                    print("hello")
-                    return redirect(request.POST.get('next'))
-                # if request.POST.get("checkbox", None):
-                #     request.session.set_expiry(settings.KEEP_LOGGED_DURATION)
-                #     response = redirect('/Dashboard')
-                #     response.set_cookie('email', request.POST['email'])
-                #     response.set_cookie('password', request.POST['password'])
-                #     # print(response.set_cookie)
-                #     return response
-                    
-                
-                else:
-                    return redirect('/dashboard')
-               
-
-            else:
-                print('account active kar re')
-
-        else:
-            messages.info(request, "Check your cerdentials")
-
     if request.user.is_authenticated:
-        return redirect('/dashboard')
-        
+        return redirect('index')
 
-    return render(request, 'Login/login.html')
+    next_url = request.POST.get('next') or request.GET.get('next') or ''
+    email = ''
+
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            # Only follow `next` when it points back into this site.
+            if next_url and url_has_allowed_host_and_scheme(
+                    next_url, allowed_hosts={request.get_host()},
+                    require_https=request.is_secure()):
+                return redirect(next_url)
+            return redirect('index')
+        messages.error(request, 'That email and password combination is not correct.')
+
+    return render(request, 'Login/login.html', {'next': next_url, 'email': email})
 
 
 def logoutUser(request):
-    if request.method =="POST":
+    if request.method == 'POST':
         logout(request)
-        return redirect("/")
+        messages.success(request, 'You have been signed out.')
+    return redirect('Login')

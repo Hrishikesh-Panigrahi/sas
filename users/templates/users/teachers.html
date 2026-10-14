@@ -1,50 +1,70 @@
-{% extends 'tables.html' %}
+{% extends 'base.html' %}
 
-{% block heading %}
-<!-- <h1 class="h3 mb-2 text-gray-800">{{ title }}</h1> -->
-<p class="mb-4">Some description Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt minus fugit dicta hic
-    ut sapiente dolorum obcaecati. Perferendis, cupiditate assumenda.</p>
+{% block subtitle %}<p class="page-subtitle">{{ teachers|length }} teacher{{ teachers|length|pluralize }}{% if user.department %} in {{ user.department }}{% endif %}</p>{% endblock %}
+
+{% block actions %}
+{% if user.can_manage_department %}
+<a class="btn btn-primary" href="{% url 'FacultyRegister' %}"><i class="fas fa-plus"></i>Register teacher</a>
+{% endif %}
 {% endblock %}
 
-{% block table %}
-<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Course Assigned</th>
-            <th>Is Class Teacher</th>
-        </tr>
-    </thead>
-    <tfoot>
-        <tr>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Course Assigned</th>
-            <th>Is Class Teacher</th>
-        </tr>
-    </tfoot>
-    <tbody>
-        {% for teacher in teachers %}
-        <tr>
-            <td>
-                <a href="{% url 'updateTeacher' id=teacher.id %}">
-                    {{ teacher.id }}
-                    <!-- id -->
-                </a>
-            </td>
-            <td>{{ teacher.user.first_name }}</td> <!-- first_name -->
-            <td>{{ teacher.user.last_name }}</td> <!-- last_name -->
-            <td>
-                {% for course in teacher.course.all %}
-                {{ course.code }}-{{ course.name }},<br>
+{% block content %}
+<div class="card">
+    {% if teachers %}
+    <div class="table-responsive">
+        <table class="table table-hover" data-datatable data-search="Search teachers…">
+            <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Role</th>
+                    <th>Class teacher of</th>
+                    <th>Teaches</th>
+                    {% if user.can_manage_department %}<th class="no-sort actions"><span class="sr-only">Actions</span></th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td data-order="{{ teacher.user.full_name }}">
+                        <div class="person">
+                            <span class="avatar">{{ teacher.user.initials }}</span>
+                            <div class="min-w-0">
+                                <div class="name">{{ teacher.user.full_name|default:"(no name)" }}</div>
+                                <div class="sub">{{ teacher.user.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {% if teacher.user.is_hod %}<span class="badge badge-soft-primary">HOD</span>
+                        {% elif teacher.user.is_classteacher %}<span class="badge badge-soft-info">Class teacher</span>
+                        {% else %}<span class="badge badge-soft">Teacher</span>{% endif %}
+                    </td>
+                    <td>
+                        {% if teacher.class %}<a href="{% url 'class-detail' teacher.class.id %}">{{ teacher.class.class_name }}</a>{% else %}<span class="text-muted">—</span>{% endif %}
+                    </td>
+                    <td>
+                        <div class="chip-list">
+                            {% for a in teacher.assign_cls_set.all %}
+                            <span class="badge badge-soft" title="{{ a.course.name }}">{{ a.course.code }} · {{ a.cls.class_name }}</span>
+                            {% empty %}<span class="text-muted small">Not assigned yet</span>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    {% if user.can_manage_department %}
+                    <td class="actions"><a class="btn btn-sm btn-light" href="{% url 'updateTeacher' teacher.id %}"><i class="fas fa-pen"></i>Edit</a></td>
+                    {% endif %}
+                </tr>
                 {% endfor %}
-            </td>
-            <td>{% if teacher.user.is_classteacher %}yes{% else %}no{% endif %}</td> <!-- is class teacher -->
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+        <h3>No teachers yet</h3>
+        <p>Register the teachers in your department so they can sign in and take attendance.</p>
+        {% if user.can_manage_department %}<a class="btn btn-primary" href="{% url 'FacultyRegister' %}"><i class="fas fa-plus"></i>Register a teacher</a>{% endif %}
+    </div>
+    {% endif %}
+</div>
 {% endblock %}

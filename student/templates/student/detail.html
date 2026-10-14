@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'StudentList' %}">Students</a><span class="sep">/</span></nav>{% endblock %}
+{% block page_title %}{{ stu.user.full_name|default:stu.user.email }}{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{% if stu.cls %}{{ stu.cls.class_name }}{% else %}Not in a class{% endif %}{% if stu.roll_no %} · Roll no. {{ stu.roll_no }}{% endif %}</p>{% endblock %}
+
+{% block actions %}
+{% if user.can_manage_students %}
+<a class="btn btn-light" href="{% url 'UpdateStudent' stu.id %}"><i class="fas fa-pen"></i>Edit</a>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row row-gap">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <span class="avatar avatar-lg mb-3">{{ stu.user.initials }}</span>
+                <h2 class="h5 mb-1">{{ stu.user.full_name }}</h2>
+                <p class="text-muted mb-0">{{ stu.user.email }}</p>
+            </div>
+            <div class="card-footer">
+                <dl class="kv">
+                    <dt>Class</dt><dd>{% if stu.cls %}<a href="{% url 'class-detail' stu.cls.id %}">{{ stu.cls.class_name }}</a>{% else %}—{% endif %}</dd>
+                    <dt>Roll no.</dt><dd>{{ stu.roll_no|default:"—" }}</dd>
+                    <dt>Overall</dt>
+                    <dd>{% if summary.percent is not None %}<span class="badge {% if summary.short %}badge-soft-danger{% else %}badge-soft-success{% endif %}">{{ summary.percent }}%</span> <span class="text-muted small">{{ summary.present }}/{{ summary.total }} lectures</span>{% else %}—{% endif %}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header"><h2 class="card-title">Attendance by course</h2></div>
+            {% include 'partials/course_attendance.html' %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% if percent is None %}<span class="text-muted small">No lectures yet</span>{% else %}
+<div class="meter" title="{{ present }} of {{ total }} lectures">
+    <div class="meter-bar{% if short %} short{% endif %}"><span style="width: {{ percent }}%"></span></div>
+    <span class="meter-value{% if short %} short{% endif %}">{{ percent }}%</span>
+</div>
+{% endif %}

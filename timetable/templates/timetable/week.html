@@ -1,0 +1,27 @@
+<div class="week">
+    {% for day, slots in week %}
+    <section class="day-col{% if day == today %} is-today{% endif %}" aria-label="{{ day }}">
+        <div class="day-head">{{ day }}{% if day == today %}<span class="badge badge-soft-primary">Today</span>{% endif %}</div>
+        <div class="day-body">
+            {% for slot in slots %}
+            <div class="slot{% if slot.lec_type == 'Lab' %} lab{% endif %}">
+                <div class="slot-time">{{ slot.period }}</div>
+                <div class="slot-title">{{ slot.course.name|default:"Course removed" }}</div>
+                <div class="slot-meta">
+                    {% if show_class %}{{ slot.cls.class_name }} · {% endif %}{{ slot.lec_type }}{% if slot.batch != 'All' %} · Batch {{ slot.batch }}{% endif %}
+                    {% if slot.teachers %}<br>{{ slot.teachers|join:", " }}{% endif %}
+                </div>
+                {% if can_edit %}
+                <form method="post" action="{% url 'timetable-slot-delete' slot.id %}" data-confirm="Remove {{ slot.course.name|default:'this slot' }} on {{ day }}, {{ slot.period }}?">
+                    {% csrf_token %}
+                    <button class="btn-link-muted" type="submit" title="Remove slot"><i class="fas fa-times"></i><span class="sr-only">Remove</span></button>
+                </form>
+                {% endif %}
+            </div>
+            {% empty %}
+            <div class="day-empty">Free</div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endfor %}
+</div>

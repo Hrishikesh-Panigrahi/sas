@@ -1,45 +1,59 @@
-{% extends 'blank.html' %}
+{% extends 'base.html' %}
 
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'StudentList' %}">Students</a><span class="sep">/</span>{% if stu %}<a href="{% url 'student-detail' stu.id %}">{{ stu.user.full_name }}</a><span class="sep">/</span>{% endif %}</nav>{% endblock %}
+{% block page_title %}{% if type == 'Update' %}Edit student{% else %}Register a student{% endif %}{% endblock %}
+{% block subtitle %}{% if type == 'Create' %}<p class="page-subtitle">They can sign in with this email and password to see their attendance.</p>{% endif %}{% endblock %}
 
 {% block content %}
-<div class="container mb-5">
-    <!-- page heading -->
-    <h1 class="h3 mb-4 text-gray-800">Student</h1>
-    <!-- userForm holder -->
-    <form action="" method="POST" id="userForm">
-        {% csrf_token %}
-
-            {{ userform.as_p }}
-            {{ sform.as_p }}
-            
-                <button  type="submit" class="btn btn-success btn-icon-split mr-3">
-                    <span class="icon text-white-50">
-                        <i class="fas fa-check"></i>
-                    </span>
-                    <span class="text">{{ type }}</span>
-                </button>
-    </form>
-
+<div class="row row-gap">
+    <div class="col-lg-8 col-xl-7">
+        <form method="post" class="card" novalidate>
+            {% csrf_token %}
+            <div class="card-body">
+                {% include 'partials/form_errors.html' %}
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.first_name %}</div>
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.last_name %}</div>
+                        <div class="col-12">{% include 'partials/field.html' with field=form.email %}</div>
+                        {% if form.department %}<div class="col-12">{% include 'partials/field.html' with field=form.department %}</div>{% endif %}
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">Class</div>
+                    <div class="form-section-help">The student is added to the class's attendance lists and courses.</div>
+                    <div class="row">
+                        <div class="col-sm-8">{% include 'partials/field.html' with field=form.cls %}</div>
+                        <div class="col-sm-4">{% include 'partials/field.html' with field=form.roll_no %}</div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <div class="form-section-title">{% if type == 'Update' %}Reset password{% else %}Password{% endif %}</div>
+                    <div class="row">
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.password1 %}</div>
+                        <div class="col-sm-6">{% include 'partials/field.html' with field=form.password2 %}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer form-actions">
+                <a class="btn btn-light" href="{% if stu %}{% url 'student-detail' stu.id %}{% else %}{% url 'StudentList' %}{% endif %}">Cancel</a>
+                {% if type == 'Create' %}<button class="btn btn-light" type="submit" name="add_another">Save and add another</button>{% endif %}
+                <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i>{% if type == 'Create' %}Register student{% else %}Save changes{% endif %}</button>
+            </div>
+        </form>
+    </div>
     {% if type == 'Update' %}
-    <a href="{% url 'deleteStudent' id %}" class="btn btn-danger btn-icon-split">
-        <span class="icon text-white-50">
-            <i class="fas fa-trash"></i>
-        </span>
-        <span class="text">Delete</span>
-    </a>
-    <style>
-        #id_password {
-            display: none;
-        }
-    </style>
+    <div class="col-lg-4 col-xl-5">
+        <div class="card danger-zone">
+            <div class="card-body">
+                <div>
+                    <div class="fw-600">Delete this student</div>
+                    <div class="small text-muted">Removes their account and attendance history.</div>
+                </div>
+                <a class="btn btn-outline-danger" href="{% url 'deleteStudent' stu.id %}"><i class="far fa-trash-alt"></i>Delete</a>
+            </div>
+        </div>
+    </div>
     {% endif %}
-
-    <style>
-        .errorlist {
-            color: red;
-        }
-    </style>
-    <!-- userForm ends -->
 </div>
-
 {% endblock %}

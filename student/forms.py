@@ -1,79 +1,40 @@
 from django import forms
-from .models import student
-from course.models import Course
-from users.models import User
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+
+from cls.models import Class
+from users.forms import UserAccountForm
 
 
-class StudentForm(forms.ModelForm):
-    my_form = 'userForm'
-    course = forms.ModelMultipleChoiceField(
-        required=False,
-        queryset=Course.objects.none(),
-        widget=forms.CheckboxSelectMultiple(attrs={'form': my_form}),
-        # widget=forms.CheckboxSelectMultiple()
-    )
-    class Meta:
-        # my_form = 'userForm'
-        model = student
-        fields = [ 'course']
-        # widgets = {
-    
-        #     'department': forms.HiddenInput(),
-        # #     # 'course': forms.CheckboxSelectMultiple(attrs={'form': my_form}),
-        # #     'address': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-        # #     'DOB': forms.DateField(attrs={'class': 'form-control', 'form': my_form}),
-        # }
-    
-    def __init__(self, *args, **kwargs):
-        courseSet = kwargs.pop('courseSet')
-        d = kwargs.pop('dept', None)
-        super(StudentForm, self).__init__(*args, **kwargs)
-        self.fields['course'].queryset = courseSet
-        self.fields['course'].label = 'Courses'
-        # self.fields['department'].initial = d
-    
-       
+class StudentForm(UserAccountForm):
+    roll_no = forms.IntegerField(label='Roll number', required=False, min_value=1)
+    cls = forms.ModelChoiceField(label='Class', queryset=Class.objects.none(), required=False,
+                                 empty_label='Not in a class yet')
 
-class UserForm(UserCreationForm):
-    class Meta:
-        my_form = 'userForm'
-        model = User
-        
-        fields = [ 'email' ]
-        widgets = {
-            'email': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-            # 'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-            # 'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-        }
-        # widgets = {
-        #     'email': forms.TextInput(attrs={'class': 'form-control'}),
-        #     'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-        #     'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-        # }
+    class Meta(UserAccountForm.Meta):
+        pass
 
-    def __init__(self, *args, **kwargs):
-        my_form = 'userForm'
-        super(UserForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].widget = forms.PasswordInput(
-            attrs={'class': 'form-control', 'type': 'password', 'form': my_form})
-        self.fields['password2'].widget = forms.PasswordInput(
-            attrs={'class': 'form-control', 'type': 'password', 'form': my_form})
+    field_order = ['first_name', 'last_name', 'email', 'roll_no', 'cls', 'password1', 'password2']
 
+    def __init__(self, *args, profile=None, classes=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.profile = profile
+        self.fields['cls'].queryset = classes if classes is not None else Class.objects.none()
+        self.fields['cls'].widget.attrs['class'] = 'custom-select'
+        self.fields['roll_no'].widget.attrs['class'] = 'form-control'
+        if profile is not None:
+            self.fields['roll_no'].initial = profile.roll_no
+            self.fields['cls'].initial = profile.cls_id
+        self.order_fields(self.field_order + ['department'])
 
-class UserUpdateForm(UserChangeForm):
-    class Meta:
-        my_form = 'userForm'
-        model = User
-        fields = [ 'first_name', 'last_name', 'email']
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control', 'form': my_form}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'form': my_form}),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(UserChangeForm, self).__init__(*args, **kwargs)
-        self.fields['password'].initial = ''
-        self.fields['password'].help_text = ''
-        self.fields['password'].label = ''
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = False
+        user.save()
+        # Saving the user creates the student profile (see users/signals.py).
+        profile = user.student
+        profile.roll_no = self.cleaned_data.get('roll_no')
+        profile.cls = self.cleaned_data.get('cls')
+        profile.save()
+        if profile.cls:
+            courses = profile.cls.assign_cls_set.values_list('course', flat=True)
+            profile.course.add(*courses)
+        return user

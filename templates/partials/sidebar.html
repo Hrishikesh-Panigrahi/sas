@@ -1,0 +1,51 @@
+{% with u=request.user %}
+<aside class="sidebar" id="sidebar" aria-label="Main navigation">
+    <a class="sidebar-brand" href="{% url 'index' %}">
+        <span class="brand-mark"><i class="fas fa-check"></i></span>
+        <span class="brand-text">SAS<small>Student Attendance</small></span>
+    </a>
+
+    <nav class="sidebar-nav">
+        <a class="nav-item{% if nav == 'sas' %} active{% endif %}" href="{% url 'index' %}">
+            <i class="fas fa-home"></i><span>Dashboard</span>
+        </a>
+
+        {% if u.is_staff or u.is_superuser %}
+        <div class="nav-section">Teaching</div>
+        <a class="nav-item{% if nav == 'attendance' %} active{% endif %}" href="{% url 'attendance-home' %}">
+            <i class="fas fa-clipboard-check"></i><span>Attendance</span>
+        </a>
+        <a class="nav-item{% if nav == 'timetable' %} active{% endif %}" href="{% url 'timetable' %}">
+            <i class="far fa-calendar-alt"></i><span>Timetable</span>
+        </a>
+
+        <div class="nav-section">Department</div>
+        <a class="nav-item{% if nav == 'cls' %} active{% endif %}" href="{% url 'viewcls' %}">
+            <i class="fas fa-chalkboard"></i><span>Classes</span>
+        </a>
+        <a class="nav-item{% if nav == 'student' %} active{% endif %}" href="{% url 'StudentList' %}">
+            <i class="fas fa-user-graduate"></i><span>Students</span>
+        </a>
+        {% if u.can_manage_students %}
+        <a class="nav-item{% if nav == 'users' %} active{% endif %}" href="{% url 'teachers' %}">
+            <i class="fas fa-chalkboard-teacher"></i><span>Teachers</span>
+        </a>
+        <a class="nav-item{% if nav == 'course' %} active{% endif %}" href="{% url 'chome' %}">
+            <i class="fas fa-book"></i><span>Courses</span>
+        </a>
+        {% endif %}
+        {% endif %}
+    </nav>
+
+    <div class="sidebar-footer">
+        <a class="nav-item{% if nav == 'profile' %} active{% endif %}" href="{% url 'profile' %}">
+            <i class="far fa-user-circle"></i><span>My profile</span>
+        </a>
+        {% if u.is_superuser %}
+        <a class="nav-item" href="{% url 'admin:index' %}">
+            <i class="fas fa-cog"></i><span>Admin site</span>
+        </a>
+        {% endif %}
+    </div>
+</aside>
+{% endwith %}
