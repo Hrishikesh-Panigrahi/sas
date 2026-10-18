@@ -1,5 +1,4 @@
 """Attendance percentages used by the dashboard and reports."""
-import math
 
 from django.conf import settings
 from django.db.models import Count, Q
@@ -16,12 +15,15 @@ def is_short(pct):
     return pct is not None and pct < settings.ATTENDANCE_THRESHOLD
 
 
-def lectures_needed(present, total):
-    """Consecutive lectures to attend to get back up to the threshold."""
-    target = settings.ATTENDANCE_THRESHOLD / 100
-    if not total or present / total >= target:
+def lectures_needed(present, total, threshold=None):
+    """Consecutive lectures to attend to get back up to the threshold (None at 100%)."""
+    t = settings.ATTENDANCE_THRESHOLD if threshold is None else threshold
+    if not total or present * 100 >= t * total:
         return 0
-    return math.ceil((target * total - present) / (1 - target))
+    if t >= 100:
+        return None
+    # Smallest n with (present + n) * 100 >= t * (total + n), in whole numbers.
+    return -(-(t * total - 100 * present) // (100 - t))
 
 
 def assignment_report(assign):
@@ -31,24 +33,27 @@ def assignment_report(assign):
     # is not marked absent for lectures held before they arrived.
     counts = {
         row['student']: row
-        for row in Attendance.objects.filter(attendanceclass__in=lectures)
+        for row in Attendance.objects.filter(attendanceclass__in=lectures, excused=False)
         .values('student').annotate(
             total=Count('attendanceclass', distinct=True),
             present=Count('attendanceclass', distinct=True, filter=Q(status=True)))
     }
     rows = []
+    excused = dict(Attendance.objects.filter(attendanceclass__in=lectures, excused=True)
+                   .values('student').annotate(n=Count('attendanceclass', distinct=True))
+                   .values_list('student', 'n'))
     for stu in assign.cls.student_set.select_related('user').order_by(*ROLL_ORDER):
         row = counts.get(stu.id, {'present': 0, 'total': 0})
         pct = percent(row['present'], row['total'])
         rows.append({'student': stu, 'present': row['present'], 'total': row['total'],
-                     'percent': pct, 'short': is_short(pct)})
+                     'percent': pct, 'short': is_short(pct), 'excused': excused.get(stu.id, 0)})
     return rows, lectures.count()
 
 
 def student_summary(stu):
     """Attendance per course for one student, plus an overall figure."""
     per_course = (
-        Attendance.objects.filter(student=stu)
+        Attendance.objects.filter(student=stu, excused=False)
         .values('course__id', 'course__code', 'course__name')
         .annotate(total=Count('attendanceclass', distinct=True),
                   present=Count('attendanceclass', distinct=True, filter=Q(status=True)))
@@ -72,7 +77,8 @@ def student_summary(stu):
 def students_below_threshold(students, limit=None):
     """Students whose overall attendance is under the threshold, worst first."""
     annotated = students.select_related('user', 'cls').annotate(
-        total=Count('attendance__attendanceclass', distinct=True),
+        total=Count('attendance__attendanceclass', distinct=True,
+                    filter=Q(attendance__excused=False)),
         present=Count('attendance__attendanceclass', distinct=True,
                       filter=Q(attendance__status=True)),
     ).filter(total__gt=0)

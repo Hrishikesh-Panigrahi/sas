@@ -18,6 +18,10 @@ urlpatterns = [
     path('timetable/', include('timetable.urls')),
     path('class/', include('cls.urls')),
     path('insights/', include('insights.urls')),
+    path('leave/', include('leave.urls')),
+    path('reports/', include('attendance.defaulter_urls')),
+    path('', include('timetable.calendar_urls')),
+    path('', include('sas.pwa_urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

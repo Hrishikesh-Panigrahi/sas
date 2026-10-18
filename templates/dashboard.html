@@ -69,7 +69,7 @@
                     <span class="time-chip">{{ item.slot.period }}</span>
                     <div class="grow">
                         <div class="title">{{ item.slot.course.name }}</div>
-                        <div class="meta">{{ item.slot.cls.class_name }} · {{ item.slot.lec_type }}{% if item.slot.batch != 'All' %} · Batch {{ item.slot.batch }}{% endif %}</div>
+                        <div class="meta">{{ item.slot.cls.class_name }} · {{ item.slot.lec_type }}{% if item.slot.batch != 'All' %} · Batch {{ item.slot.batch }}{% endif %}{% if item.cover_for %} · <span class="badge badge-soft-info">Covering for {{ item.cover_for }}</span>{% endif %}</div>
                     </div>
                     {% if item.lecture and item.lecture.is_marked %}
                     <span class="badge badge-soft-success d-none d-sm-inline-block"><i class="fas fa-check"></i> Marked</span>
@@ -157,6 +157,8 @@
             <div class="empty compact"><p class="mb-0">No classes assigned to you yet.</p></div>
             {% endif %}
         </div>
+
+        {% if warnings is not None %}{% include 'insights/_warnings.html' %}{% endif %}
 
         {% if counts %}
         <div class="card">

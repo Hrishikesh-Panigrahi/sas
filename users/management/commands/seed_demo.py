@@ -30,8 +30,11 @@ from django.utils import timezone
 from attendance.models import Assign_cls, Attendance, AttendanceClass
 from cls.models import Class
 from course.models import Course
+from leave.models import LeaveRequest
+from leave.services import sync_excuses
 from student.models import student
 from timetable import generator
+from timetable.models import Substitution, TimeTable
 from users.models import TeacherProfile, User
 
 DEMO_PASSWORD = 'sas-demo-2026'
@@ -175,6 +178,8 @@ class Command(BaseCommand):
             return names.pop()
 
         self.lecture_count = self.record_count = 0
+        self.rosters = {}
+        self.teachers = teachers
         for class_name, dept, ct_email, plan, habits, timetabled, weeks in CLASSES:
             cls = Class.objects.create(class_name=class_name, department=dept,
                                        class_teacher=teachers[ct_email.split('@')[0]])
@@ -192,6 +197,7 @@ class Command(BaseCommand):
                 roster.append((stu, habit))
                 if habit == 'chronic' and class_name == 'TE COMPS A':
                     self.example_student = user.email
+            self.rosters[class_name] = roster
 
             if timetabled:
                 self._timetable(cls, class_name)
@@ -204,8 +210,66 @@ class Command(BaseCommand):
         # A registered student who hasn't been placed in a class.
         first, last = next_name()
         self._user('%s.%s@sas.test' % (first.lower(), last.lower()), first, last, CE)
+        self._leave()
+        self._cover()
         self.summary.append('%d lectures and %d attendance records over %d weeks'
                             % (self.lecture_count, self.record_count, WEEKS))
+
+    def _leave(self):
+        """Leave requests in every state, with approved medical leave excusing absences."""
+        day = datetime.timedelta(days=1)
+        certificate = (b'%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[]/Count 0>>'
+                       b'endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n')
+        by_habit = {(c, h): s for c, roster in self.rosters.items() for s, h in roster}
+        rahul = User.objects.get(email='rahul@sas.test')
+        priya = User.objects.get(email='priya@sas.test')
+        made = []
+
+        stu = by_habit.get(('TE COMPS A', 'medical'))
+        if stu:
+            leave = LeaveRequest.objects.create(
+                student=stu, kind='medical', start_date=self.today - 27 * day, end_date=self.today - 21 * day,
+                reason='Dengue fever; the doctor advised a week of rest. Certificate attached.',
+                document=certificate, document_name='medical-certificate.pdf', document_type='application/pdf',
+                status='approved', reviewed_by=rahul, reviewed_at=timezone.now() - 20 * day,
+                review_note='Get well soon. Please collect the notes from your batchmates.')
+            sync_excuses(stu, leave.start_date, leave.end_date)
+            made.append('approved')
+        stu = by_habit.get(('TE COMPS A', 'good'))
+        if stu:
+            LeaveRequest.objects.create(
+                student=stu, kind='event', start_date=self.today + day, end_date=self.today + 2 * day,
+                reason='Representing the college at the inter-university hackathon in Pune.')
+            made.append('pending')
+        stu = by_habit.get(('TE COMPS A', 'chronic'))
+        if stu:
+            LeaveRequest.objects.create(
+                student=stu, kind='other', start_date=self.today - 9 * day, end_date=self.today - 7 * day,
+                reason='Was travelling for a family function.', status='rejected', reviewed_by=rahul,
+                reviewed_at=timezone.now() - 5 * day,
+                review_note='Leave has to be requested before travelling, not afterwards.')
+            made.append('rejected')
+        stu = by_habit.get(('SE COMPS A', 'friday'))
+        if stu:
+            last_friday = self.today - ((self.today.weekday() - 4) % 7 or 7) * day
+            LeaveRequest.objects.create(
+                student=stu, kind='medical', start_date=last_friday, end_date=last_friday,
+                reason='Migraine; attached the clinic slip.', document=certificate,
+                document_name='clinic-slip.pdf', document_type='application/pdf')
+            made.append('pending')
+        self.summary.append('Leave requests: %s' % ', '.join(made))
+
+    def _cover(self):
+        """Meera is away today; Vikram covers her first lecture."""
+        meera, vikram = self.teachers['meera'], self.teachers['vikram']
+        pairs = Assign_cls.objects.filter(teacher=meera).values_list('cls_id', 'course_id')
+        slots = [s for s in TimeTable.objects.filter(day=self.today.strftime('%A')).order_by('start_time')
+                 if (s.cls_id, s.course_id) in set(pairs)]
+        if slots:
+            Substitution.objects.create(slot=slots[0], date=self.today, absent_teacher=meera, substitute=vikram,
+                                        created_by=User.objects.get(email='hod@sas.test'))
+            self.summary.append('Meera Iyer is away today; Vikram Bhatt covers %s at %s'
+                                % (slots[0].course.name, slots[0].period))
 
     def _timetable(self, cls, class_name):
         config = generator.default_config(cls)

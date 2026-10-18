@@ -1,8 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}<link href="{% static 'css/rollcall.css' %}" rel="stylesheet">{% endblock %}
+{% block extra_js %}<script src="{% static 'js/rollcall.js' %}"></script>{% endblock %}
 
 {% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'attendance-home' %}">Attendance</a><span class="sep">/</span><a href="{% url 'attendance-attendance_date' assign.id %}">{{ assign.course.name }} · {{ assign.cls.class_name }}</a><span class="sep">/</span></nav>{% endblock %}
 {% block page_title %}{% if lecture.is_marked %}Edit attendance{% else %}Take attendance{% endif %}{% endblock %}
 {% block subtitle %}<p class="page-subtitle">{{ lecture.date|date:"l, j F Y" }}{% if lecture.period %} · {{ lecture.period }}{% endif %} · {{ assign.course.name }}, {{ assign.cls.class_name }}{% if lecture.batch != 'All' %} · Batch {{ lecture.batch }}{% endif %}</p>{% endblock %}
+
+{% block actions %}
+{% if rows %}
+<form method="post" action="{% url 'checkin-start' lecture.id %}"
+    {% if lecture.is_marked %}data-confirm="Run a live check-in? When you finish it, it replaces the attendance saved for this lecture."{% endif %}>
+    {% csrf_token %}
+    <button class="btn btn-primary" type="submit"><i class="fas fa-qrcode"></i>{% if live_session %}Resume live check-in{% else %}Live QR check-in{% endif %}</button>
+</form>
+{% endif %}
+{% endblock %}
 
 {% block content %}
 {% if rows %}
@@ -19,6 +33,7 @@
                 <div class="search-input"><i class="fas fa-search"></i><input type="search" class="form-control" style="height:34px;font-size:.875rem" placeholder="Find a student" data-filter="#mark-list" aria-label="Find a student"></div>
                 <button type="button" class="btn btn-sm btn-light" data-mark-all="present"><i class="fas fa-check text-success"></i>All present</button>
                 <button type="button" class="btn btn-sm btn-light" data-mark-all="absent"><i class="fas fa-times text-danger"></i>All absent</button>
+                {% include 'attendance/_rollcall.html' %}
             </div>
         </div>
         <ul class="list" id="mark-list">
@@ -28,7 +43,7 @@
                 <span class="roll">{{ stu.roll_no|default:"" }}</span>
                 <span class="avatar">{{ stu.user.initials }}</span>
                 <div class="grow">
-                    <div class="title text-truncate">{{ stu.user.full_name|default:stu.user.email }}</div>
+                    <div class="title text-truncate">{{ stu.user.full_name|default:stu.user.email }}{% if row.on_leave %} <span class="badge badge-soft-info" title="Approved leave covers this date; an absence here is excused">On leave</span>{% endif %}</div>
                     <div class="meta sub text-truncate">{{ stu.user.email }}</div>
                 </div>
                 <div class="toggle" role="radiogroup" aria-label="Attendance for {{ stu.user.full_name }}">

@@ -13,6 +13,8 @@ from django.views.decorators.http import require_POST
 from sas.permissions import in_department, staff_required
 from student.models import ROLL_ORDER
 from timetable.models import TimeTable
+from leave.services import approved_on, excuse_lecture
+from timetable.substitutes import is_substitute, todays_cover
 from .forms import LectureForm
 from .models import Assign_cls, Attendance, AttendanceClass
 from .stats import assignment_report
@@ -24,17 +26,19 @@ def _can_view(user, assign):
     return user.can_manage_students and assign.cls.department == user.department
 
 
-def _can_mark(user, assign):
+def _can_mark(user, assign, lecture=None):
     if assign.teacher.user_id == user.id or user.is_superuser:
+        return True
+    if lecture is not None and is_substitute(user, assign, lecture.date):
         return True
     return user.can_manage_department and assign.cls.department == user.department
 
 
-def _get_assignment(request, assign_id, mark=False):
+def _get_assignment(request, assign_id, mark=False, lecture=None):
     assign = get_object_or_404(
         Assign_cls.objects.select_related('cls', 'course', 'teacher__user'), pk=assign_id)
-    allowed = _can_mark if mark else _can_view
-    if not allowed(request.user, assign):
+    allowed = _can_mark(request.user, assign, lecture) if mark else _can_view(request.user, assign)
+    if not allowed:
         raise PermissionDenied
     return assign
 
@@ -104,11 +108,14 @@ def create_lecture(request, assign_id):
 def start_from_slot(request, slot_id):
     """Open (or create) today's lecture for a timetable slot."""
     slot = get_object_or_404(TimeTable, pk=slot_id)
+    today = timezone.localdate()
     assign = Assign_cls.objects.filter(cls=slot.cls, course=slot.course,
                                        teacher__user=request.user).first()
     if assign is None:
+        cover = next((c for c in todays_cover(request.user, today) if c['slot'].pk == slot.pk), None)
+        assign = cover['assign'] if cover else None
+    if assign is None:
         raise PermissionDenied
-    today = timezone.localdate()
     lecture, _ = AttendanceClass.objects.get_or_create(
         assign=assign, date=today, period=slot.period, batch=slot.batch,
         defaults={'day': today.strftime('%A')})
@@ -118,7 +125,7 @@ def start_from_slot(request, slot_id):
 @staff_required
 def mark(request, attendancecls_id):
     lecture = get_object_or_404(AttendanceClass, pk=attendancecls_id)
-    assign = _get_assignment(request, lecture.assign_id, mark=True)
+    assign = _get_assignment(request, lecture.assign_id, mark=True, lecture=lecture)
     students = list(lecture.students().select_related('user').order_by(*ROLL_ORDER))
 
     if request.method == 'POST':
@@ -135,15 +142,21 @@ def mark(request, attendancecls_id):
             Attendance.objects.bulk_create(records)
             lecture.status = 1
             lecture.save(update_fields=['status'])
+            on_leave = excuse_lecture(lecture)
         present = sum(1 for r in records if r.status)
-        messages.success(request, 'Attendance saved for %s: %d present, %d absent.'
-                         % (lecture.date.strftime('%d %b'), present, len(records) - present))
+        excused = sum(1 for r in records if not r.status and r.student_id in on_leave)
+        messages.success(request, 'Attendance saved for %s: %d present, %d absent%s.'
+                         % (lecture.date.strftime('%d %b'), present, len(records) - present,
+                            ' (%d on approved leave)' % excused if excused else ''))
         return redirect('attendance-attendance_date', assign_id=assign.id)
 
     existing = {a.student_id: a.status for a in lecture.attendance_set.all()}
-    rows = [{'student': stu, 'present': existing.get(stu.id, True)} for stu in students]
+    on_leave = approved_on(students, lecture.date)
+    rows = [{'student': stu, 'on_leave': stu.id in on_leave,
+             'present': existing.get(stu.id, stu.id not in on_leave)} for stu in students]
     context = {
         'title': 'Take attendance',
+        'live_session': lecture.checkin_sessions.filter(closed_at__isnull=True).exists(),
         'assign': assign,
         'lecture': lecture,
         'rows': rows,

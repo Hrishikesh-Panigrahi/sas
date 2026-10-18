@@ -1,0 +1,4 @@
+{% if leave.status == 'approved' %}<span class="badge badge-soft-success"><i class="fas fa-check"></i> Approved</span>
+{% elif leave.status == 'rejected' %}<span class="badge badge-soft-danger"><i class="fas fa-times"></i> Not approved</span>
+{% elif leave.status == 'cancelled' %}<span class="badge badge-soft">Cancelled</span>
+{% else %}<span class="badge badge-soft-warning"><i class="far fa-clock"></i> Waiting for approval</span>{% endif %}

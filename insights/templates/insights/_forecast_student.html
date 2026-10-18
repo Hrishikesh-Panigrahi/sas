@@ -1,0 +1,43 @@
+{% if forecast and forecast.overall %}
+<div class="card forecast-card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Semester forecast</h2>
+            <p class="card-subtitle">If {{ who|default:"you" }} keep{% if who and who != "you" %}s{% endif %} the recent pace · semester ends {{ forecast.semester_end|date:"j M" }} ({{ forecast.weeks_left }} weeks)</p>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="forecast-head">
+            <div>
+                <div class="forecast-big {% if forecast.overall.projected < attendance_threshold %}short{% endif %}">{{ forecast.overall.projected }}%</div>
+                <div class="small text-muted">projected overall</div>
+            </div>
+            <div class="forecast-arrow" aria-hidden="true"><i class="fas fa-long-arrow-alt-right"></i></div>
+            <div>
+                <div class="forecast-best">{{ forecast.overall.best }}%</div>
+                <div class="small text-muted">attending everything left</div>
+            </div>
+        </div>
+        <ul class="forecast-list">
+            {% for c in forecast.courses %}
+            <li class="fc-{{ c.status }}">
+                <i class="fas {% if c.status == 'lost' %}fa-ban{% elif c.status == 'slipping' %}fa-arrow-down{% elif c.status == 'at_risk' %}fa-exclamation-triangle{% elif c.status == 'recovering' %}fa-arrow-up{% else %}fa-check{% endif %}" aria-hidden="true"></i>
+                <div class="grow min-w-0">
+                    <div class="fw-600 text-truncate">{{ c.name }}</div>
+                    <div class="small text-muted">
+                        {% if c.current is not None %}{{ c.current }}% now{% if c.projected is not None and c.total >= 4 %} → about {{ c.projected }}%{% endif %}{% endif %}
+                        {% if c.remaining %} · {{ c.remaining }} lecture{{ c.remaining|pluralize }} left{% endif %}
+                    </div>
+                </div>
+                <span class="fc-note">
+                    {% if c.status == 'lost' %}Out of reach (max {{ c.best }}%)
+                    {% elif c.status == 'slipping' %}{% if c.can_miss is not None %}Can miss {{ c.can_miss }}{% else %}Slipping{% endif %}{% if c.crosses_in_weeks %} · below in {{ c.crosses_in_weeks }} wk{% endif %}
+                    {% elif c.can_miss is not None %}Can miss {{ c.can_miss }} of {{ c.remaining }}
+                    {% elif c.remaining %}Attend all{% else %}—{% endif %}
+                </span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}

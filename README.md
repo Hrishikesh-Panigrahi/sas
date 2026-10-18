@@ -34,12 +34,24 @@ The demo data covers the cases worth trying: two departments, three Computer Eng
 - **Insights** (sidebar) — attendance trends by week, weekday and time of day, plus a written analysis with suggested next steps: for students about themselves, for teachers about their courses, and for HODs and class teachers about the whole department. Staff also see an analysis on each student's page, and a summary card sits on every dashboard.
 - **Timetable generator** (a class's timetable page → *Generate timetable*) — set how often each course meets, lab length and batches, the shape of the day and any rules, then generate a clash-free week. It avoids the teachers' lectures in other classes, runs lab batches side by side, spreads courses across the week and explains the result. Rules can be typed in plain English ("Meera can't teach on Friday afternoons", "keep Wednesday after lunch free").
 
+- **Forecasts and early warnings** — every student's attendance projected to the end of the semester (`SEMESTER_END`): who will slip below 75% and when, who can no longer reach it, and how many more lectures each student can afford to miss.
+- **Ask SAS** (sidebar) — questions in plain English ("who missed 3+ CN lectures this month?"), answered from read-only data tools scoped to what the person may see.
+
 Both work out of the box with a built-in analyst. Put an Anthropic API key in `AI_TOKEN` (in `sas/.env`) to have Claude write the analyses and read the plain-English rules instead; `AI_MODEL` picks the model (default `claude-opus-5-5`). Claude's analyses are cached until the underlying numbers change.
+
+## More features
+
+- **Live QR check-in** — on any attendance sheet, *Live QR check-in* projects a QR code (and a 6-digit code) that changes every 15 seconds. Students scan it on their own phone; one phone can only check in one student per lecture. *Finish* saves present/absent for everyone. Phones must be able to reach the server, so use the deployed site rather than `localhost`.
+- **Swipe and voice roll call** — on the attendance sheet, *Swipe* shows one student at a time (right for present, left for absent); *Voice* reads each name and listens for "present"/"absent" (Chrome, Edge and Safari; needs HTTPS).
+- **Leave and medical requests** — students apply (with an optional certificate); class teachers or the HOD approve. Approved leave turns absences into excused absences that don't count against attendance.
+- **Defaulter list PDF** — per class or department, plus warning letters for parents (*Defaulter list* in the sidebar).
+- **Find cover** — pick a teacher who is away and a date; SAS ranks the free colleagues for each of their lectures and lets the substitute take attendance.
+- **Calendar and app** — subscribe to your timetable in Google/Apple Calendar, and install SAS on a phone; attendance saved while offline is sent when the connection returns.
 
 ## Tests
 
 ```bash
-python manage.py test sas insights timetable
+python manage.py test sas insights timetable leave attendance
 ```
 
 ## How the pieces fit

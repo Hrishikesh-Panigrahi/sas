@@ -1,0 +1,87 @@
+{% comment %}
+  Quick roll call: Swipe and Voice modes for the attendance marking page.
+  Include it inside the .mark-toolbar button row. Needs css/rollcall.css and js/rollcall.js.
+  The entry buttons stay hidden until rollcall.js runs, and the script moves the overlay to
+  <body> so it sits above the app shell and outside the form. Student text is filled in
+  with textContent only.
+{% endcomment %}
+<div class="rc-launch" role="group" aria-label="Quick roll call" data-rc-launch hidden>
+    <button type="button" class="btn btn-sm btn-light" data-rc-open="swipe" aria-haspopup="dialog" title="Go through students one card at a time"><i class="fas fa-layer-group" aria-hidden="true"></i>Swipe</button>
+    <button type="button" class="btn btn-sm btn-light" data-rc-open="voice" aria-haspopup="dialog" title="Call the roll out loud"><i class="fas fa-microphone" aria-hidden="true"></i>Voice</button>
+</div>
+
+<div class="rc" data-rc hidden>
+    <div class="rc-dialog" role="dialog" aria-modal="true" aria-labelledby="rc-title" aria-describedby="rc-hint" tabindex="-1" data-rc-dialog>
+        <div class="rc-top">
+            <div class="rc-heading">
+                <h2 class="rc-title" id="rc-title" data-rc-title>Swipe roll call</h2>
+                <span class="rc-count" data-rc-count></span>
+            </div>
+            <button type="button" class="rc-close" data-rc-close aria-label="Close roll call"><i class="fas fa-times" aria-hidden="true"></i></button>
+        </div>
+        <div class="rc-bar" aria-hidden="true"><span data-rc-bar></span></div>
+
+        <div class="rc-voice" data-rc-voice hidden>
+            <button type="button" class="rc-mic" data-rc-mic aria-pressed="true" aria-label="Pause listening"><i class="fas fa-microphone" aria-hidden="true" data-rc-mic-icon></i></button>
+            <div class="rc-voice-text">
+                <div class="rc-voice-status" data-rc-voice-status>Starting the microphone…</div>
+                <div class="rc-transcript is-hint" data-rc-transcript>Say “present” or “absent”</div>
+            </div>
+            <label class="rc-switch" data-rc-read-wrap>
+                <input type="checkbox" data-rc-read checked>
+                <span class="rc-switch-track" aria-hidden="true"></span>
+                <span>Read names aloud</span>
+            </label>
+        </div>
+
+        <div class="rc-body" data-rc-cards>
+            <div class="rc-stage" data-rc-stage></div>
+            <p class="rc-hint" id="rc-hint" data-rc-hint>Swipe right for present, left for absent.</p>
+            <div class="rc-actions">
+                <button type="button" class="rc-btn rc-btn-sm" data-rc-undo aria-label="Undo last decision">
+                    <span class="rc-btn-circle"><i class="fas fa-undo" aria-hidden="true"></i></span><span class="rc-btn-label">Undo</span>
+                </button>
+                <button type="button" class="rc-btn rc-btn-lg rc-btn-absent" data-rc-mark="absent" aria-label="Mark absent">
+                    <span class="rc-btn-circle"><i class="fas fa-times" aria-hidden="true"></i></span><span class="rc-btn-label">Absent</span>
+                </button>
+                <button type="button" class="rc-btn rc-btn-lg rc-btn-present" data-rc-mark="present" aria-label="Mark present">
+                    <span class="rc-btn-circle"><i class="fas fa-check" aria-hidden="true"></i></span><span class="rc-btn-label">Present</span>
+                </button>
+                <button type="button" class="rc-btn rc-btn-sm" data-rc-skip aria-label="Skip this student">
+                    <span class="rc-btn-circle"><i class="fas fa-forward" aria-hidden="true"></i></span><span class="rc-btn-label">Skip</span>
+                </button>
+            </div>
+            <p class="rc-last" data-rc-last></p>
+        </div>
+
+        <div class="rc-panel" data-rc-summary hidden>
+            <div class="rc-panel-icon is-ok" aria-hidden="true"><i class="fas fa-check"></i></div>
+            <h3 tabindex="-1" data-rc-summary-title>Roll call complete</h3>
+            <p class="rc-sum-count" data-rc-sum-count></p>
+            <p class="rc-sum-note" data-rc-sum-skipped hidden></p>
+            <div class="rc-absent">
+                <div class="rc-absent-label">Absent</div>
+                <ul data-rc-absent-list></ul>
+                <p class="rc-absent-none" data-rc-absent-none>Everyone is present.</p>
+            </div>
+            <div class="rc-panel-actions">
+                <button type="button" class="btn btn-primary" data-rc-save><i class="fas fa-check" aria-hidden="true"></i>Save attendance</button>
+                <button type="button" class="btn btn-light" data-rc-close>Back to list</button>
+                <button type="button" class="btn btn-link-muted" data-rc-undo><i class="fas fa-undo" aria-hidden="true"></i>Undo last</button>
+            </div>
+        </div>
+
+        <div class="rc-panel" data-rc-msg hidden>
+            <div class="rc-panel-icon is-warn" aria-hidden="true"><i class="fas fa-microphone-slash" data-rc-msg-icon></i></div>
+            <h3 tabindex="-1" data-rc-msg-title></h3>
+            <p class="rc-msg-text" data-rc-msg-text></p>
+            <div class="rc-panel-actions">
+                <button type="button" class="btn btn-primary" data-rc-to-swipe><i class="fas fa-layer-group" aria-hidden="true"></i>Use Swipe mode instead</button>
+                <button type="button" class="btn btn-light" data-rc-retry><i class="fas fa-redo" aria-hidden="true"></i>Try again</button>
+                <button type="button" class="btn btn-light" data-rc-close>Close</button>
+            </div>
+        </div>
+
+        <div class="sr-only" aria-live="polite" aria-atomic="true" data-rc-live></div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+/* SAS — Ask SAS chat. */
+.ask { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; min-height: calc(100vh - 220px); }
+.ask-thread { flex: 1; display: flex; flex-direction: column; gap: 1rem; padding-bottom: 1rem; }
+.ask-welcome { text-align: center; padding: 2.5rem 1rem; }
+.ask-suggestions { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1rem; }
+.ask-chip {
+  border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-2);
+  border-radius: 999px; padding: .45rem .9rem; font-size: .875rem; font-weight: 500;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.ask-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+.ask-msg { display: flex; gap: .65rem; align-items: flex-start; }
+.ask-msg.me { justify-content: flex-end; }
+.ask-avatar {
+  width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0; display: grid; place-items: center;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; font-size: .85rem;
+}
+.ask-bubble { max-width: min(720px, 100%); border-radius: 16px; padding: .75rem 1rem; line-height: 1.5; }
+.ask-msg.me .ask-bubble { background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+.ask-msg.bot .ask-bubble { background: var(--surface); border: 1px solid var(--border); border-top-left-radius: 4px; box-shadow: var(--shadow-sm); min-width: 0; flex: 1; }
+.ask-bubble p:last-child { margin-bottom: 0; }
+.ask-table { margin-top: .75rem; border: 1px solid var(--border); border-radius: 10px; padding: .6rem .75rem; background: var(--surface-2); }
+.ask-table-title { font-weight: 700; font-size: .8125rem; margin-bottom: .35rem; }
+.ask-table .table { background: var(--surface); margin: 0; font-size: .8125rem; }
+.ask-table .table th { padding: .45rem .6rem; }
+.ask-table .table td { padding: .45rem .6rem; }
+.ask-typing { display: inline-flex; gap: 4px; padding: .3rem 0; }
+.ask-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--border-strong); animation: blink 1.2s infinite ease-in-out; }
+.ask-typing span:nth-child(2) { animation-delay: .15s; }
+.ask-typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .3; } 40% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .ask-typing span { animation: none; } }
+.ask-bar {
+  position: sticky; bottom: 0; display: flex; gap: .5rem; padding: .75rem; margin: 0 -.75rem;
+  background: rgba(244, 246, 251, .95); backdrop-filter: blur(6px);
+}
+.ask-bar .form-control { height: 48px; border-radius: 12px; font-size: 1rem; }
+.ask-bar .btn { height: 48px; border-radius: 12px; padding: 0 1.1rem; }
+.ask-source { text-align: center; margin: .5rem 0 0; }

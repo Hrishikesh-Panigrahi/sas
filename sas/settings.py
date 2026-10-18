@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'cls.apps.ClsConfig',
     'Login.apps.LoginConfig',
     'insights.apps.InsightsConfig',
+    'leave.apps.LeaveConfig',
 
     # PIP packages
     'django_extensions',
@@ -184,6 +185,10 @@ GRAPH_MODELS = {
 
 # Attendance below this percentage is highlighted as a shortfall.
 ATTENDANCE_THRESHOLD = 75
+
+# Last day of teaching this semester (YYYY-MM-DD); used for forecasts and
+# calendar feeds. See sas/semester.py for the default when it is not set.
+SEMESTER_END = env('SEMESTER_END', default='')
 
 # AI features (insights, timetable assistant). With AI_TOKEN (an Anthropic API
 # key) they run on Claude; without it a built-in analyst produces the results.

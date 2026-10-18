@@ -1,4 +1,7 @@
+import json
+
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -9,6 +12,7 @@ from sas.permissions import in_department
 from student.models import student
 from .analyst import analyze
 from .analytics import department_facts, student_facts, teacher_facts
+from .forecast import forecasts, warnings
 
 
 def _views_for(user):
@@ -53,7 +57,20 @@ def index(request):
     if view not in dict(views):
         view = views[0][0]
     kind, facts, _ = _facts(request, view)
+    user = request.user
+    extra = {}
+    if facts and kind == 'student':
+        me = student.objects.filter(user=user).first()
+        extra['forecast'] = forecasts(student.objects.filter(pk=me.pk)).get(me.pk) if me else None
+    elif facts and kind == 'department':
+        extra['warnings'] = warnings(in_department(
+            student.objects.filter(user__is_staff=False, cls__isnull=False), user, 'user__department'))
+    elif facts and kind == 'teacher':
+        mine = Assign_cls.objects.filter(teacher__user=user)
+        extra['warnings'] = warnings(student.objects.filter(cls__in=mine.values('cls')),
+                                     courses=set(mine.values_list('course_id', flat=True)))
     context = {
+        **extra,
         'title': 'Insights',
         'views': views,
         'view': view,
@@ -66,6 +83,20 @@ def index(request):
         'analysis_url': '%s?view=%s' % (reverse('insights-analysis'), view),
     }
     return render(request, 'insights/index.html', context)
+
+
+@login_required
+def ask(request):
+    from . import ask as asker
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body or b'{}')
+        except ValueError:
+            body = {}
+        history = [h for h in body.get('history', []) if isinstance(h, dict) and 'q' in h and 'a' in h][-3:]
+        return JsonResponse(asker.answer(request.user, str(body.get('question', '')), history))
+    return render(request, 'insights/ask.html', {
+        'title': 'Ask SAS', 'suggestions': asker.suggestions(request.user), 'claude': ai.enabled()})
 
 
 @login_required

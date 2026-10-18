@@ -38,7 +38,7 @@ def _start(period):
 
 
 def load(queryset):
-    rows = queryset.filter(attendanceclass__status=1).values_list(
+    rows = queryset.filter(attendanceclass__status=1, excused=False).values_list(
         'status', 'attendanceclass__date', 'attendanceclass__period', 'attendanceclass_id',
         'student_id', 'course_id', 'attendanceclass__assign_id')
     return [Row(bool(p), d, _start(per), lec, s, c, a) for p, d, per, lec, s, c, a in rows]
@@ -189,6 +189,9 @@ def student_facts(stu, today=None):
         facts['class_average'] = summarize(class_rows)['percent']
     facts['weak_day'] = weak_spot(facts['by_weekday'], o['percent'], minimum=4)
     facts['weak_time'] = weak_spot(facts['by_time'], o['percent'], minimum=4)
+    from . import forecast
+    f = forecast.forecasts(student.objects.filter(pk=stu.pk), today).get(stu.pk)
+    facts['forecast'] = forecast.student_summary(f)
     return facts
 
 
@@ -231,12 +234,23 @@ def teacher_facts(user, today=None):
             num_below=len(below), below=below[:6], streaks=streaks[:6],
             unmarked=unmarked[a.id], slots=_missed_slots(a, today, dates[a.id])))
 
+    from . import forecast
+    classes = {a.cls_id for a in assigns}
+    facts['warnings'] = forecast.summary(forecast.warnings(
+        student.objects.filter(cls__in=classes), today, courses={a.course_id for a in assigns}))
     facts['students_below'] = len(below_ids)
     facts['unmarked'] = sum(unmarked.values())
     facts['missed_slots'] = sum(c['slots']['missed'] for c in facts['courses'])
     facts['weak_day'] = weak_spot(facts['by_weekday'], facts['overall']['percent'])
     facts['weak_time'] = weak_spot(facts['by_time'], facts['overall']['percent'])
     return facts
+
+
+def _department_warnings(user, today):
+    from . import forecast
+    students = in_department(student.objects.filter(user__is_staff=False, cls__isnull=False),
+                             user, 'user__department')
+    return forecast.summary(forecast.warnings(students, today))
 
 
 # ---------------------------------------------------------------- department
@@ -332,4 +346,5 @@ def department_facts(user, today=None):
     }
     facts['weak_day'] = weak_spot(facts['by_weekday'], facts['overall']['percent'])
     facts['weak_time'] = weak_spot(facts['by_time'], facts['overall']['percent'])
+    facts['warnings'] = _department_warnings(user, today)
     return facts

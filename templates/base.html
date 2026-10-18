@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{{ title|default:"SAS" }}{% endblock %} · SAS</title>
     <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    {% include 'partials/pwa_head.html' %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -46,6 +47,7 @@
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'js/app.js' %}"></script>
+    {% include 'partials/pwa_scripts.html' %}
     {% block extra_js %}{% endblock %}
 </body>
 </html>

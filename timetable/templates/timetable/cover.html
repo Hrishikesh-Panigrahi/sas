@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'timetable' %}">Timetable</a><span class="sep">/</span></nav>{% endblock %}
+{% block subtitle %}<p class="page-subtitle">A teacher is away? Pick them and the day, and SAS lines up who is free for each of their lectures.</p>{% endblock %}
+
+{% block content %}
+<form method="get" class="card mb-4">
+    <div class="card-body cover-form">
+        <div class="form-group mb-0">
+            <label for="teacher">Who is away</label>
+            <select id="teacher" name="teacher" class="custom-select" required>
+                <option value="">Choose a teacher</option>
+                {% for t in teachers %}<option value="{{ t.pk }}"{% if absent and absent.pk == t.pk %} selected{% endif %}>{{ t.user.full_name }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="form-group mb-0">
+            <label for="date">On</label>
+            <input id="date" name="date" type="date" class="form-control" value="{{ date|date:'Y-m-d' }}">
+        </div>
+        <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i>Find cover</button>
+    </div>
+</form>
+
+{% if absent %}
+<h2 class="section-title">{{ absent.user.full_name }}'s lectures on {{ date|date:"l j F" }}</h2>
+{% if lectures %}
+<div class="cover-grid">
+    {% for item in lectures %}
+    <article class="card cover-card{% if item.assigned %} is-covered{% endif %}">
+        <div class="card-header">
+            <div class="min-w-0">
+                <h3 class="card-title text-truncate">{{ item.slot.course.name|default:"Course" }}</h3>
+                <p class="card-subtitle">{{ item.slot.period }} · {{ item.slot.cls.class_name }}{% if item.slot.batch != 'All' %} · Batch {{ item.slot.batch }}{% endif %} · {{ item.slot.lec_type }}</p>
+            </div>
+            {% if item.assigned %}<span class="badge badge-soft-success"><i class="fas fa-check"></i> Covered</span>{% else %}<span class="badge badge-soft-warning">Needs cover</span>{% endif %}
+        </div>
+        {% if item.assigned %}
+        <div class="card-body d-flex align-items-center justify-content-between" style="gap:1rem">
+            <div class="person">
+                <span class="avatar">{{ item.assigned.substitute.user.initials }}</span>
+                <div><div class="name">{{ item.assigned.substitute.user.full_name }}</div><div class="sub">is covering this lecture</div></div>
+            </div>
+            <form method="post" action="{% url 'cover-assign' %}">
+                {% csrf_token %}
+                <input type="hidden" name="slot" value="{{ item.slot.pk }}"><input type="hidden" name="absent" value="{{ absent.pk }}"><input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+                <button class="btn btn-sm btn-light" name="action" value="remove" type="submit">Change</button>
+            </form>
+        </div>
+        {% elif item.options %}
+        <ul class="list">
+            {% for o in item.options %}
+            <li class="list-row">
+                <span class="avatar">{{ o.teacher.user.initials }}</span>
+                <div class="grow">
+                    <div class="title">{{ o.teacher.user.full_name }}{% if forloop.first %} <span class="badge badge-soft-primary">Best match</span>{% endif %}</div>
+                    <div class="meta">{{ o.reasons|join:" · " }}</div>
+                </div>
+                <form method="post" action="{% url 'cover-assign' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="slot" value="{{ item.slot.pk }}"><input type="hidden" name="absent" value="{{ absent.pk }}">
+                    <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}"><input type="hidden" name="substitute" value="{{ o.teacher.pk }}">
+                    <button class="btn btn-sm {% if forloop.first %}btn-primary{% else %}btn-light{% endif %}" type="submit">Assign</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="empty compact"><p class="mb-0">Nobody in the department is free at {{ item.slot.period }}.</p></div>
+        {% endif %}
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card"><div class="empty">
+    <div class="empty-icon"><i class="far fa-calendar-check"></i></div>
+    <h3>{{ absent.user.first_name }} has no timetabled lectures on {{ date|date:"l" }}</h3>
+    <p class="mb-0">Nothing needs covering.</p>
+</div></div>
+{% endif %}
+{% endif %}
+
+{% if booked %}
+<h2 class="section-title mt-4">Cover arranged for {{ date|date:"l j F" }}</h2>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Time</th><th>Lecture</th><th>Away</th><th>Covered by</th></tr></thead>
+            <tbody>
+                {% for b in booked %}
+                <tr><td class="tabular">{{ b.slot.period }}</td><td>{{ b.slot.course.name }} · {{ b.slot.cls.class_name }}</td>
+                    <td>{{ b.absent_teacher.user.full_name }}</td><td class="fw-600">{{ b.substitute.user.full_name }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

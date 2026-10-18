@@ -4,11 +4,13 @@ from django.utils import timezone
 
 from attendance.models import Assign_cls, AttendanceClass
 from attendance.stats import student_summary, students_below_threshold
+from insights.forecast import forecasts, warnings
 from cls.models import Class
 from course.models import Course
 from sas.permissions import in_department
 from student.models import student
 from timetable.models import TimeTable
+from timetable.substitutes import todays_cover
 from users.models import TeacherProfile
 
 
@@ -24,6 +26,8 @@ def index(request):
         profile = student.objects.filter(user=user).select_related('cls').first()
         context['profile'] = profile
         context['summary'] = student_summary(profile) if profile else None
+        if profile:
+            context['forecast'] = forecasts(student.objects.filter(pk=profile.pk)).get(profile.pk)
         return render(request, 'dashboard_student.html', context)
 
     # Teaching: today's timetable, lectures still to be marked, my classes.
@@ -43,6 +47,12 @@ def index(request):
         if assign:
             today_slots.append({'slot': slot, 'assign': assign,
                                 'lecture': marked.get((assign.id, slot.period, slot.batch))})
+    for cover in todays_cover(user, today):
+        lecture = AttendanceClass.objects.filter(assign=cover['assign'], date=today, period=cover['slot'].period,
+                                                 batch=cover['slot'].batch).first()
+        today_slots.append({'slot': cover['slot'], 'assign': cover['assign'], 'lecture': lecture,
+                            'cover_for': cover['sub'].absent_teacher.user.full_name})
+    today_slots.sort(key=lambda item: item['slot'].start_time)
 
     context.update({
         'assignments': assignments,
@@ -65,6 +75,10 @@ def index(request):
                 'classes': in_department(Class.objects.all(), user).count(),
             },
             'low_attendance': students_below_threshold(dept_students, limit=8),
+            'warnings': warnings(dept_students.filter(cls__isnull=False), limit=6),
         })
+    elif assignments:
+        context['warnings'] = warnings(student.objects.filter(cls__in={a.cls_id for a in assignments}),
+                                       limit=6, courses={a.course_id for a in assignments})
 
     return render(request, 'dashboard.html', context)

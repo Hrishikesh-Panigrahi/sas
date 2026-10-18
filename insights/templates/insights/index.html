@@ -147,6 +147,8 @@
         </div>
     </div>
     <div class="col-xl-5">
+        {% include 'insights/_warnings.html' %}
+
         <div class="card">
             <div class="card-header"><div><h2 class="card-title">Students at risk</h2><p class="card-subtitle">Below {{ attendance_threshold }}% overall</p></div><span class="badge badge-soft-danger">{{ facts.at_risk.count }}</span></div>
             {% if facts.at_risk.students %}
@@ -182,6 +184,7 @@
 
 {# ---------- Teacher detail ---------- #}
 {% elif kind == 'teacher' %}
+<div class="mb-4">{% include 'insights/_warnings.html' %}</div>
 <h2 class="section-title">By course</h2>
 <div class="row row-gap">
     {% for c in facts.courses %}
@@ -216,6 +219,7 @@
 
 {# ---------- Student detail ---------- #}
 {% else %}
+<div class="mb-4">{% include 'insights/_forecast_student.html' %}</div>
 <div class="card">
     <div class="card-header"><h2 class="card-title">By course</h2></div>
     {% with summary=facts %}{% include 'partials/course_attendance.html' %}{% endwith %}

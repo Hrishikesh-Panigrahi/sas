@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from cls.models import Class
 from course.models import Course
@@ -81,6 +82,30 @@ class AttendanceClass(models.Model):
         return self.status == 1
 
 
+class CheckInSession(models.Model):
+    """Live QR check-in for one lecture: students scan a code that changes every `window` seconds."""
+    lecture = models.ForeignKey(AttendanceClass, on_delete=models.CASCADE, related_name='checkin_sessions')
+    secret = models.CharField(max_length=64)
+    window = models.PositiveSmallIntegerField(default=15)
+    started_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL, related_name='+')
+    started_at = models.DateTimeField(auto_now_add=True)
+    closed_at = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return 'Check-in for %s' % self.lecture
+
+
+class CheckIn(models.Model):
+    """A student who checked in, and the device they used (one student per device per session)."""
+    session = models.ForeignKey(CheckInSession, on_delete=models.CASCADE, related_name='checkins')
+    student = models.ForeignKey(student, on_delete=models.CASCADE)
+    device = models.CharField(max_length=64)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (('session', 'student'),)
+
+
 class Attendance(models.Model):
     """One student's presence at one lecture."""
     course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
@@ -89,6 +114,8 @@ class Attendance(models.Model):
     attendanceclass = models.ForeignKey(
         AttendanceClass, on_delete=models.CASCADE, default=1)
     status = models.BooleanField(default=True)
+    # An absence covered by approved leave; left out of attendance percentages.
+    excused = models.BooleanField(default=False)
 
     def __str__(self):
         return '%s : %s' % (self.student, self.course)

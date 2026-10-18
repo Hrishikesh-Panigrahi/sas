@@ -1,0 +1,53 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>You're offline · SAS</title>
+    <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    {% include 'partials/pwa_head.html' %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Self-contained so it renders even when nothing else is cached. */
+        :root { --bg: #f4f6fb; --surface: #fff; --border: #e4e7ee; --border-strong: #cfd5e1; --text: #0f172a; --text-2: #334155; --muted: #64748b; --primary: #4f46e5; --primary-hover: #4338ca; --primary-soft: #eef2ff; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; font-size: .9375rem; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+        .offline { min-height: 100%; display: grid; place-items: center; padding: 2rem 1rem; }
+        .offline-card { width: 100%; max-width: 440px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 4px 12px rgba(15, 23, 42, .06), 0 1px 3px rgba(15, 23, 42, .05); padding: 2.25rem 1.75rem; text-align: center; }
+        .brand { display: inline-flex; align-items: center; gap: .55rem; font-weight: 700; color: var(--text); margin-bottom: 1.75rem; }
+        .brand svg { display: block; }
+        .offline-icon { width: 56px; height: 56px; margin: 0 auto 1rem; border-radius: 16px; display: grid; place-items: center; background: var(--primary-soft); color: var(--primary); }
+        h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -.01em; margin: 0 0 .5rem; }
+        p { color: var(--muted); margin: 0 auto 1.5rem; max-width: 360px; }
+        .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; border-radius: 8px; font: inherit; font-size: .875rem; font-weight: 600; padding: .55rem 1.1rem; cursor: pointer; text-decoration: none; border: 1px solid transparent; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-light { background: var(--surface); border-color: var(--border-strong); color: var(--text-2); }
+        .btn-light:hover { background: #f8fafc; color: var(--text); }
+        .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    </style>
+</head>
+<body>
+    <main class="offline">
+        <div class="offline-card">
+            <div class="brand">
+                <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="sas-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f46e5"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#sas-g)"/><path d="M9 16.5l4.5 4.5L23 11.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                SAS
+            </div>
+            <div class="offline-icon" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.8a15 15 0 0 1 20 0"/><path d="M5 12.6a10 10 0 0 1 14 0"/><path d="M8.5 16.3a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/><path d="M3 3l18 18"/></svg>
+            </div>
+            <h1>You're offline</h1>
+            <p>Pages you've opened recently still work. Attendance you save while offline is kept on this device and sent when you're back online.</p>
+            <div class="actions">
+                <button type="button" class="btn btn-primary" onclick="location.reload()">Retry</button>
+                <a class="btn btn-light" href="{{ dashboard_url|default:'/dashboard/' }}">Go to dashboard</a>
+            </div>
+        </div>
+    </main>
+    <script src="{% static 'js/offline.js' %}" data-sync="off" defer></script>
+    <script>window.addEventListener('online', function () { location.reload(); });</script>
+</body>
+</html>

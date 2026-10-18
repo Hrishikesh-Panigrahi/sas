@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.db import models
 from course.models import Course
 from cls.models import Class
+from users.models import TeacherProfile
 
 
 class TimeTable(models.Model):
@@ -41,3 +43,20 @@ class TimeTable(models.Model):
     @property
     def period(self):
         return '%s - %s' % (self.start_time.strftime('%H:%M'), self.end_time.strftime('%H:%M'))
+
+
+class Substitution(models.Model):
+    """A colleague covering one timetabled lecture for an absent teacher on a date."""
+    slot = models.ForeignKey(TimeTable, on_delete=models.CASCADE, related_name='substitutions')
+    date = models.DateField()
+    absent_teacher = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE, related_name='+')
+    substitute = models.ForeignKey(TeacherProfile, on_delete=models.CASCADE, related_name='substitutions')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+                                   related_name='+')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = (('slot', 'date'),)
+
+    def __str__(self):
+        return '%s covers %s on %s' % (self.substitute, self.slot, self.date)

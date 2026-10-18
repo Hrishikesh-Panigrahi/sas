@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}<p class="page-subtitle">Put your timetable in Google Calendar, Apple Calendar or Outlook. It updates by itself when the timetable changes.</p>{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cal-field + .cal-field { margin-top: 1rem; }
+    .cal-field label { display: block; font-weight: 600; font-size: .8125rem; margin-bottom: .35rem; color: var(--text-2); }
+    .cal-field .form-control[readonly] { background: var(--surface-2); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .8125rem; }
+    .cal-field .input-group-append .btn { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+    .cal-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .cal-steps { margin: 0; padding-left: 1.1rem; }
+    .cal-steps li + li { margin-top: .5rem; }
+    .cal-day { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: .65rem 1.25rem .35rem; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+    .cal-day .badge { margin-left: .4rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row row-gap">
+    <div class="col-lg-7">
+        {% if not num_events %}
+        <div class="card">
+            <div class="empty compact">
+                <div class="empty-icon"><i class="far fa-calendar-alt"></i></div>
+                <h3>Nothing to sync yet</h3>
+                <p class="mb-0">{% if user.is_student %}Your class timetable hasn't been set up yet.{% else %}None of your courses are on a class timetable yet.{% endif %} You can subscribe now: lectures will appear in your calendar as soon as they're scheduled.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title"><i class="fas fa-calendar-plus text-muted mr-1"></i> Subscribe to your timetable</h2>
+                    <p class="card-subtitle">{% if num_events %}{{ num_events }} weekly {{ num_events|pluralize:"class,classes" }}, repeating until {{ semester_end|date:"j F Y" }}.{% else %}Repeats every week until {{ semester_end|date:"j F Y" }}.{% endif %}</p>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="cal-actions mb-4">
+                    <a class="btn btn-primary" href="{{ google_url }}" target="_blank" rel="noopener noreferrer"><i class="fab fa-google"></i>Add to Google Calendar</a>
+                    <a class="btn btn-light" href="{{ webcal_url }}"><i class="fab fa-apple"></i>Apple / Outlook</a>
+                    <a class="btn btn-light" href="{{ download_url }}" download="sas-timetable.ics"><i class="fas fa-download"></i>Download .ics</a>
+                </div>
+
+                <div class="cal-field">
+                    <label for="cal-feed-url">Calendar link</label>
+                    <div class="input-group">
+                        <input id="cal-feed-url" class="form-control" type="text" value="{{ feed_url }}" readonly spellcheck="false" data-select-on-focus>
+                        <div class="input-group-append">
+                            <button class="btn btn-light" type="button" data-copy="#cal-feed-url"><i class="fas fa-copy"></i><span>Copy</span></button>
+                        </div>
+                    </div>
+                    <div class="small text-muted mt-1">Paste this into any calendar app that can subscribe to a calendar from the web.</div>
+                </div>
+                <div class="cal-field">
+                    <label for="cal-webcal-url">webcal:// link</label>
+                    <div class="input-group">
+                        <input id="cal-webcal-url" class="form-control" type="text" value="{{ webcal_url }}" readonly spellcheck="false" data-select-on-focus>
+                        <div class="input-group-append">
+                            <button class="btn btn-light" type="button" data-copy="#cal-webcal-url"><i class="fas fa-copy"></i><span>Copy</span></button>
+                        </div>
+                    </div>
+                    <div class="small text-muted mt-1">Opens straight in Apple Calendar and Outlook on your computer or phone.</div>
+                </div>
+
+                <div class="alert alert-warning small mt-4 mb-0" role="note">
+                    <i class="fas fa-lock"></i>
+                    <div><strong>Keep this link private.</strong> Anyone who has it can see your timetable, without signing in.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h2 class="card-title">How to add it</h2></div>
+            <div class="card-body">
+                <ol class="cal-steps">
+                    <li><span class="fw-600">Google Calendar:</span> press <em>Add to Google Calendar</em> and confirm with <em>Add</em>. On a phone, do this once in a browser; the calendar then shows up in the Google Calendar app.</li>
+                    <li><span class="fw-600">iPhone, iPad or Mac:</span> press <em>Apple / Outlook</em> and choose <em>Subscribe</em>.</li>
+                    <li><span class="fw-600">Outlook on the web:</span> choose <em>Add calendar</em> &rsaquo; <em>Subscribe from web</em> and paste the calendar link.</li>
+                </ol>
+                <p class="small text-muted mt-3 mb-0">Calendar apps check for changes every few hours; Google can take up to a day. Download .ics gives you a one-off copy that won't update.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">What's in it</h2>
+                    <p class="card-subtitle">One weekly event per class{% if not user.is_student %} you teach{% endif %}.</p>
+                </div>
+            </div>
+            {% if days %}
+            <div>
+                {% for day, events in days %}
+                <div class="cal-day">{{ day }}{% if day == today %}<span class="badge badge-soft-primary">Today</span>{% endif %}</div>
+                <ul class="list">
+                    {% for event in events %}
+                    <li class="list-row">
+                        <span class="time-chip">{{ event.slot.period }}</span>
+                        <div class="grow">
+                            <div class="title">{{ event.summary }}</div>
+                            <div class="meta text-truncate">{{ event.location }}{% if event.teachers %} · {{ event.teachers|join:", " }}{% endif %}</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty compact"><p class="mb-0">No classes yet.</p></div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  'use strict';
+  function legacyCopy(input) {
+    input.focus();
+    input.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    return ok ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+  }
+  function copyText(input) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(input.value).catch(function () { return legacyCopy(input); });
+    }
+    return legacyCopy(input);
+  }
+  document.querySelectorAll('[data-copy]').forEach(function (button) {
+    var label = button.querySelector('span');
+    button.addEventListener('click', function () {
+      var input = document.querySelector(button.getAttribute('data-copy'));
+      copyText(input).then(function () {
+        label.textContent = 'Copied';
+      }, function () {
+        input.focus();
+        input.select();
+        label.textContent = 'Selected';   // couldn't copy automatically; the link is selected to copy by hand
+      }).then(function () {
+        setTimeout(function () { label.textContent = 'Copy'; }, 2000);
+      });
+    });
+  });
+  document.querySelectorAll('[data-select-on-focus]').forEach(function (input) {
+    input.addEventListener('focus', function () { input.select(); });
+  });
+})();
+</script>
+{% endblock %}

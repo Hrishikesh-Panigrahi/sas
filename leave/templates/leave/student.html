@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}<p class="page-subtitle">Ask your class teacher to excuse lectures you'll miss. Approved leave doesn't count against your attendance.</p>{% endblock %}
+
+{% block content %}
+<div class="row row-gap">
+    <div class="col-lg-5">
+        <form method="post" enctype="multipart/form-data" class="card" novalidate>
+            {% csrf_token %}
+            <div class="card-header"><h2 class="card-title">Apply for leave</h2></div>
+            <div class="card-body">
+                {% include 'partials/form_errors.html' %}
+                {% include 'partials/field.html' with field=form.kind %}
+                <div class="row">
+                    <div class="col-6">{% include 'partials/field.html' with field=form.start_date %}</div>
+                    <div class="col-6">{% include 'partials/field.html' with field=form.end_date %}</div>
+                </div>
+                {% include 'partials/field.html' with field=form.reason %}
+                {% include 'partials/field.html' with field=form.document_file %}
+            </div>
+            <div class="card-footer form-actions">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-paper-plane"></i>Send request</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header"><h2 class="card-title">My requests</h2></div>
+            {% if requests %}
+            <ul class="list">
+                {% for leave in requests %}
+                <li class="list-row leave-row">
+                    <span class="date-chip"><span class="d">{{ leave.start_date|date:"j" }}</span><span class="m">{{ leave.start_date|date:"M" }}</span></span>
+                    <div class="grow">
+                        <div class="title">{{ leave.get_kind_display }} · {{ leave.days }} day{{ leave.days|pluralize }}</div>
+                        <div class="meta">{{ leave.start_date|date:"D j M" }}{% if leave.end_date != leave.start_date %} – {{ leave.end_date|date:"D j M" }}{% endif %} · {{ leave.lectures }} lecture{{ leave.lectures|pluralize }} in this period</div>
+                        <div class="meta text-truncate-2 mt-1">{{ leave.reason }}</div>
+                        {% if leave.review_note %}<div class="meta mt-1"><i class="far fa-comment"></i> {{ leave.review_note }}</div>{% endif %}
+                    </div>
+                    <div class="text-right" style="display:flex;flex-direction:column;align-items:flex-end;gap:.35rem">
+                        {% include 'leave/_status.html' %}
+                        {% if leave.has_document %}<a class="small" href="{% url 'leave-document' leave.id %}" target="_blank" rel="noopener"><i class="fas fa-paperclip"></i> Document</a>{% endif %}
+                        {% if leave.status == 'pending' %}
+                        <form method="post" action="{% url 'leave-cancel' leave.id %}" data-confirm="Cancel this leave request?">{% csrf_token %}
+                            <button class="btn btn-sm btn-link-muted" type="submit">Cancel</button></form>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="empty compact">
+                <div class="empty-icon"><i class="fas fa-umbrella-beach"></i></div>
+                <h3>No leave requests yet</h3>
+                <p class="mb-0">Requests you send appear here with their status.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

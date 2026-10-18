@@ -60,7 +60,12 @@ a JSON object of attendance facts computed by the app and write a short analysis
 The college requires {threshold}% attendance. Percentages are of lectures attended. \
 "recent_change" compares the last two weeks with the four weeks before; "trailing" counts \
 lectures missed in a row up to the latest one; "slots" counts timetabled lectures in the last \
-two weeks and how many had no attendance recorded.
+two weeks and how many had no attendance recorded. Absences covered by approved leave are already \
+left out of every percentage. "forecast" (one student) and "warnings" (many) project attendance to \
+the end of the semester at the recent pace: "projected" is the likely final percentage, "best" the \
+percentage if every remaining lecture is attended, "can_miss" how many remaining lectures can still \
+be missed, "crosses_in_weeks" when the student would dip below the requirement; status "lost" \
+means the requirement can no longer be reached and "slipping" means above it now but heading below.
 
 Rules:
 - Use only the numbers in the facts. Never invent students, courses or figures.
@@ -187,6 +192,9 @@ def _student(facts, kind):
         headline = 'Comfortably on track at %s' % _pct(pct)
 
     summary = '%s %s at %s overall (%d of %d lectures).' % (w['S'], w['be'], _pct(pct), o['present'], o['total'])
+    fc = facts.get('forecast')
+    lost = [c for c in fc['courses'] if c['status'] == 'lost'] if fc else []
+    slipping = [c for c in fc['courses'] if c['status'] == 'slipping'] if fc else []
     change = facts['recent_change']
     if change and abs(change['delta']) >= 5:
         summary += ' Over the last two weeks it %s to %s, from %s before.' % (
@@ -197,14 +205,38 @@ def _student(facts, kind):
             _join('%s (%s)' % (c['name'], _pct(c['percent'])) for c in below))
     elif pct >= t:
         summary += ' Every course is at or above the %d%% requirement.' % t
+    if fc and fc['projected_overall'] is not None:
+        summary += ' At the recent pace %s would finish the semester at about %s%s.' % (
+            w['s'], _pct(fc['projected_overall']),
+            '' if fc['projected_overall'] >= t else ' (attending everything left gets %s to %s)'
+            % (w['obj'], _pct(fc['best_overall'])))
 
     insights = []
+    for c in lost[:2]:
+        insights.append(_insight(
+            '%d%% is out of reach in %s' % (t, c['name']),
+            'Even attending all %d remaining lectures would only reach %s. %s' % (
+                c['remaining'], _pct(c['best']),
+                'Talk to your class teacher now about options such as medical leave.' if me else
+                'Worth a conversation about leave or condonation before exams.'),
+            'critical'))
+    for c in slipping[:2]:
+        insights.append(_insight(
+            'Heading below %d%% in %s' % (t, c['name']),
+            '%s now, but at the recent pace about %s by the end%s. %s' % (
+                _pct(c['current']), _pct(c['projected']),
+                ', dipping under %d%% within %s' % (t, _plural(c['crosses_in_weeks'], 'week'))
+                if c['crosses_in_weeks'] else '',
+                ('%s can miss at most %d of the %d remaining lectures.' % (w['S'], c['can_miss'], c['remaining']))
+                if c['can_miss'] is not None else ''),
+            'warning'))
     if facts['trailing_absences'] >= 3:
         insights.append(_insight(
             'Missed the last %d lectures in a row' % facts['trailing_absences'],
             "%s %s missed every lecture since the last one %s attended. A run like this is the "
             "fastest way to fall below %d%%." % (w['S'], w['have'], w['s'], t), 'critical'))
-    for c in below[:2]:
+    lost_names = {c['name'] for c in lost}
+    for c in [c for c in below if c['name'] not in lost_names][:2]:
         insights.append(_insight(
             '%s needs attention' % c['name'],
             '%d of %d lectures attended (%s). Attending the next %s brings it back to %d%%.'
@@ -239,8 +271,19 @@ def _student(facts, kind):
             'positive'))
 
     actions = []
-    if below:
-        c = below[0]
+    if lost:
+        actions.append(_action(
+            'Talk to your class teacher about %s' % lost[0]['name'] if me else 'Discuss options with %s' % name,
+            'The %d%% mark can no longer be reached by attendance alone, so it needs a plan now, not at exam time.' % t))
+    if slipping and slipping[0]['can_miss'] is not None:
+        c = slipping[0]
+        actions.append(_action(
+            'Protect %s' % c['name'],
+            '%s can miss at most %d more of its %d remaining lectures and still finish at %d%%.'
+            % (w['S'], c['can_miss'], c['remaining'], t)))
+    recoverable = [c for c in below if c['name'] not in lost_names]
+    if recoverable:
+        c = recoverable[0]
         actions.append(_action(
             'Prioritise %s' % c['name'],
             '%s every %s lecture for the next %s; that alone lifts it to %d%%.'
@@ -336,6 +379,21 @@ def _teacher(facts):
                                        _join('%s (%s)' % (s['name'], _pct(s['percent'])) for s in c['below'][:4]))
                      for c in below_courses[:2]),
             'warning'))
+    warn = facts.get('warnings') or {}
+    if warn.get('cannot_recover'):
+        people = warn['cannot_recover_students'][:3]
+        insights.append(_insight(
+            '%s can no longer reach %d%%' % (_plural(warn['cannot_recover'], 'student'), t),
+            ' '.join('%s in %s: at most %s even attending everything.' % (p['name'], p['course'], _pct(p['best']))
+                     for p in people), 'critical'))
+    if warn.get('will_slip'):
+        people = warn['will_slip_students'][:3]
+        insights.append(_insight(
+            '%s will slip below %d%% at this pace' % (_plural(warn['will_slip'], 'student'), t),
+            ' '.join('%s in %s: %s now, about %s by the end%s.' % (
+                p['name'], p['course'], _pct(p['current']), _pct(p['projected']),
+                ' (below %d%% in %s)' % (t, _plural(p['crosses_in_weeks'], 'week')) if p['crosses_in_weeks'] else '')
+                for p in people), 'warning'))
     if facts['missed_slots']:
         gaps = [c for c in courses if c['slots']['missed']]
         insights.append(_insight(
@@ -355,6 +413,11 @@ def _teacher(facts):
                                  '%s average attendance.' % _pct(best['percent']), 'positive'))
 
     actions = []
+    if warn.get('will_slip'):
+        names = [_first(p['name']) for p in warn['will_slip_students'][:3]]
+        actions.append(_action('Warn %s early' % _join(names),
+                               "They're above %d%% today but trending below it; a heads-up now costs less "
+                               "than a shortage later." % t))
     if facts['unmarked']:
         actions.append(_action('Mark the %s' % _plural(facts['unmarked'], 'pending lecture'),
                                'They are listed under "Waiting to be marked" on your dashboard.'))
@@ -428,6 +491,19 @@ def _department(facts):
                     'has' if len(risk['streaks'][:3]) == 1 else 'have'),
                 _join('%s, %s (%s)' % (s['name'], s['class'], _pct(s['percent'])) for s in risk['students'][:3])),
             'critical' if risk['critical'] else 'warning'))
+    warn = facts.get('warnings') or {}
+    if warn.get('cannot_recover') or warn.get('will_slip'):
+        parts = []
+        if warn.get('cannot_recover'):
+            parts.append('%s can no longer reach %d%% in at least one course (%s).' % (
+                _plural(warn['cannot_recover'], 'student'), t,
+                _join('%s in %s' % (p['name'], p['course']) for p in warn['cannot_recover_students'][:2])))
+        if warn.get('will_slip'):
+            parts.append('%s %s above %d%% now but on course to finish below it (%s).' % (
+                _plural(warn['will_slip'], 'student'), 'is' if warn['will_slip'] == 1 else 'are', t,
+                _join('%s in %s' % (p['name'], p['course']) for p in warn['will_slip_students'][:2])))
+        insights.append(_insight('Early warnings for the rest of the semester', ' '.join(parts),
+                                 'critical' if warn.get('cannot_recover') else 'warning'))
     if len(classes) > 1:
         low = min(classes, key=lambda c: c['percent'])
         high = max(classes, key=lambda c: c['percent'])
@@ -480,6 +556,9 @@ def _department(facts):
         actions.append(_action('Ask class teachers to contact at-risk students',
                                '%s %s below %d%%; a list is in the at-risk table below.'
                                % (_plural(risk['count'], 'student'), 'is' if risk['count'] == 1 else 'are', t)))
+    if warn.get('will_slip'):
+        actions.append(_action('Send early warnings to %s' % _plural(warn['will_slip'], 'student'),
+                               'They are still above %d%%, so a nudge now can keep them there.' % t))
     if lagging:
         actions.append(_action('Remind %s to mark attendance' % _join(_first(t_['name']) for t_ in lagging[:3]),
                                'Unmarked and unrecorded lectures distort every report.'))

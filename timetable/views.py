@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.contrib import messages
@@ -12,9 +13,10 @@ from attendance.models import Assign_cls
 from cls.models import Class
 from sas import ai
 from sas.permissions import in_department, staff_required
-from . import assistant, generator as gen
+from users.models import TeacherProfile
+from . import assistant, generator as gen, substitutes
 from .forms import SlotForm
-from .models import TimeTable
+from .models import Substitution, TimeTable
 
 DAYS = [day for day, _ in TimeTable.day_choices]
 
@@ -158,3 +160,51 @@ def generator_apply(request, cls_id):
     del request.session['timetable_draft_%d' % cls.id]
     messages.success(request, 'Saved a new timetable for %s with %d slots.' % (cls.class_name, count))
     return JsonResponse({'redirect': reverse('timetable-class', args=[cls.id])})
+
+
+@staff_required
+def cover(request):
+    """Find substitutes for a teacher who is away on a date."""
+    if not request.user.can_manage_students:
+        raise PermissionDenied
+    teachers = list(in_department(TeacherProfile.objects.filter(user__is_staff=True), request.user,
+                                  'user__department').select_related('user').order_by('user__first_name'))
+    try:
+        date = datetime.date.fromisoformat(request.GET.get('date', ''))
+    except ValueError:
+        date = timezone.localdate()
+    absent = next((t for t in teachers if str(t.pk) == request.GET.get('teacher')), None)
+    context = {
+        'title': 'Find cover',
+        'teachers': teachers,
+        'date': date,
+        'absent': absent,
+        'lectures': substitutes.suggest(request.user, absent, date) if absent else None,
+        'booked': Substitution.objects.filter(date=date, slot__cls__in=in_department(Class.objects.all(), request.user))
+                  .select_related('slot__cls', 'slot__course', 'absent_teacher__user', 'substitute__user')
+                  .order_by('slot__start_time'),
+    }
+    return render(request, 'timetable/cover.html', context)
+
+
+@staff_required
+@require_POST
+def cover_assign(request):
+    if not request.user.can_manage_students:
+        raise PermissionDenied
+    scope = in_department(TeacherProfile.objects.filter(user__is_staff=True), request.user, 'user__department')
+    slot = get_object_or_404(TimeTable.objects.filter(cls__in=in_department(Class.objects.all(), request.user)),
+                             pk=request.POST.get('slot'))
+    absent = get_object_or_404(scope, pk=request.POST.get('absent'))
+    date = datetime.date.fromisoformat(request.POST.get('date'))
+    back = '%s?teacher=%d&date=%s' % (reverse('cover'), absent.pk, date.isoformat())
+    if request.POST.get('action') == 'remove':
+        Substitution.objects.filter(slot=slot, date=date).delete()
+        messages.info(request, 'Removed the cover for %s at %s.' % (slot.course, slot.period))
+        return redirect(back)
+    sub = get_object_or_404(scope, pk=request.POST.get('substitute'))
+    substitutes.assign(slot, date, absent, sub, request.user)
+    messages.success(request, '%s will cover %s (%s) at %s on %s. It shows on their dashboard, and they can '
+                     'take attendance.' % (sub.user.full_name, slot.course, slot.cls, slot.period,
+                                           date.strftime('%a %d %b')))
+    return redirect(back)

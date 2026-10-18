@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}<link href="{% static 'css/checkin.css' %}" rel="stylesheet">{% endblock %}
+{% block header %}{% endblock %}
+
+{% block content %}
+<div class="checkin-phone">
+    {% include 'attendance/_checkin_result.html' %}
+    {% if not ok %}
+    <form method="post" class="checkin-confirm mt-3" autocomplete="off">
+        {% csrf_token %}
+        <span class="ai-badge"><i class="fas fa-keyboard"></i> Check in with a code</span>
+        <label for="code" class="d-block mt-3">Type the 6-digit code on the screen</label>
+        <input id="code" name="code" class="form-control checkin-code-input" inputmode="numeric" pattern="[0-9 ]*"
+            maxlength="7" autocomplete="one-time-code" placeholder="000000" required autofocus>
+        <button class="btn btn-primary btn-lg btn-block mt-3" type="submit">Check in</button>
+        <p class="small text-muted mt-3 mb-0">The code changes every few seconds, so type the one showing now.</p>
+    </form>
+    {% endif %}
+    <a class="btn btn-link btn-block mt-2" href="{% url 'index' %}">Go to my dashboard</a>
+</div>
+{% endblock %}

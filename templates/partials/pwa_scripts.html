@@ -1,0 +1,11 @@
+{% load static %}{% url 'pwa-sw' as pwa_sw_url %}{% url 'pwa-manifest' as pwa_ping_url %}{% url 'Login' as pwa_login_url %}
+    <script src="{% static 'js/offline.js' %}" data-ping-url="{{ pwa_ping_url|default:'/manifest.webmanifest' }}" data-login-url="{{ pwa_login_url|default:'/' }}"{% if user %} data-user="{% if user.is_authenticated %}{{ user.pk }}{% endif %}"{% endif %} defer></script>
+    {% if pwa_sw_url %}<script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('{{ pwa_sw_url|escapejs }}', { scope: '/' }).catch(function (err) {
+            if (window.console) console.warn('SAS: service worker not registered.', err);
+          });
+        });
+      }
+    </script>{% endif %}

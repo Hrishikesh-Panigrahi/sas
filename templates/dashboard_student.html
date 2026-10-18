@@ -7,6 +7,8 @@
 </p>
 {% endblock %}
 
+{% block actions %}<a class="btn btn-light" href="{% url 'leave' %}"><i class="fas fa-umbrella-beach"></i>Apply for leave</a>{% endblock %}
+
 {% block content %}
 {% if summary %}
 <a class="card card-link-block ai-card mb-4 d-block" href="{% url 'insights' %}">
@@ -47,6 +49,7 @@
         </div>
     </div>
 </div>
+<div class="mt-4">{% include 'insights/_forecast_student.html' %}</div>
 {% else %}
 <div class="card">
     <div class="empty">

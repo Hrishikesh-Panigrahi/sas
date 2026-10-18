@@ -44,7 +44,10 @@ def studentList(request):
 @staff_required
 def detail(request, pk):
     stu = get_object_or_404(_students_for(request.user).select_related('user', 'cls'), pk=pk)
-    context = {'title': stu.user.full_name, 'stu': stu, 'summary': student_summary(stu)}
+    from insights.forecast import forecasts
+    context = {'title': stu.user.full_name, 'stu': stu, 'summary': student_summary(stu),
+               'forecast': forecasts(student.objects.filter(pk=stu.pk)).get(stu.pk),
+               'who': stu.user.first_name or 'they'}
     return render(request, 'student/detail.html', context)
 
 

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}<link href="{% static 'css/checkin.css' %}" rel="stylesheet">{% endblock %}
+
+{% block header %}
+<div class="page-header">
+    <div class="min-w-0">
+        <nav class="crumbs"><a href="{% url 'attendance-attendance_date' assign.id %}">{{ assign.course.name }} · {{ assign.cls.class_name }}</a><span class="sep">/</span></nav>
+        <h1 class="page-title">Live check-in</h1>
+        <p class="page-subtitle">Project this screen. Students scan the code with their phones; it changes every {{ session.window }} seconds so photos of it stop working.</p>
+    </div>
+    <div class="page-actions">
+        <button type="button" class="btn btn-light" data-fullscreen><i class="fas fa-expand"></i>Full screen</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="checkin-stage" id="checkin" data-state="{{ state_url }}" data-expected="{{ expected }}">
+    <div class="checkin-qr-card">
+        <div class="checkin-qr" data-qr role="img" aria-label="Check-in QR code, changes every few seconds"></div>
+        <div class="checkin-timer" aria-hidden="true"><span data-bar></span></div>
+    </div>
+
+    <div class="checkin-side">
+        <div class="checkin-course">{{ assign.course.name }}</div>
+        <div class="checkin-meta">{{ assign.cls.class_name }}{% if lecture.batch != 'All' %} · Batch {{ lecture.batch }}{% endif %} · {{ lecture.date|date:"D j M" }}{% if lecture.period %} · {{ lecture.period }}{% endif %}</div>
+
+        <div class="checkin-title">Scan to check in</div>
+        <p class="checkin-help">No camera? Open <strong>{{ code_url }}</strong> and type</p>
+        <div class="checkin-code" data-code aria-live="off">······</div>
+
+        <div class="checkin-count"><span data-count>0</span><span class="of">of {{ expected }} checked in</span></div>
+        <div class="checkin-progress"><span data-progress></span></div>
+
+        <div class="checkin-people" data-people aria-live="polite" aria-label="Students who have checked in"></div>
+
+        <form method="post" action="{% url 'checkin-finish' lecture.id %}" class="checkin-actions">
+            {% csrf_token %}
+            <button class="btn btn-success btn-lg" name="action" value="finish" type="submit"><i class="fas fa-check"></i>Finish and save</button>
+            <button class="btn btn-light" name="action" value="cancel" type="submit" formnovalidate
+                onclick="return confirm('Cancel the live check-in? Nothing will be saved.')">Cancel</button>
+        </form>
+        <p class="small text-muted mt-2 mb-0">Finishing marks everyone who checked in as present and everyone else absent. You can still adjust it afterwards.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/checkin.js' %}"></script>{% endblock %}

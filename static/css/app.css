@@ -643,3 +643,46 @@ label, .form-label { font-weight: 600; font-size: .8125rem; color: var(--text-2)
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 @media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
 [data-ai-panel].is-loading { opacity: .6; }
+
+/* ---------- Leave ---------- */
+.nav-count {
+  margin-left: auto; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px;
+  background: #f59e0b; color: #111827; font-size: .6875rem; font-weight: 800;
+  display: inline-grid; place-items: center;
+}
+.leave-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem; }
+.leave-grid .card + .card { margin-top: 0; }
+.leave-card { display: flex; flex-direction: column; }
+.leave-card .card-body { flex: 1; }
+.leave-facts { display: flex; flex-wrap: wrap; gap: .35rem 1rem; margin: .9rem 0 .6rem; font-size: .8125rem; color: var(--text-2); }
+.leave-facts i { color: var(--muted); margin-right: .35rem; }
+.leave-reason { color: var(--text-2); font-size: .875rem; margin-bottom: .75rem; white-space: pre-line; }
+.leave-actions { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; justify-content: flex-end; }
+.leave-actions .form-control { flex: 1 1 100%; min-width: 0; height: 34px; }
+.leave-row { align-items: flex-start; }
+.form-control-file { font-size: .875rem; }
+
+/* ---------- Forecast ---------- */
+.forecast-head { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem; }
+.forecast-big { font-size: 2.25rem; font-weight: 800; line-height: 1; color: var(--success); letter-spacing: -.02em; }
+.forecast-big.short { color: var(--danger); }
+.forecast-best { font-size: 1.5rem; font-weight: 700; line-height: 1.1; color: var(--text-2); }
+.forecast-arrow { color: var(--border-strong); font-size: 1.25rem; }
+.forecast-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .35rem; }
+.forecast-list li { display: flex; align-items: center; gap: .75rem; padding: .55rem .7rem; border-radius: var(--radius-sm); background: var(--surface-2); }
+.forecast-list li > i { width: 18px; text-align: center; }
+.forecast-list .grow { flex: 1; }
+.fc-note { font-size: .75rem; font-weight: 700; white-space: nowrap; color: var(--text-2); }
+.fc-ok > i, .fc-recovering > i { color: var(--success-bright); }
+.fc-slipping > i { color: #d97706; }
+.fc-slipping .fc-note { color: var(--warning); }
+.fc-at_risk > i { color: #d97706; }
+.fc-lost { background: var(--danger-soft) !important; }
+.fc-lost > i, .fc-lost .fc-note { color: var(--danger); }
+
+/* ---------- Cover ---------- */
+.cover-form { display: grid; grid-template-columns: minmax(200px, 320px) minmax(160px, 220px) auto; gap: 1rem; align-items: end; }
+@media (max-width: 767.98px) { .cover-form { grid-template-columns: 1fr; } }
+.cover-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.25rem; align-items: start; }
+.cover-grid .card + .card { margin-top: 0; }
+.cover-card.is-covered { border-color: #bbf7d0; }

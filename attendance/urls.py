@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from . import checkin, views
 
 urlpatterns = [
     path('attendance/', views.home, name='attendance-home'),
@@ -10,4 +10,10 @@ urlpatterns = [
     path('attendance/<int:attendancecls_id>/', views.mark, name='attendance'),
     path('attendance/<int:attendancecls_id>/delete', views.delete_lecture, name='attendance-lecture-delete'),
     path('editattendance/<int:attendancecls_id>', views.mark, name='edit-attendance'),
+    path('attendance/<int:lecture_id>/checkin/start', checkin.start, name='checkin-start'),
+    path('attendance/<int:lecture_id>/checkin/', checkin.live, name='checkin-live'),
+    path('attendance/<int:lecture_id>/checkin/state', checkin.state, name='checkin-state'),
+    path('attendance/<int:lecture_id>/checkin/finish', checkin.finish, name='checkin-finish'),
+    path('c/<int:session_id>/<str:token>', checkin.scan, name='checkin-scan'),
+    path('checkin/', checkin.code, name='checkin-code'),
 ]

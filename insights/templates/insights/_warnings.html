@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Early warnings</h2>
+            <p class="card-subtitle">Forecast to the end of the semester at each student's recent pace</p>
+        </div>
+        {% if warnings %}<span class="badge badge-soft-warning">{{ warnings|length }}</span>{% endif %}
+    </div>
+    {% if warnings %}
+    <div class="list">
+        {% for w in warnings %}
+        <a class="list-row" href="{% url 'student-detail' w.student.id %}">
+            <span class="avatar">{{ w.student.user.initials }}</span>
+            <div class="grow">
+                <div class="title text-truncate">{{ w.student.user.full_name }}</div>
+                <div class="meta text-truncate">{{ w.reason.name }} · {{ w.student.cls.class_name }}</div>
+            </div>
+            {% if w.reason.status == 'lost' %}
+            <span class="badge badge-soft-danger" title="Even attending every remaining lecture reaches only {{ w.reason.best }}%">Can't reach {{ attendance_threshold }}%</span>
+            {% else %}
+            <span class="badge badge-soft-warning" title="{{ w.reason.current }}% now, about {{ w.reason.projected }}% by the end">{{ w.reason.current }}% → {{ w.reason.projected }}%{% if w.reason.crosses_in_weeks %} · {{ w.reason.crosses_in_weeks }} wk{% endif %}</span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty compact">
+        <div class="empty-icon" style="background:var(--success-soft);color:var(--success)"><i class="fas fa-shield-alt"></i></div>
+        <p class="mb-0">Nobody is on course to drop below {{ attendance_threshold }}%.</p>
+    </div>
+    {% endif %}
+</div>

@@ -9,4 +9,6 @@ urlpatterns = [
     path('class/<int:cls_id>/generate/assist', views.generator_assist, name='timetable-generator-assist'),
     path('class/<int:cls_id>/generate/apply', views.generator_apply, name='timetable-generator-apply'),
     path('slot/<int:id>/delete', views.delete_slot, name='timetable-slot-delete'),
+    path('cover/', views.cover, name='cover'),
+    path('cover/assign', views.cover_assign, name='cover-assign'),
 ]

@@ -12,6 +12,18 @@
         <a class="nav-item{% if nav == 'insights' %} active{% endif %}" href="{% url 'insights' %}">
             <i class="fas fa-magic"></i><span>Insights</span>
         </a>
+        <a class="nav-item{% if nav == 'ask' %} active{% endif %}" href="{% url 'ask' %}">
+            <i class="far fa-comments"></i><span>Ask SAS</span>
+        </a>
+
+        {% if u.is_student %}
+        <a class="nav-item{% if nav == 'checkin' %} active{% endif %}" href="{% url 'checkin-code' %}">
+            <i class="fas fa-qrcode"></i><span>Check in</span>
+        </a>
+        <a class="nav-item{% if nav == 'leave' %} active{% endif %}" href="{% url 'leave' %}">
+            <i class="fas fa-umbrella-beach"></i><span>Leave</span>
+        </a>
+        {% endif %}
 
         {% if u.is_staff or u.is_superuser %}
         <div class="nav-section">Teaching</div>
@@ -21,6 +33,11 @@
         <a class="nav-item{% if nav == 'timetable' %} active{% endif %}" href="{% url 'timetable' %}">
             <i class="far fa-calendar-alt"></i><span>Timetable</span>
         </a>
+        {% if u.can_manage_students %}
+        <a class="nav-item{% if nav == 'cover' %} active{% endif %}" href="{% url 'cover' %}">
+            <i class="fas fa-people-arrows"></i><span>Find cover</span>
+        </a>
+        {% endif %}
 
         <div class="nav-section">Department</div>
         <a class="nav-item{% if nav == 'cls' %} active{% endif %}" href="{% url 'viewcls' %}">
@@ -29,6 +46,15 @@
         <a class="nav-item{% if nav == 'student' %} active{% endif %}" href="{% url 'StudentList' %}">
             <i class="fas fa-user-graduate"></i><span>Students</span>
         </a>
+        {% if u.can_manage_students %}
+        <a class="nav-item{% if nav == 'defaulters' %} active{% endif %}" href="{% url 'defaulters' %}">
+            <i class="fas fa-user-clock"></i><span>Defaulter list</span>
+        </a>
+        <a class="nav-item{% if nav == 'leave' %} active{% endif %}" href="{% url 'leave' %}">
+            <i class="fas fa-umbrella-beach"></i><span>Leave requests</span>
+            {% if pending_leave %}<span class="nav-count" aria-label="{{ pending_leave }} waiting">{{ pending_leave }}</span>{% endif %}
+        </a>
+        {% endif %}
         {% if u.can_manage_students %}
         <a class="nav-item{% if nav == 'users' %} active{% endif %}" href="{% url 'teachers' %}">
             <i class="fas fa-chalkboard-teacher"></i><span>Teachers</span>
@@ -41,6 +67,9 @@
     </nav>
 
     <div class="sidebar-footer">
+        <a class="nav-item{% if nav == 'calendar' %} active{% endif %}" href="{% url 'calendar' %}">
+            <i class="far fa-calendar-plus"></i><span>Add to calendar</span>
+        </a>
         <a class="nav-item{% if nav == 'profile' %} active{% endif %}" href="{% url 'profile' %}">
             <i class="far fa-user-circle"></i><span>My profile</span>
         </a>

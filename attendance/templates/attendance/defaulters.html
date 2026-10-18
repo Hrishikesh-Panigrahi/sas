@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    .filter-bar { border-bottom: 0; border-radius: var(--radius); gap: .6rem 1.25rem; }
+    .filter-bar .field { display: flex; align-items: center; gap: .5rem; }
+    .filter-bar label { margin: 0; font-size: .8125rem; font-weight: 600; color: var(--text-2); white-space: nowrap; }
+    .filter-bar .custom-select { height: 36px; font-size: .875rem; width: auto; min-width: 190px; }
+    .filter-bar .threshold { width: 84px; }
+    .filter-bar .reset { margin-left: auto; }
+    .defaulters-table .nowrap { white-space: nowrap; }
+    .defaulters-table .badge { font-variant-numeric: tabular-nums; }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}<nav class="crumbs"><a href="{% url 'attendance-home' %}">Attendance</a><span class="sep">/</span></nav>{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{{ report.department|default:"All departments" }} · {% if report.cls %}{{ report.cls.class_name }}{% else %}All classes{% endif %} · below {{ report.threshold }}% in at least one course</p>{% endblock %}
+
+{% block actions %}
+<a class="btn btn-light" href="{% url 'defaulters-letters' %}?{{ query }}"><i class="fas fa-envelope-open-text"></i>Warning letters (PDF)</a>
+<a class="btn btn-primary" href="{% url 'defaulters-pdf' %}?{{ query }}"><i class="fas fa-file-pdf"></i>Defaulter list (PDF)</a>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <form class="toolbar filter-bar" method="get" action="{% url 'defaulters' %}">
+        <div class="field">
+            <label for="f-cls">Class</label>
+            <select id="f-cls" name="cls" class="custom-select">
+                <option value="">All classes</option>
+                {% for c in classes %}
+                <option value="{{ c.id }}"{% if report.cls and report.cls.id == c.id %} selected{% endif %}>{{ c.class_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="f-threshold">Below</label>
+            <input id="f-threshold" type="number" name="threshold" class="form-control threshold tabular"
+                   min="{{ min_threshold }}" max="{{ max_threshold }}" step="1" value="{{ report.threshold }}" required>
+            <span class="text-muted small">%</span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-filter"></i>Apply</button>
+        {% if report.cls or report.threshold != attendance_threshold %}
+        <a class="btn btn-sm btn-link-muted reset" href="{% url 'defaulters' %}">Reset</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="row row-gap mb-4">
+    <div class="col-sm-4">
+        <div class="card"><div class="stat"><span class="stat-icon {% if report.counts.students %}red{% else %}green{% endif %}"><i class="fas fa-user-clock"></i></span>
+            <div><div class="stat-value">{{ report.counts.students }}</div><div class="stat-label">Student{{ report.counts.students|pluralize }} below {{ report.threshold }}%</div></div></div></div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card"><div class="stat"><span class="stat-icon amber"><i class="fas fa-book"></i></span>
+            <div><div class="stat-value">{{ report.counts.courses }}</div><div class="stat-label">Course{{ report.counts.courses|pluralize }} affected</div></div></div></div>
+    </div>
+    <div class="col-sm-4">
+        <div class="card"><div class="stat"><span class="stat-icon sky"><i class="fas fa-chalkboard"></i></span>
+            <div><div class="stat-value">{{ report.counts.classes }}{% if report.counts.classes_in_scope > 1 %}<span class="text-muted small fw-600"> / {{ report.counts.classes_in_scope }}</span>{% endif %}</div><div class="stat-label">Class{{ report.counts.classes|pluralize:"es" }} affected</div></div></div></div>
+    </div>
+</div>
+
+<div class="card">
+    {% if report.students %}
+    <div class="card-header">
+        <div>
+            <h2 class="card-title">Students below {{ report.threshold }}%</h2>
+            <p class="card-subtitle">Each chip is a course below the threshold: attendance and lectures attended out of lectures held.</p>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover defaulters-table" data-datatable data-search="Search by name, class or course…" data-order='[[2,"asc"],[0,"asc"]]' data-page-length="100">
+            <thead>
+                <tr>
+                    <th>Roll no.</th>
+                    <th>Student</th>
+                    <th>Class</th>
+                    <th style="width:20%">Overall</th>
+                    <th>Courses below {{ report.threshold }}%</th>
+                    <th class="no-sort actions"><span class="sr-only">Letter</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in report.students %}
+                {% with stu=entry.student summary=entry.summary %}
+                <tr>
+                    <td class="tabular" data-order="{{ stu.roll_no|default_if_none:99999 }}">{{ stu.roll_no|default_if_none:"—" }}</td>
+                    <td data-order="{{ stu.user.full_name }}">
+                        <div class="person">
+                            <span class="avatar">{{ stu.user.initials }}</span>
+                            <div class="min-w-0">
+                                <a class="name" href="{% url 'student-detail' stu.id %}">{{ stu.user.full_name|default:stu.user.email }}</a>
+                                <div class="sub">{{ stu.user.email }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="nowrap" data-order="{{ entry.cls.class_name }}"><a href="{% url 'class-detail' entry.cls.id %}">{{ entry.cls.class_name }}</a></td>
+                    <td data-order="{{ summary.percent|default_if_none:'-1' }}">{% include 'partials/meter.html' with percent=summary.percent short=entry.overall_short present=summary.present total=summary.total %}</td>
+                    <td data-order="{{ entry.courses|length }}">
+                        <div class="chip-list">
+                            {% for c in entry.courses %}
+                            <a class="badge badge-soft-danger" href="{% url 'attendance-report' c.assign.id %}"
+                               title="{{ c.name }}{% if c.needed %} · {{ c.needed }} lecture{{ c.needed|pluralize }} in a row to reach {{ report.threshold }}%{% endif %}">{{ c.code }} {{ c.percent }}% ({{ c.present }}/{{ c.total }})</a>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td class="actions">
+                        <a class="btn btn-sm btn-light" href="{% url 'defaulter-letter' stu.id %}?threshold={{ report.threshold }}" title="Warning letter to the parent or guardian"><i class="fas fa-file-pdf"></i>Letter</a>
+                    </td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% elif report.sections %}
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-user-check"></i></div>
+        <h3>Nobody is below {{ report.threshold }}%</h3>
+        <p>Every student in {% if report.cls %}{{ report.cls.class_name }}{% else %}the department{% endif %} has at least {{ report.threshold }}% attendance in each course with lectures marked.</p>
+    </div>
+    {% else %}
+    <div class="empty">
+        <div class="empty-icon"><i class="fas fa-book"></i></div>
+        <h3>No courses to check</h3>
+        <p>{% if report.cls %}{{ report.cls.class_name }} has{% else %}Your department's classes have{% endif %} no courses assigned yet, so there is no attendance to report.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
