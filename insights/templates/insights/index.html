@@ -65,7 +65,7 @@
     <div>
         {% include 'insights/_chart.html' with chart_title='Weekly attendance' chart_subtitle='Last 8 weeks · amber line is the requirement' chart_type='line' source='trend-data' rows=facts.trend chart_axis='Week of' chart_prefix='Week of' %}
         <div class="split even mt-3">
-            {% include 'insights/_chart.html' with chart_title='By day of the week' chart_type='columns' source='weekday-data' rows=facts.by_weekday chart_axis='Day' %}
+            {% include 'insights/_chart.html' with chart_title='By day of the week' chart_subtitle='Monday to Friday' chart_type='columns' source='weekday-data' rows=facts.by_weekday chart_axis='Day' %}
             {% include 'insights/_chart.html' with chart_title='By time of day' chart_subtitle='Lecture start time' chart_type='columns' source='time-data' rows=facts.by_time chart_axis='Starts at' chart_prefix='Starts' %}
         </div>
         {% if kind == 'department' %}

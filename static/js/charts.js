@@ -132,7 +132,8 @@
     }
     var hit = node('rect', { x: m.l - 12, y: 0, width: c.W - m.l - m.r + 24, height: c.H, fill: 'transparent' }, c.svg);
     hit.addEventListener('pointermove', function (e) {
-      var px = e.clientX - c.svg.getBoundingClientRect().left;
+      var box = c.svg.getBoundingClientRect();
+      var px = (e.clientX - box.left) * (c.W / box.width);   // into the chart's own units, even when zoomed
       var best = 0;
       data.forEach(function (d, i) { if (Math.abs(x(i) - px) < Math.abs(x(best) - px)) best = i; });
       focus(best);
@@ -197,11 +198,21 @@
       if (!source) return;
       var data = JSON.parse(source.textContent);
       var opts = { threshold: +host.getAttribute('data-threshold') || 0, prefix: host.getAttribute('data-label') || '' };
+      host._drawnWidth = host.clientWidth;
       (host.getAttribute('data-chart') === 'line' ? line : columns)(host, data, opts);
     });
   }
 
   var timer;
-  window.addEventListener('resize', function () { clearTimeout(timer); timer = setTimeout(render, 150); });
+  function later() { clearTimeout(timer); timer = setTimeout(render, 150); }
+  window.addEventListener('resize', later);
+  // Redraw when a chart's box changes width for any other reason too: a scrollbar
+  // appearing after the first paint, page zoom, or a column reflowing.
+  if (window.ResizeObserver) {
+    var watcher = new ResizeObserver(function (entries) {
+      if (entries.some(function (e) { return e.target.clientWidth !== e.target._drawnWidth; })) later();
+    });
+    document.querySelectorAll('[data-chart]').forEach(function (host) { watcher.observe(host); });
+  }
   render();
 })();

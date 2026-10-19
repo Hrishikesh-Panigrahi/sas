@@ -231,9 +231,12 @@ h1, h2, h3, h4, h5, h6 { color: var(--text); font-weight: 600; }
 /* Two-column page layout that keeps both columns in use. */
 .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: start; }
 .split > * > .card + .card, .split > * > * + .card { margin-top: 1rem; }
+/* Cards placed side by side by the grid itself line up at the top. */
+.split > .card + .card, .split > * + .card { margin-top: 0; }
 @media (min-width: 1200px) {
   .split { grid-template-columns: minmax(0, 1.85fr) minmax(320px, 1fr); }
   .split.even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .split.even > .card { align-self: stretch; }
   .split.wide-right { grid-template-columns: minmax(320px, 1fr) minmax(0, 1.6fr); }
 }
 
