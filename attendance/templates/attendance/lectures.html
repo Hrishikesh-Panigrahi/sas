@@ -45,13 +45,13 @@
                 {% for lec in lectures %}
                 <tr>
                     <td><div class="fw-600">{{ lec.date|date:"D, j M Y" }}</div></td>
-                    <td class="tabular">{{ lec.period|default:"—" }}{% if lec.batch != 'All' %} <span class="badge badge-soft-info">Batch {{ lec.batch }}</span>{% endif %}</td>
+                    <td class="tabular">{{ lec.period|default:"-" }}{% if lec.batch != 'All' %} <span class="badge badge-soft-info">Batch {{ lec.batch }}</span>{% endif %}</td>
                     <td>{% if lec.is_marked %}<span class="badge badge-soft-success"><i class="fas fa-check"></i> Marked</span>{% else %}<span class="badge badge-soft-warning">Not marked</span>{% endif %}</td>
                     <td>
                         {% if lec.is_marked %}
                         {% widthratio lec.num_present lec.num_marked 100 as pct %}
                         <div class="meter" style="max-width:220px"><div class="meter-bar neutral"><span style="width: {{ pct }}%"></span></div><span class="meter-value tabular" style="min-width:3.5rem">{{ lec.num_present }}/{{ lec.num_marked }}</span></div>
-                        {% else %}<span class="text-muted">—</span>{% endif %}
+                        {% else %}<span class="text-muted">-</span>{% endif %}
                     </td>
                     <td class="actions">
                         {% if can_mark %}

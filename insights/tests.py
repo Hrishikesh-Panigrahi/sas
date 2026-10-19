@@ -94,8 +94,8 @@ class BuiltinAnalystTests(InsightData):
     def test_pages(self):
         self.client.force_login(self.hod)
         r = self.client.get(reverse('insights'))
-        self.assertContains(r, 'AI analysis')
-        self.assertContains(r, 'built-in analyst')
+        self.assertContains(r, 'Summary')
+        self.assertContains(r, 'Worked out from the figures on this page')
         self.assertEqual(self.client.get(reverse('insights') + '?view=teaching').status_code, 200)
         r = self.client.get(reverse('insights-analysis') + '?student=%d' % self.poor.id)
         self.assertContains(r, 'serious risk')

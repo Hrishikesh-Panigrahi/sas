@@ -40,7 +40,7 @@
                         {% else %}<span class="badge badge-soft">Teacher</span>{% endif %}
                     </td>
                     <td>
-                        {% if teacher.class %}<a href="{% url 'class-detail' teacher.class.id %}">{{ teacher.class.class_name }}</a>{% else %}<span class="text-muted">—</span>{% endif %}
+                        {% if teacher.class %}<a href="{% url 'class-detail' teacher.class.id %}">{{ teacher.class.class_name }}</a>{% else %}<span class="text-muted">-</span>{% endif %}
                     </td>
                     <td>
                         <div class="chip-list">

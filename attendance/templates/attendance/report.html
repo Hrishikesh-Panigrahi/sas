@@ -9,19 +9,10 @@
 {% endblock %}
 
 {% block content %}
-<div class="row row-gap mb-4">
-    <div class="col-sm-4">
-        <div class="card"><div class="stat"><span class="stat-icon"><i class="far fa-calendar-check"></i></span>
-            <div><div class="stat-value">{{ total_lectures }}</div><div class="stat-label">Lectures marked</div></div></div></div>
-    </div>
-    <div class="col-sm-4">
-        <div class="card"><div class="stat"><span class="stat-icon green"><i class="fas fa-percentage"></i></span>
-            <div><div class="stat-value">{% if average is not None %}{{ average }}%{% else %}—{% endif %}</div><div class="stat-label">Class average</div></div></div></div>
-    </div>
-    <div class="col-sm-4">
-        <div class="card"><div class="stat"><span class="stat-icon {% if num_short %}red{% else %}green{% endif %}"><i class="fas fa-user-clock"></i></span>
-            <div><div class="stat-value">{{ num_short }}</div><div class="stat-label">Below {{ attendance_threshold }}%</div></div></div></div>
-    </div>
+<div class="stats">
+    <div><div class="stat-value">{{ total_lectures }}</div><div class="stat-label">Lectures marked</div></div>
+    <div><div class="stat-value">{% if average is not None %}{{ average }}%{% else %}-{% endif %}</div><div class="stat-label">Class average</div></div>
+    <div><div class="stat-value{% if num_short %} bad{% endif %}">{{ num_short }}</div><div class="stat-label">Below {{ attendance_threshold }}%</div></div>
 </div>
 
 <div class="card">
@@ -34,7 +25,7 @@
             <tbody>
                 {% for row in rows %}
                 <tr>
-                    <td class="tabular" data-order="{{ row.student.roll_no|default:99999 }}">{{ row.student.roll_no|default:"—" }}</td>
+                    <td class="tabular" data-order="{{ row.student.roll_no|default:99999 }}">{{ row.student.roll_no|default:"-" }}</td>
                     <td>
                         <div class="person">
                             <span class="avatar">{{ row.student.user.initials }}</span>

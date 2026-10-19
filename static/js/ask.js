@@ -1,4 +1,5 @@
-/* SAS — Ask SAS chat. Answers and tables are inserted with textContent only. */
+/* SAS: Ask SAS. Each question and its answer is one entry, newest first.
+   Answers and tables are inserted with textContent only. */
 (function () {
   'use strict';
   var root = document.getElementById('ask');
@@ -19,20 +20,24 @@
     var t = document.querySelector('[name=csrfmiddlewaretoken]');
     return t ? t.value : '';
   }
-  function scrollDown() { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); }
+  function now() {
+    var d = new Date();
+    return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+  }
 
-  function bubble(who, text) {
-    var row = el('div', 'ask-msg ' + who);
-    if (who === 'bot') {
-      var av = el('span', 'ask-avatar');
-      av.appendChild(el('i', 'fas fa-magic'));
-      row.appendChild(av);
-    }
-    var b = el('div', 'ask-bubble');
-    if (text !== undefined) b.appendChild(el('p', 'mb-0', text));
-    row.appendChild(b);
-    thread.appendChild(row);
-    return b;
+  function entry(question) {
+    var item = el('article', 'ask-msg bot');
+    var head = el('div', 'ask-q');
+    var icon = el('i', 'fas fa-search text-muted small');
+    icon.setAttribute('aria-hidden', 'true');
+    head.appendChild(icon);
+    head.appendChild(el('strong', '', question));
+    head.appendChild(el('span', 'when', now()));
+    var body = el('div', 'ask-bubble');
+    item.appendChild(head);
+    item.appendChild(body);
+    thread.insertBefore(item, thread.firstChild);
+    return body;
   }
 
   function table(t) {
@@ -53,7 +58,7 @@
     tbl.appendChild(body);
     wrap.appendChild(tbl);
     card.appendChild(wrap);
-    if (t.note) card.appendChild(el('div', 'small text-muted mt-1', t.note));
+    if (t.note) card.appendChild(el('div', 'small text-muted', t.note));
     return card;
   }
 
@@ -62,10 +67,8 @@
     busy = true;
     var welcome = root.querySelector('[data-welcome]');
     if (welcome) welcome.remove();
-    bubble('me', question);
-    var reply = bubble('bot');
+    var reply = entry(question);
     reply.appendChild(el('div', 'ask-typing', '')).innerHTML = '<span></span><span></span><span></span>';
-    scrollDown();
     input.value = '';
     fetch(root.getAttribute('data-url'), {
       method: 'POST', credentials: 'same-origin',
@@ -86,8 +89,7 @@
       reply.appendChild(el('p', 'text-danger mb-0', "Sorry, that didn't work. Please try again."));
     }).then(function () {
       busy = false;
-      input.focus();
-      scrollDown();
+      input.focus({ preventScroll: true });
     });
   }
 

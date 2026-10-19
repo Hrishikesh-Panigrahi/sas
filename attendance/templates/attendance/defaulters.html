@@ -46,19 +46,10 @@
     </form>
 </div>
 
-<div class="row row-gap mb-4">
-    <div class="col-sm-4">
-        <div class="card"><div class="stat"><span class="stat-icon {% if report.counts.students %}red{% else %}green{% endif %}"><i class="fas fa-user-clock"></i></span>
-            <div><div class="stat-value">{{ report.counts.students }}</div><div class="stat-label">Student{{ report.counts.students|pluralize }} below {{ report.threshold }}%</div></div></div></div>
-    </div>
-    <div class="col-sm-4">
-        <div class="card"><div class="stat"><span class="stat-icon amber"><i class="fas fa-book"></i></span>
-            <div><div class="stat-value">{{ report.counts.courses }}</div><div class="stat-label">Course{{ report.counts.courses|pluralize }} affected</div></div></div></div>
-    </div>
-    <div class="col-sm-4">
-        <div class="card"><div class="stat"><span class="stat-icon sky"><i class="fas fa-chalkboard"></i></span>
-            <div><div class="stat-value">{{ report.counts.classes }}{% if report.counts.classes_in_scope > 1 %}<span class="text-muted small fw-600"> / {{ report.counts.classes_in_scope }}</span>{% endif %}</div><div class="stat-label">Class{{ report.counts.classes|pluralize:"es" }} affected</div></div></div></div>
-    </div>
+<div class="stats">
+    <div><div class="stat-value{% if report.counts.students %} bad{% endif %}">{{ report.counts.students }}</div><div class="stat-label">Student{{ report.counts.students|pluralize }} below {{ report.threshold }}%</div></div>
+    <div><div class="stat-value">{{ report.counts.courses }}</div><div class="stat-label">Course{{ report.counts.courses|pluralize }} affected</div></div>
+    <div><div class="stat-value">{{ report.counts.classes }}{% if report.counts.classes_in_scope > 1 %}<span class="text-muted small fw-600"> / {{ report.counts.classes_in_scope }}</span>{% endif %}</div><div class="stat-label">Class{{ report.counts.classes|pluralize:"es" }} affected</div></div>
 </div>
 
 <div class="card">
@@ -85,7 +76,7 @@
                 {% for entry in report.students %}
                 {% with stu=entry.student summary=entry.summary %}
                 <tr>
-                    <td class="tabular" data-order="{{ stu.roll_no|default_if_none:99999 }}">{{ stu.roll_no|default_if_none:"—" }}</td>
+                    <td class="tabular" data-order="{{ stu.roll_no|default_if_none:99999 }}">{{ stu.roll_no|default_if_none:"-" }}</td>
                     <td data-order="{{ stu.user.full_name }}">
                         <div class="person">
                             <span class="avatar">{{ stu.user.initials }}</span>

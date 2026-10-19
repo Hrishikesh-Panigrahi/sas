@@ -36,7 +36,7 @@
                 {% include 'attendance/_rollcall.html' %}
             </div>
         </div>
-        <ul class="list" id="mark-list">
+        <ul class="list mark-list" id="mark-list">
             {% for row in rows %}
             {% with stu=row.student %}
             <li class="list-row mark-row" data-item data-search="{{ stu.user.full_name }} {{ stu.user.email }} {{ stu.roll_no|default:'' }}">

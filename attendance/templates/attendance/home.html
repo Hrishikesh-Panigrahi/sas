@@ -19,7 +19,7 @@
                 </div>
                 <div class="class-stats">
                     <div><strong>{{ a.num_lectures }}</strong>lecture{{ a.num_lectures|pluralize }}</div>
-                    <div><strong>{% if a.last_lecture %}{{ a.last_lecture|date:"j M" }}{% else %}—{% endif %}</strong>last taken</div>
+                    <div><strong>{% if a.last_lecture %}{{ a.last_lecture|date:"j M" }}{% else %}-{% endif %}</strong>last taken</div>
                 </div>
                 <div class="d-flex mt-auto" style="gap:.5rem">
                     <a class="btn btn-sm btn-primary flex-fill" href="{% url 'attendance-attendance_date' a.id %}"><i class="fas fa-clipboard-check"></i>Take attendance</a>
@@ -56,7 +56,7 @@
                     <td>{{ a.cls.class_name }}</td>
                     <td>{{ a.teacher.user.full_name }}</td>
                     <td class="text-right tabular">{{ a.num_lectures }}{% if a.num_pending %} <span class="badge badge-soft-warning">{{ a.num_pending }} unmarked</span>{% endif %}</td>
-                    <td data-order="{{ a.last_lecture|date:'Y-m-d' }}">{{ a.last_lecture|date:"j M Y"|default:"—" }}</td>
+                    <td data-order="{{ a.last_lecture|date:'Y-m-d' }}">{{ a.last_lecture|date:"j M Y"|default:"-" }}</td>
                     <td class="actions">
                         <a class="btn btn-sm btn-light" href="{% url 'attendance-attendance_date' a.id %}">Lectures</a>
                         <a class="btn btn-sm btn-light" href="{% url 'attendance-report' a.id %}">Report</a>

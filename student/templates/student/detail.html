@@ -21,19 +21,19 @@
             </div>
             <div class="card-footer">
                 <dl class="kv">
-                    <dt>Class</dt><dd>{% if stu.cls %}<a href="{% url 'class-detail' stu.cls.id %}">{{ stu.cls.class_name }}</a>{% else %}—{% endif %}</dd>
-                    <dt>Roll no.</dt><dd>{{ stu.roll_no|default:"—" }}</dd>
+                    <dt>Class</dt><dd>{% if stu.cls %}<a href="{% url 'class-detail' stu.cls.id %}">{{ stu.cls.class_name }}</a>{% else %}-{% endif %}</dd>
+                    <dt>Roll no.</dt><dd>{{ stu.roll_no|default:"-" }}</dd>
                     <dt>Overall</dt>
-                    <dd>{% if summary.percent is not None %}<span class="badge {% if summary.short %}badge-soft-danger{% else %}badge-soft-success{% endif %}">{{ summary.percent }}%</span> <span class="text-muted small">{{ summary.present }}/{{ summary.total }} lectures</span>{% else %}—{% endif %}</dd>
+                    <dd>{% if summary.percent is not None %}<span class="badge {% if summary.short %}badge-soft-danger{% else %}badge-soft-success{% endif %}">{{ summary.percent }}%</span> <span class="text-muted small">{{ summary.present }}/{{ summary.total }} lectures</span>{% else %}-{% endif %}</dd>
                 </dl>
             </div>
         </div>
     </div>
     <div class="col-lg-8">
         <div class="card ai-card">
+            <div class="card-header"><h2 class="card-title">Summary</h2></div>
             <div class="card-body" data-ai-panel data-url="{% url 'insights-analysis' %}?student={{ stu.id }}">
-                <span class="ai-badge"><i class="fas fa-magic"></i> AI analysis</span>
-                <div class="skeleton w-75 mt-3"></div><div class="skeleton"></div><div class="skeleton w-50"></div>
+                <div class="skeleton w-75"></div><div class="skeleton"></div><div class="skeleton w-50"></div>
             </div>
         </div>
         <div class="card">

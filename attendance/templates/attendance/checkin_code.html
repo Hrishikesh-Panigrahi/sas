@@ -10,7 +10,7 @@
     {% if not ok %}
     <form method="post" class="checkin-confirm mt-3" autocomplete="off">
         {% csrf_token %}
-        <span class="ai-badge"><i class="fas fa-keyboard"></i> Check in with a code</span>
+        <h1 class="h5 mb-1">Check in with a code</h1>
         <label for="code" class="d-block mt-3">Type the 6-digit code on the screen</label>
         <input id="code" name="code" class="form-control checkin-code-input" inputmode="numeric" pattern="[0-9 ]*"
             maxlength="7" autocomplete="one-time-code" placeholder="000000" required autofocus>

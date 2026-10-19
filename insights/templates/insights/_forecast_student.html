@@ -33,7 +33,7 @@
                     {% if c.status == 'lost' %}Out of reach (max {{ c.best }}%)
                     {% elif c.status == 'slipping' %}{% if c.can_miss is not None %}Can miss {{ c.can_miss }}{% else %}Slipping{% endif %}{% if c.crosses_in_weeks %} · below in {{ c.crosses_in_weeks }} wk{% endif %}
                     {% elif c.can_miss is not None %}Can miss {{ c.can_miss }} of {{ c.remaining }}
-                    {% elif c.remaining %}Attend all{% else %}—{% endif %}
+                    {% elif c.remaining %}Attend all{% else %}-{% endif %}
                 </span>
             </li>
             {% endfor %}

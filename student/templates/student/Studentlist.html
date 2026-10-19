@@ -34,7 +34,7 @@
                         </div>
                     </td>
                     <td>{% if stu.cls %}<a href="{% url 'class-detail' stu.cls.id %}">{{ stu.cls.class_name }}</a>{% else %}<span class="badge badge-soft-warning">No class</span>{% endif %}</td>
-                    <td class="tabular" data-order="{{ stu.roll_no|default:99999 }}">{{ stu.roll_no|default:"—" }}</td>
+                    <td class="tabular" data-order="{{ stu.roll_no|default:99999 }}">{{ stu.roll_no|default:"-" }}</td>
                     <td class="actions">
                         <a class="btn btn-sm btn-light" href="{% url 'student-detail' stu.id %}">View</a>
                         {% if user.can_manage_students %}<a class="btn btn-sm btn-light" href="{% url 'UpdateStudent' stu.id %}"><i class="fas fa-pen"></i>Edit</a>{% endif %}

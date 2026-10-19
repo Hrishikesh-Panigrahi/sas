@@ -5,51 +5,34 @@
 {% block actions %}
 <nav class="segmented" aria-label="Filter requests">
     <a href="?status=pending" class="{% if status == 'pending' %}active{% endif %}">Pending{% if counts.pending %} ({{ counts.pending }}){% endif %}</a>
-    <a href="?status=approved" class="{% if status == 'approved' %}active{% endif %}">Approved</a>
-    <a href="?status=rejected" class="{% if status == 'rejected' %}active{% endif %}">Not approved</a>
+    <a href="?status=approved" class="{% if status == 'approved' %}active{% endif %}">Approved ({{ counts.approved }})</a>
+    <a href="?status=rejected" class="{% if status == 'rejected' %}active{% endif %}">Not approved ({{ counts.rejected }})</a>
 </nav>
 {% endblock %}
 
 {% block content %}
-{% if requests %}
-<div class="leave-grid">
+<div class="card leave-table">
+    <div class="card-header">
+        <h2 class="card-title">{% if status == 'pending' %}Waiting for a decision{% elif status == 'approved' %}Approved{% else %}Not approved{% endif %}</h2>
+        <span class="count-pill">{{ requests|length }} request{{ requests|length|pluralize }}</span>
+    </div>
+    {% if requests %}
+    <div class="leave-row leave-head"><span>Student</span><span>When</span><span>Reason</span><span class="text-right">{% if status == 'pending' %}Decision{% else %}Review{% endif %}</span></div>
     {% for leave in requests %}
-    <article class="card leave-card">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start" style="gap:.75rem">
-                <div class="person">
-                    <span class="avatar">{{ leave.student.user.initials }}</span>
-                    <div class="min-w-0">
-                        <a class="name" href="{% url 'student-detail' leave.student.id %}">{{ leave.student.user.full_name }}</a>
-                        <div class="sub">{{ leave.student.cls.class_name|default:"No class" }}{% if leave.student.roll_no %} · Roll {{ leave.student.roll_no }}{% endif %}</div>
-                    </div>
-                </div>
-                {% include 'leave/_status.html' %}
-            </div>
-            <div class="leave-facts">
-                <span><i class="far fa-calendar"></i>{{ leave.start_date|date:"D j M" }}{% if leave.end_date != leave.start_date %} – {{ leave.end_date|date:"D j M" }}{% endif %}</span>
-                <span><i class="fas fa-tag"></i>{{ leave.get_kind_display }}</span>
-                <span><i class="fas fa-chalkboard"></i>{{ leave.lectures }} lecture{{ leave.lectures|pluralize }}</span>
-            </div>
-            <p class="leave-reason">{{ leave.reason }}</p>
-            {% if leave.has_document %}<a class="btn btn-sm btn-light" href="{% url 'leave-document' leave.id %}" target="_blank" rel="noopener"><i class="fas fa-paperclip"></i>{{ leave.document_name|truncatechars:32 }}</a>{% endif %}
-            {% if leave.reviewed_by %}<p class="small text-muted mt-2 mb-0">{{ leave.get_status_display }} by {{ leave.reviewed_by.full_name }}, {{ leave.reviewed_at|date:"j M, H:i" }}{% if leave.review_note %} · “{{ leave.review_note }}”{% endif %}</p>{% endif %}
-        </div>
-        <form method="post" action="{% url 'leave-review' leave.id %}" class="card-footer leave-actions">
-            {% csrf_token %}
-            <input type="hidden" name="from" value="{{ status }}">
-            <input type="text" name="note" class="form-control form-control-sm" placeholder="Note for the student (optional)" maxlength="300" aria-label="Note for {{ leave.student.user.full_name }}">
-            {% if leave.status != 'rejected' %}<button class="btn btn-sm btn-light" name="action" value="reject" type="submit">{% if leave.status == 'approved' %}Revoke{% else %}Don't approve{% endif %}</button>{% endif %}
-            {% if leave.status != 'approved' %}<button class="btn btn-sm btn-success" name="action" value="approve" type="submit"><i class="fas fa-check"></i>Approve</button>{% endif %}
-        </form>
-    </article>
+    {% include 'leave/_inbox_row.html' with editable=True %}
+    {% endfor %}
+    {% else %}
+    <div class="empty-line"><span>{% if status == 'pending' %}No requests are waiting. New requests from students appear here.{% else %}Nothing here yet.{% endif %}</span></div>
+    {% endif %}
+</div>
+
+{% if recent %}
+<div class="card leave-table">
+    <div class="card-header"><h2 class="card-title">Recently decided</h2></div>
+    <div class="leave-row leave-head"><span>Student</span><span>When</span><span>Reason</span><span class="text-right">Review</span></div>
+    {% for leave in recent %}
+    {% include 'leave/_inbox_row.html' with editable=False %}
     {% endfor %}
 </div>
-{% else %}
-<div class="card"><div class="empty">
-    <div class="empty-icon"><i class="fas fa-inbox"></i></div>
-    <h3>{% if status == 'pending' %}No requests waiting{% else %}Nothing here yet{% endif %}</h3>
-    <p class="mb-0">{% if status == 'pending' %}When students ask for leave, their requests show up here for you to approve.{% else %}Decided requests are listed here.{% endif %}</p>
-</div></div>
 {% endif %}
 {% endblock %}

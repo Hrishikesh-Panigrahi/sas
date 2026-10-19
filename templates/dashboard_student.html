@@ -1,59 +1,109 @@
 {% extends 'base.html' %}
 
-{% block page_title %}Hi{% if user.first_name %}, {{ user.first_name }}{% endif %}{% endblock %}
+{% block page_title %}My attendance{% endblock %}
 {% block subtitle %}
 <p class="page-subtitle">
-    {% if profile.cls %}{{ profile.cls.class_name }}{% if profile.roll_no %} · Roll no. {{ profile.roll_no }}{% endif %}{% else %}You haven't been added to a class yet{% endif %}
+    {{ user.full_name }} · {% if profile.cls %}{{ profile.cls.class_name }}{% if profile.roll_no %} · Roll no. {{ profile.roll_no }}{% endif %}{% else %}not in a class yet{% endif %}
 </p>
 {% endblock %}
 
-{% block actions %}<a class="btn btn-light" href="{% url 'leave' %}"><i class="fas fa-umbrella-beach"></i>Apply for leave</a>{% endblock %}
+{% block actions %}
+<a class="btn btn-light" href="{% url 'checkin-code' %}"><i class="fas fa-qrcode"></i>Check in</a>
+<a class="btn btn-primary" href="{% url 'leave' %}"><i class="fas fa-umbrella-beach"></i>Apply for leave</a>
+{% endblock %}
 
 {% block content %}
 {% if summary %}
-<a class="card card-link-block ai-card mb-4 d-block" href="{% url 'insights' %}">
-            <div class="card-body" data-ai-panel data-url="{% url 'insights-analysis' %}?view=student&amp;format=teaser">
-                <span class="ai-badge"><i class="fas fa-magic"></i> AI analysis</span>
-                <div class="skeleton w-75 mt-3"></div><div class="skeleton w-50"></div>
+<div class="stats">
+    <div>
+        <div class="stat-value{% if summary.short %} bad{% else %} good{% endif %}">{% if summary.percent is None %}-{% else %}{{ summary.percent }}%{% endif %}</div>
+        <div class="stat-label">Overall · {{ summary.present }} of {{ summary.total }} lectures</div>
+    </div>
+    {% if forecast and forecast.overall %}
+    <div>
+        <div class="stat-value{% if forecast.overall.projected < attendance_threshold %} bad{% endif %}">{{ forecast.overall.projected }}%</div>
+        <div class="stat-label">Projected by {{ forecast.semester_end|date:"j M" }}</div>
+    </div>
+    <div><div class="stat-value">{{ forecast.overall.best }}%</div><div class="stat-label">If you attend everything left</div></div>
+    {% endif %}
+    <div>
+        <div class="stat-value{% if short_courses %} bad{% endif %}">{{ short_courses }}</div>
+        <div class="stat-label">Course{{ short_courses|pluralize }} below {{ attendance_threshold }}%</div>
+    </div>
+    <div>
+        <div class="stat-value{% if summary.needed %} bad{% endif %}">{{ summary.needed }}</div>
+        <div class="stat-label">Lectures in a row to reach {{ attendance_threshold }}%</div>
+    </div>
+</div>
+
+<div class="split even">
+    <div>
+        <div class="card">
+            <div class="card-header"><h2 class="card-title">By course</h2></div>
+            {% include 'partials/course_attendance.html' %}
+        </div>
+        <div class="card ai-card">
+            <div class="card-header">
+                <h2 class="card-title">Summary</h2>
+                <a class="link" href="{% url 'insights' %}">Details</a>
             </div>
-            <div class="card-footer small fw-600 text-primary">Open insights <i class="fas fa-arrow-right ml-1"></i></div>
-        </a>
-<div class="row row-gap">
-    <div class="col-lg-4">
-        <div class="card h-100">
-            <div class="card-body d-flex flex-column align-items-center text-center">
-                <h2 class="card-title align-self-start mb-3">Overall attendance</h2>
+            <div class="card-body" data-ai-panel data-url="{% url 'insights-analysis' %}?view=student&amp;format=teaser">
+                <div class="skeleton w-75"></div><div class="skeleton w-50"></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">My leave requests</h2>
+                <a class="link" href="{% url 'leave' %}">All</a>
+            </div>
+            {% if leaves %}
+            <div class="list">
+                {% for leave in leaves %}
+                <div class="list-row">
+                    <div class="grow">
+                        <div class="title">{{ leave.get_kind_display }}</div>
+                        <div class="meta">{{ leave.start_date|date:"D j M" }}{% if leave.end_date != leave.start_date %} – {{ leave.end_date|date:"D j M" }}{% endif %}</div>
+                    </div>
+                    {% include 'leave/_status.html' %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-line"><span>No leave requests yet.</span><a class="btn btn-sm btn-light" href="{% url 'leave' %}">Apply</a></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <div class="card">
+            <div class="card-body d-flex align-items-center" style="gap:1.25rem">
                 {% if summary.percent is not None %}
                 <div class="ring{% if summary.short %} short{% endif %}" style="--p: {{ summary.percent }}">
                     <div class="ring-inner">
                         <div><div class="ring-value">{{ summary.percent }}%</div><div class="ring-label">{{ summary.present }} of {{ summary.total }}</div></div>
                     </div>
                 </div>
-                {% if summary.short %}
-                <p class="mt-3 mb-0"><span class="badge badge-soft-danger">Below {{ attendance_threshold }}%</span></p>
-                <p class="text-muted small mt-2 mb-0">Attend the next <strong>{{ summary.needed }}</strong> lecture{{ summary.needed|pluralize }} in a row to get back to {{ attendance_threshold }}%.</p>
+                <div>
+                    <h2 class="card-title mb-1">Overall attendance</h2>
+                    {% if summary.short %}
+                    <span class="badge badge-soft-danger">Below {{ attendance_threshold }}%</span>
+                    <p class="text-muted small mt-2 mb-0">Attend the next <strong>{{ summary.needed }}</strong> lecture{{ summary.needed|pluralize }} in a row to get back to {{ attendance_threshold }}%.</p>
+                    {% else %}
+                    <span class="badge badge-soft-success">On track</span>
+                    <p class="text-muted small mt-2 mb-0">You're at or above the {{ attendance_threshold }}% requirement.</p>
+                    {% endif %}
+                </div>
                 {% else %}
-                <p class="mt-3 mb-0"><span class="badge badge-soft-success">On track</span></p>
-                <p class="text-muted small mt-2 mb-0">You're at or above the {{ attendance_threshold }}% requirement.</p>
-                {% endif %}
-                {% else %}
-                <div class="empty compact"><p class="mb-0">No lectures recorded yet.</p></div>
+                <p class="text-muted mb-0">No lectures recorded yet.</p>
                 {% endif %}
             </div>
         </div>
-    </div>
-    <div class="col-lg-8">
-        <div class="card h-100">
-            <div class="card-header"><h2 class="card-title">By course</h2></div>
-            {% include 'partials/course_attendance.html' %}
-        </div>
+        <div class="mt-3">{% include 'insights/_forecast_student.html' %}</div>
     </div>
 </div>
-<div class="mt-4">{% include 'insights/_forecast_student.html' %}</div>
 {% else %}
 <div class="card">
     <div class="empty">
-        <div class="empty-icon"><i class="fas fa-user-graduate"></i></div>
         <h3>Your student profile isn't set up</h3>
         <p>Ask your class teacher to add you to a class. Your attendance will appear here after that.</p>
     </div>

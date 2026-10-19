@@ -10,10 +10,10 @@
             <i class="fas fa-home"></i><span>Dashboard</span>
         </a>
         <a class="nav-item{% if nav == 'insights' %} active{% endif %}" href="{% url 'insights' %}">
-            <i class="fas fa-magic"></i><span>Insights</span>
+            <i class="fas fa-chart-line"></i><span>Insights</span>
         </a>
         <a class="nav-item{% if nav == 'ask' %} active{% endif %}" href="{% url 'ask' %}">
-            <i class="far fa-comments"></i><span>Ask SAS</span>
+            <i class="fas fa-search"></i><span>Ask SAS</span>
         </a>
 
         {% if u.is_student %}

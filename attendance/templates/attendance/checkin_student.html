@@ -8,8 +8,8 @@
 <div class="checkin-phone">
     {% if ticket %}
     <div class="checkin-confirm">
-        <span class="ai-badge"><i class="fas fa-qrcode"></i> Live check-in</span>
-        <h1 class="h4 mt-3 mb-1">{{ lecture.assign.course.name }}</h1>
+        <div class="small text-muted fw-600">Live check-in</div>
+        <h1 class="h4 mt-1 mb-1">{{ lecture.assign.course.name }}</h1>
         <p class="text-muted">{{ lecture.assign.cls.class_name }}{% if lecture.batch != 'All' %} · Batch {{ lecture.batch }}{% endif %} · {{ lecture.period }}</p>
         <form method="post">
             {% csrf_token %}

@@ -6,37 +6,23 @@
     <title>Sign in · SAS</title>
     <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
     {% include 'partials/pwa_head.html' %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
     <link href="{% static 'vendor/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/app.css' %}" rel="stylesheet">
 </head>
 <body>
     <div class="auth">
-        <aside class="auth-aside">
-            <div class="auth-brand"><span class="brand-mark"><i class="fas fa-check"></i></span> SAS</div>
-            <div>
-                <h2>Attendance, without the paperwork.</h2>
-                <p>Mark a lecture in seconds, keep an eye on who's falling behind, and give students a clear view of where they stand.</p>
-                <ul class="auth-features">
-                    <li><i class="fas fa-clipboard-check"></i><div><strong>One-tap marking</strong>Everyone starts present; tap the few who aren't.</div></li>
-                    <li><i class="far fa-calendar-alt"></i><div><strong>Built around your timetable</strong>Today's lectures are waiting on your dashboard.</div></li>
-                    <li><i class="fas fa-chart-line"></i><div><strong>Reports that flag shortfalls</strong>See who is under the attendance requirement at a glance.</div></li>
-                </ul>
-            </div>
-            <small style="color:#a5b4fc">Student Attendance System</small>
-        </aside>
-
-        <main class="auth-main">
+        <div class="auth-brand">
+            <span class="brand-mark"><i class="fas fa-check"></i></span>
+            <span>SAS<small>Student Attendance System</small></span>
+        </div>
+        <main class="auth-card">
             <form class="auth-form" method="post" action="{% url 'Login' %}" novalidate>
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
 
-                <div class="d-lg-none mb-4"><span class="brand-mark"><i class="fas fa-check"></i></span></div>
-                <h1>Welcome back</h1>
-                <p class="text-muted mb-4">Sign in with your college email.</p>
+                <h1>Sign in</h1>
+                <p class="text-muted mb-4">Use your college email address.</p>
 
                 {% for message in messages %}
                 <div class="alert alert-{{ message.tags|default:'info' }}" role="{% if message.level >= 40 %}alert{% else %}status{% endif %}">
@@ -58,10 +44,10 @@
                         <button type="button" class="password-toggle" aria-label="Show password"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg btn-block mt-4">Sign in</button>
-                <p class="small text-muted text-center mt-4 mb-0">Forgot your password? Ask your HOD or class teacher to reset it.</p>
+                <button type="submit" class="btn btn-primary btn-block mt-4" style="height:42px">Sign in</button>
             </form>
         </main>
+        <p class="auth-foot">Forgot your password? Your HOD or class teacher can reset it.</p>
     </div>
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

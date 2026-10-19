@@ -2,28 +2,49 @@
 {% load static %}
 
 {% block extra_css %}<link href="{% static 'css/ask.css' %}" rel="stylesheet">{% endblock %}
-{% block subtitle %}<p class="page-subtitle">Ask about attendance in plain English. Answers come from your own data{% if claude %}, read by Claude{% endif %}.</p>{% endblock %}
+{% block subtitle %}<p class="page-subtitle">Ask about attendance in plain English. Answers come from the records you're allowed to see.</p>{% endblock %}
 
 {% block content %}
 {% csrf_token %}
-<div class="ask" id="ask" data-url="{% url 'ask' %}">
-    <div class="ask-thread" data-thread aria-live="polite">
-        <div class="ask-welcome" data-welcome>
-            <div class="empty-icon"><i class="fas fa-comments"></i></div>
-            <h2 class="h5">What would you like to know?</h2>
-            <p class="text-muted">Try one of these, or type your own question.</p>
-            <div class="ask-suggestions">
-                {% for s in suggestions %}<button type="button" class="ask-chip" data-suggestion>{{ s }}</button>{% endfor %}
-            </div>
+<div class="split" id="ask" data-url="{% url 'ask' %}">
+    <div>
+        <form class="card ask-bar" data-form>
+            <label for="ask-input" class="sr-only">Your question</label>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <input id="ask-input" type="text" class="form-control" maxlength="500" autocomplete="off"
+                placeholder="e.g. Who missed 3 or more CN lectures this month?">
+            <button class="btn btn-primary" type="submit">Ask</button>
+        </form>
+        <div class="ask-thread" data-thread aria-live="polite">
+            <div class="ask-welcome" data-welcome>Answers appear here, newest first. Pick a question on the right to start.</div>
         </div>
     </div>
-    <form class="ask-bar" data-form>
-        <label for="ask-input" class="sr-only">Your question</label>
-        <input id="ask-input" type="text" class="form-control" maxlength="500" autocomplete="off"
-            placeholder="e.g. Who missed 3 or more CN lectures this month?">
-        <button class="btn btn-primary" type="submit" aria-label="Ask"><i class="fas fa-paper-plane"></i><span class="d-none d-sm-inline">Ask</span></button>
-    </form>
-    <p class="ask-source small text-muted">{% if claude %}Answers by Claude ({{ request.user.full_name|default:"you" }} can only see their own data).{% else %}Answers by the built-in assistant. Add <code>AI_TOKEN</code> for Claude, which handles any phrasing.{% endif %}</p>
+
+    <aside>
+        <div class="card">
+            <div class="card-header"><h2 class="card-title">Try asking</h2></div>
+            <div class="list">
+                {% for s in suggestions %}<button type="button" class="list-row ask-chip" data-suggestion>{{ s }}</button>{% endfor %}
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header"><h2 class="card-title">What you can ask about</h2></div>
+            <ul class="ask-topics">
+                {% if request.user.is_student %}
+                <li>Your attendance overall and in each course</li>
+                <li>How many lectures you can still miss</li>
+                <li>Where you're heading by the end of the semester</li>
+                {% else %}
+                <li>Who missed lectures in a course, class or period</li>
+                <li>Who is below, or heading below, {{ attendance_threshold }}%</li>
+                <li>One student's attendance by course</li>
+                <li>Class-by-class attendance</li>
+                <li>Lectures taken and lectures not yet marked</li>
+                {% endif %}
+            </ul>
+            <p class="small text-muted px-3 pb-3 mb-0">Course codes and short names work too, such as CN for Computer Networks.</p>
+        </div>
+    </aside>
 </div>
 {% endblock %}
 

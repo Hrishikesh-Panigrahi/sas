@@ -12,9 +12,9 @@
             </div>
             <div class="card-footer">
                 <dl class="kv">
-                    <dt>Department</dt><dd>{{ user.department|default:"—" }}</dd>
+                    <dt>Department</dt><dd>{{ user.department|default:"-" }}</dd>
                     <dt>Member since</dt><dd>{{ user.created_on|date:"j M Y" }}</dd>
-                    <dt>Last sign-in</dt><dd>{{ user.last_login|date:"j M Y, H:i"|default:"—" }}</dd>
+                    <dt>Last sign-in</dt><dd>{{ user.last_login|date:"j M Y, H:i"|default:"-" }}</dd>
                 </dl>
             </div>
         </div>

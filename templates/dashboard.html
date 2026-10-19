@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
-{% block page_title %}Good {{ greeting }}{% if user.first_name %}, {{ user.first_name }}{% endif %}{% endblock %}
-{% block subtitle %}<p class="page-subtitle">{{ today|date:"l, j F Y" }}</p>{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block subtitle %}<p class="page-subtitle">{{ today|date:"l, j F Y" }} · {{ user.role_label }}</p>{% endblock %}
 
 {% block actions %}
 <a class="btn btn-primary" href="{% url 'attendance-home' %}"><i class="fas fa-clipboard-check"></i>Take attendance</a>
@@ -23,44 +23,27 @@
 {% endblock %}
 
 {% block content %}
-{% if counts %}
-<div class="row row-gap mb-4">
-    <div class="col-6 col-xl-3">
-        <a class="card card-link-block" href="{% url 'viewcls' %}">
-            <div class="stat"><span class="stat-icon"><i class="fas fa-chalkboard"></i></span>
-                <div><div class="stat-value">{{ counts.classes }}</div><div class="stat-label">Classes</div></div></div>
-        </a>
-    </div>
-    <div class="col-6 col-xl-3">
-        <a class="card card-link-block" href="{% url 'StudentList' %}">
-            <div class="stat"><span class="stat-icon green"><i class="fas fa-user-graduate"></i></span>
-                <div><div class="stat-value">{{ counts.students }}</div><div class="stat-label">Students</div></div></div>
-        </a>
-    </div>
-    <div class="col-6 col-xl-3">
-        <a class="card card-link-block" href="{% url 'teachers' %}">
-            <div class="stat"><span class="stat-icon sky"><i class="fas fa-chalkboard-teacher"></i></span>
-                <div><div class="stat-value">{{ counts.teachers }}</div><div class="stat-label">Teachers</div></div></div>
-        </a>
-    </div>
-    <div class="col-6 col-xl-3">
-        <a class="card card-link-block" href="{% url 'chome' %}">
-            <div class="stat"><span class="stat-icon amber"><i class="fas fa-book"></i></span>
-                <div><div class="stat-value">{{ counts.courses }}</div><div class="stat-label">Courses</div></div></div>
-        </a>
-    </div>
+<div class="stats">
+    <div><div class="stat-value">{{ today_slots|length }}</div><div class="stat-label">Lectures today</div></div>
+    <div><div class="stat-value{% if pending_count %} warn{% endif %}">{{ pending_count }}</div><div class="stat-label">Waiting to be marked</div></div>
+    {% if counts %}
+    <a href="{% url 'defaulters' %}"><div class="stat-value{% if counts.below %} bad{% endif %}">{{ counts.below }}</div><div class="stat-label">Below {{ attendance_threshold }}% now</div></a>
+    <a href="{% url 'insights' %}"><div class="stat-value{% if counts.warnings %} warn{% endif %}">{{ counts.warnings }}</div><div class="stat-label">Early warnings</div></a>
+    <a href="{% url 'StudentList' %}"><div class="stat-value">{{ counts.students }}</div><div class="stat-label">Students</div></a>
+    <a href="{% url 'viewcls' %}"><div class="stat-value">{{ counts.classes }}</div><div class="stat-label">Classes</div></a>
+    <a href="{% url 'teachers' %}"><div class="stat-value">{{ counts.teachers }}</div><div class="stat-label">Teachers</div></a>
+    {% else %}
+    <a href="{% url 'insights' %}"><div class="stat-value{% if warning_count %} warn{% endif %}">{{ warning_count|default:0 }}</div><div class="stat-label">Early warnings</div></a>
+    <a href="{% url 'attendance-home' %}"><div class="stat-value">{{ assignments|length }}</div><div class="stat-label">Courses I teach</div></a>
+    {% endif %}
 </div>
-{% endif %}
 
-<div class="row row-gap">
-    <div class="col-lg-7 col-xl-8">
+<div class="split">
+    <div>
         <div class="card">
             <div class="card-header">
-                <div>
-                    <h2 class="card-title">Today's lectures</h2>
-                    <p class="card-subtitle">From your timetable for {{ today|date:"l" }}</p>
-                </div>
-                <a class="btn btn-sm btn-light" href="{% url 'timetable' %}">My week</a>
+                <h2 class="card-title">Today's lectures</h2>
+                <a class="link" href="{% url 'timetable' %}">My week</a>
             </div>
             {% if today_slots %}
             <ul class="list">
@@ -86,18 +69,14 @@
                 {% endfor %}
             </ul>
             {% elif assignments %}
-            <div class="empty compact">
-                <div class="empty-icon"><i class="far fa-calendar-check"></i></div>
-                <h3>No lectures on your timetable today</h3>
-                <p>Taking an extra or rescheduled lecture? Start it from the class's attendance page.</p>
-                <a class="btn btn-soft" href="{% url 'attendance-home' %}">Choose a class</a>
+            <div class="empty-line">
+                <span>No lectures on your timetable today. Taking an extra or rescheduled lecture? Start it from the class's attendance page.</span>
+                <a class="btn btn-sm btn-light" href="{% url 'attendance-home' %}">Choose a class</a>
             </div>
             {% else %}
-            <div class="empty compact">
-                <div class="empty-icon"><i class="fas fa-chalkboard"></i></div>
-                <h3>You haven't been assigned to a class yet</h3>
-                <p>Once your HOD or class teacher adds you as the teacher of a course in a class, it will show up here.</p>
-                {% if user.can_manage_students %}<a class="btn btn-soft" href="{% url 'viewcls' %}">Go to classes</a>{% endif %}
+            <div class="empty-line">
+                <span>You haven't been assigned to a class yet. Once you're added as the teacher of a course, its lectures show up here.</span>
+                {% if user.can_manage_students %}<a class="btn btn-sm btn-light" href="{% url 'viewcls' %}">Go to classes</a>{% endif %}
             </div>
             {% endif %}
         </div>
@@ -105,11 +84,8 @@
         {% if pending %}
         <div class="card">
             <div class="card-header">
-                <div>
-                    <h2 class="card-title">Waiting to be marked</h2>
-                    <p class="card-subtitle">Lectures you created but haven't saved attendance for</p>
-                </div>
-                <span class="badge badge-soft-warning">{{ pending|length }}</span>
+                <h2 class="card-title">Waiting to be marked</h2>
+                <span class="badge badge-soft-warning">{{ pending_count }}</span>
             </div>
             <ul class="list">
                 {% for lecture in pending %}
@@ -125,48 +101,48 @@
             </ul>
         </div>
         {% endif %}
+
+        {% if warnings is not None %}{% include 'insights/_warnings.html' %}{% endif %}
     </div>
 
-    <div class="col-lg-5 col-xl-4">
-        <a class="card card-link-block ai-card mb-4" href="{% url 'insights' %}">
-            <div class="card-body" data-ai-panel data-url="{% url 'insights-analysis' %}?view={% if user.can_manage_students %}department{% else %}teaching{% endif %}&amp;format=teaser">
-                <span class="ai-badge"><i class="fas fa-magic"></i> AI analysis</span>
-                <div class="skeleton w-75 mt-3"></div><div class="skeleton w-50"></div>
+    <div>
+        <div class="card ai-card">
+            <div class="card-header">
+                <h2 class="card-title">Summary</h2>
+                <a class="link" href="{% url 'insights' %}">Open insights</a>
             </div>
-            <div class="card-footer small fw-600 text-primary">Open insights <i class="fas fa-arrow-right ml-1"></i></div>
-        </a>
+            <div class="card-body" data-ai-panel data-url="{% url 'insights-analysis' %}?view={% if user.can_manage_students %}department{% else %}teaching{% endif %}&amp;format=teaser">
+                <div class="skeleton w-75"></div><div class="skeleton w-50"></div>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">My classes</h2>
-                <a class="btn btn-sm btn-light" href="{% url 'attendance-home' %}">All</a>
+                <a class="link" href="{% url 'attendance-home' %}">All</a>
             </div>
             {% if assignments %}
             <div class="list">
                 {% for a in assignments %}
                 <a class="list-row" href="{% url 'attendance-attendance_date' a.id %}">
-                    <span class="avatar">{{ a.course.code|slice:":3"|upper }}</span>
                     <div class="grow">
                         <div class="title text-truncate">{{ a.course.name }}</div>
-                        <div class="meta">{{ a.cls.class_name }}</div>
+                        <div class="meta">{{ a.cls.class_name }} · {{ a.course.code }}</div>
                     </div>
                     <i class="fas fa-chevron-right text-muted small"></i>
                 </a>
                 {% endfor %}
             </div>
             {% else %}
-            <div class="empty compact"><p class="mb-0">No classes assigned to you yet.</p></div>
+            <div class="empty compact"><p>No classes assigned to you yet.</p></div>
             {% endif %}
         </div>
-
-        {% if warnings is not None %}{% include 'insights/_warnings.html' %}{% endif %}
 
         {% if counts %}
         <div class="card">
             <div class="card-header">
-                <div>
-                    <h2 class="card-title">Low attendance</h2>
-                    <p class="card-subtitle">Students below {{ attendance_threshold }}% overall</p>
-                </div>
+                <h2 class="card-title">Below {{ attendance_threshold }}% overall</h2>
+                <a class="link" href="{% url 'defaulters' %}">Defaulter list</a>
             </div>
             {% if low_attendance %}
             <div class="list">
@@ -182,10 +158,7 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="empty compact">
-                <div class="empty-icon" style="background:var(--success-soft);color:var(--success)"><i class="fas fa-thumbs-up"></i></div>
-                <p class="mb-0">Everyone is at or above {{ attendance_threshold }}%.</p>
-            </div>
+            <div class="empty compact"><p>Everyone is at or above {{ attendance_threshold }}%.</p></div>
             {% endif %}
         </div>
         {% endif %}

@@ -14,7 +14,7 @@
             <table class="table table-sm mt-2">
                 <thead><tr><th>{{ chart_axis }}</th><th class="text-right">Attended</th><th class="text-right">Rate</th></tr></thead>
                 <tbody>
-                    {% for r in rows %}<tr><td>{{ r.label }}</td><td class="text-right tabular">{{ r.present }} / {{ r.total }}</td><td class="text-right tabular">{% if r.percent is None %}—{% else %}{{ r.percent }}%{% endif %}</td></tr>{% endfor %}
+                    {% for r in rows %}<tr><td>{{ r.label }}</td><td class="text-right tabular">{{ r.present }} / {{ r.total }}</td><td class="text-right tabular">{% if r.percent is None %}-{% else %}{{ r.percent }}%{% endif %}</td></tr>{% endfor %}
                 </tbody>
             </table>
         </details>

@@ -116,7 +116,7 @@ def builtin(kind, facts):
 # ------------------------------------------------------------------ helpers
 
 def _pct(value):
-    return '—' if value is None else '%d%%' % value
+    return '-' if value is None else '%d%%' % value
 
 
 def _plural(n, word, plural=None):
@@ -182,7 +182,7 @@ def _student(facts, kind):
     if pct < 60:
         headline = 'Attendance is at serious risk (%s)' % _pct(pct)
     elif pct < t:
-        headline = 'Below %d%% — %s in a row to recover' % (t, _plural(o['needed'], 'lecture'))
+        headline = 'Below %d%%: %s in a row to recover' % (t, _plural(o['needed'], 'lecture'))
     elif pct < t + 5:
         headline = 'Just above %d%%, with little margin' % t
     elif below:
@@ -463,7 +463,7 @@ def _department(facts):
 
     headline = 'Department attendance at %s' % _pct(overall)
     if risk['count']:
-        headline += ' — %s below %d%%' % (_plural(risk['count'], 'student'), t)
+        headline += ', %s below %d%%' % (_plural(risk['count'], 'student'), t)
 
     classes = [c for c in facts['classes'] if c['total']]
     summary = '%s attended across %s over %s.' % (

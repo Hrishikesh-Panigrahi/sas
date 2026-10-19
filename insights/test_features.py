@@ -143,6 +143,6 @@ class AskTests(Fixture):
 
     def test_endpoint(self):
         self.client.force_login(self.hod)
-        self.assertContains(self.client.get(reverse('ask')), 'What would you like to know?')
+        self.assertContains(self.client.get(reverse('ask')), 'Try asking')
         r = self.client.post(reverse('ask'), '{"question": "who is below 90%"}', content_type='application/json')
         self.assertEqual(r.json()['source'], 'builtin')

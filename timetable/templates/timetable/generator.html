@@ -27,10 +27,9 @@
      data-class="{{ cls.class_name }}" data-existing="{{ existing }}">
 
     <aside class="gen-setup">
-        <section class="card ai-card">
+        <section class="card">
+            <div class="card-header"><h2 class="card-title">Rules</h2></div>
             <div class="card-body">
-                <div class="ai-head"><span class="ai-badge"><i class="fas fa-magic"></i> Assistant</span>
-                    <span class="small text-muted">{% if claude %}Powered by Claude{% else %}Built-in{% endif %}</span></div>
                 <label for="gen-ask" class="mb-1">Describe any rules in plain English</label>
                 <textarea id="gen-ask" class="form-control" rows="3" placeholder="e.g. Meera can't teach on Friday afternoons. Keep Wednesday after lunch free for sports. No more than 6 lectures a day."></textarea>
                 <div class="gen-examples" aria-label="Examples">
@@ -38,7 +37,7 @@
                     <button type="button" class="chip" data-example="No more than 5 lectures a day">Max 5 a day</button>
                     <button type="button" class="chip" data-example="Avoid the first period">No 9 am starts</button>
                 </div>
-                <button type="button" class="btn btn-soft btn-block mt-2" data-action="assist"><i class="fas fa-magic"></i>Add these rules</button>
+                <button type="button" class="btn btn-soft btn-block mt-2" data-action="assist"><i class="fas fa-plus"></i>Add these rules</button>
                 <div class="gen-assist-result" aria-live="polite"></div>
             </div>
         </section>

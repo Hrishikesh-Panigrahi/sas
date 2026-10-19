@@ -18,9 +18,7 @@ from users.models import TeacherProfile
 def index(request):
     user = request.user
     today = timezone.localdate()
-    hour = timezone.localtime().hour
-    greeting = 'morning' if hour < 12 else 'afternoon' if hour < 17 else 'evening'
-    context = {'title': 'Dashboard', 'today': today, 'greeting': greeting}
+    context = {'title': 'Dashboard', 'today': today}
 
     if user.is_student:
         profile = student.objects.filter(user=user).select_related('cls').first()
@@ -28,6 +26,8 @@ def index(request):
         context['summary'] = student_summary(profile) if profile else None
         if profile:
             context['forecast'] = forecasts(student.objects.filter(pk=profile.pk)).get(profile.pk)
+            context['short_courses'] = sum(1 for c in context['summary']['courses'] if c['short'])
+            context['leaves'] = profile.leave_requests.order_by('-created_at')[:4]
         return render(request, 'dashboard_student.html', context)
 
     # Teaching: today's timetable, lectures still to be marked, my classes.
@@ -54,18 +54,20 @@ def index(request):
                             'cover_for': cover['sub'].absent_teacher.user.full_name})
     today_slots.sort(key=lambda item: item['slot'].start_time)
 
+    pending = (AttendanceClass.objects.filter(assign__in=assignments, status=0, date__lte=today)
+               .select_related('assign__cls', 'assign__course').order_by('-date'))
     context.update({
         'assignments': assignments,
         'today_slots': today_slots,
-        'pending': (AttendanceClass.objects
-                    .filter(assign__in=assignments, status=0, date__lte=today)
-                    .select_related('assign__cls', 'assign__course')
-                    .order_by('-date')[:6]),
+        'pending': pending[:6],
+        'pending_count': pending.count(),
     })
 
     if user.can_manage_students:
         dept_students = in_department(student.objects.filter(user__is_staff=False),
                                       user, 'user__department')
+        below = students_below_threshold(dept_students)
+        upcoming = warnings(dept_students.filter(cls__isnull=False))
         context.update({
             'counts': {
                 'courses': in_department(Course.objects.all(), user, 'dept').count(),
@@ -73,12 +75,15 @@ def index(request):
                                           user, 'user__department').count(),
                 'students': dept_students.count(),
                 'classes': in_department(Class.objects.all(), user).count(),
+                'below': len(below),
+                'warnings': len(upcoming),
             },
-            'low_attendance': students_below_threshold(dept_students, limit=8),
-            'warnings': warnings(dept_students.filter(cls__isnull=False), limit=6),
+            'low_attendance': below[:8],
+            'warnings': upcoming[:8],
         })
     elif assignments:
-        context['warnings'] = warnings(student.objects.filter(cls__in={a.cls_id for a in assignments}),
-                                       limit=6, courses={a.course_id for a in assignments})
+        upcoming = warnings(student.objects.filter(cls__in={a.cls_id for a in assignments}),
+                            courses={a.course_id for a in assignments})
+        context.update({'warnings': upcoming[:8], 'warning_count': len(upcoming)})
 
     return render(request, 'dashboard.html', context)

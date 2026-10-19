@@ -16,13 +16,13 @@ html.rc-lock, html.rc-lock body { overflow: hidden; }
   background: rgba(15, 23, 42, .8);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   color: #fff;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
   animation: rc-fade .18s ease-out;
 }
 .rc[hidden], .rc [hidden] { display: none !important; }
 .rc :focus { outline: none; }
-.rc :focus-visible { outline: 3px solid #a5b4fc; outline-offset: 3px; }
+.rc :focus-visible { outline: 3px solid #9db5ef; outline-offset: 3px; }
 .rc-panel :focus-visible { outline-color: var(--primary); }
 
 .rc-dialog {
@@ -52,7 +52,7 @@ html.rc-lock, html.rc-lock body { overflow: hidden; }
 .rc-close:hover { background: rgba(255, 255, 255, .2); }
 
 .rc-bar { height: 4px; margin: .6rem 0 1rem; border-radius: 999px; background: rgba(255, 255, 255, .16); overflow: hidden; }
-.rc-bar span { display: block; width: 0; height: 100%; border-radius: inherit; background: #818cf8; transition: width .25s ease; }
+.rc-bar span { display: block; width: 0; height: 100%; border-radius: inherit; background: #2a5bd7; transition: width .25s ease; }
 
 /* ---------- Voice bar ---------- */
 .rc-voice {
@@ -112,7 +112,7 @@ html.rc-lock, html.rc-lock body { overflow: hidden; }
 }
 .rc-switch input:checked + .rc-switch-track { background: var(--success-bright); }
 .rc-switch input:checked + .rc-switch-track::after { transform: translateX(16px); }
-.rc-switch input:focus-visible + .rc-switch-track { outline: 3px solid #a5b4fc; outline-offset: 2px; }
+.rc-switch input:focus-visible + .rc-switch-track { outline: 3px solid #9db5ef; outline-offset: 2px; }
 
 /* ---------- Card stack ---------- */
 .rc-body { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }

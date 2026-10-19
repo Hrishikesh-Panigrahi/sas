@@ -129,7 +129,7 @@ def find_students(scope, below_percent=None, above_percent=None, class_name=None
             continue
         s = names.get(r['student_id'])
         if s:
-            rows.append([s.user.full_name, s.cls.class_name if s.cls else '—', s.roll_no or '',
+            rows.append([s.user.full_name, s.cls.class_name if s.cls else '-', s.roll_no or '',
                          '%d/%d' % (r['present'], r['total']), pct])
     rows.sort(key=lambda r: r[4])
     what = 'Students'
@@ -172,11 +172,11 @@ def student_attendance(scope, name=None):
     rows = []
     for c in (f['courses'] if f else []):
         rows.append([c['name'], '%d/%d' % (c['present'], c['total']), c['current'],
-                     c['projected'] if c['total'] >= 4 else '—',
+                     c['projected'] if c['total'] >= 4 else '-',
                      {'lost': "Can't reach %d%%" % settings.ATTENDANCE_THRESHOLD,
                       'slipping': 'Slipping', 'at_risk': 'Below', 'recovering': 'Recovering',
                       'ok': 'On track'}[c['status']],
-                     c['can_miss'] if c['can_miss'] is not None else '—'])
+                     c['can_miss'] if c['can_miss'] is not None else '-'])
     overall = f['overall'] if f else None
     t = _table('%s · %s' % (stu.user.full_name, stu.cls.class_name if stu.cls else 'no class'),
                ['Course', 'Attended', '% now', '% by end', 'Status', 'Can still miss'], rows)

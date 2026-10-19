@@ -25,12 +25,12 @@ class PwaTests(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r['Content-Type'], 'application/manifest+json')
         data = json.loads(r.content.decode('utf-8'))
-        self.assertEqual(data['name'], 'SAS — Student Attendance')
+        self.assertEqual(data['name'], 'SAS Student Attendance')
         self.assertEqual(data['short_name'], 'SAS')
         self.assertEqual(data['start_url'], '/dashboard/')
         self.assertEqual(data['scope'], '/')
         self.assertEqual(data['display'], 'standalone')
-        self.assertEqual(data['theme_color'], '#4f46e5')
+        self.assertEqual(data['theme_color'], '#2a5bd7')
         self.assertEqual(data['background_color'], '#f4f6fb')
         icons = {(i['sizes'], i.get('purpose', 'any')): i for i in data['icons']}
         self.assertIn(('192x192', 'any'), icons)
@@ -91,7 +91,7 @@ class PwaTests(TestCase):
     def test_head_partial(self):
         html = render_to_string('partials/pwa_head.html')
         self.assertIn('<link rel="manifest" href="/manifest.webmanifest">', html)
-        self.assertIn('<meta name="theme-color" content="#4f46e5">', html)
+        self.assertIn('<meta name="theme-color" content="#2a5bd7">', html)
         self.assertIn('rel="apple-touch-icon"', html)
         self.assertIn('apple-mobile-web-app-capable', html)
 

@@ -6,7 +6,7 @@
 
 {% block actions %}
 <a class="btn btn-light" href="{% url 'class-detail' cls.id %}"><i class="fas fa-chalkboard"></i>Class details</a>
-{% if can_edit and has_courses %}<a class="btn btn-primary" href="{% url 'timetable-generator' cls.id %}"><i class="fas fa-magic"></i>Generate timetable</a>{% endif %}
+{% if can_edit and has_courses %}<a class="btn btn-primary" href="{% url 'timetable-generator' cls.id %}"><i class="fas fa-th"></i>Generate timetable</a>{% endif %}
 {% endblock %}
 
 {% block content %}

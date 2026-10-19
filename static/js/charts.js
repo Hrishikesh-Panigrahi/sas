@@ -9,8 +9,8 @@
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
   var C = {
-    series: '#4f46e5', wash: 'rgba(79, 70, 229, .10)', ref: '#d97706',
-    grid: '#e9edf4', ink: '#334155', muted: '#64748b', surface: '#ffffff'
+    series: '#2a5bd7', wash: 'rgba(42, 91, 215, .08)', ref: '#d98a0b',
+    grid: '#e7eaee', ink: '#3c434d', muted: '#69717d', surface: '#ffffff'
   };
 
   function node(name, attrs, parent) {
@@ -121,7 +121,7 @@
       cross.setAttribute('visibility', 'visible');
       markers.forEach(function (mk, j) { if (mk) mk.setAttribute('r', j === i ? 6 : 4); });
       var top = d.percent === null || d.percent === undefined ? y(50) : y(d.percent);
-      showTip(c, host, x(i), top, d.percent === null || d.percent === undefined ? '—' : d.percent + '%',
+      showTip(c, host, x(i), top, d.percent === null || d.percent === undefined ? '-' : d.percent + '%',
               caption(d, opts.prefix));
     }
     function blur() {
@@ -170,7 +170,7 @@
       bars.forEach(function (b, j) { b.setAttribute('opacity', j === i || i < 0 ? 1 : 0.55); });
       var d = data[i];
       var top = d.percent === null || d.percent === undefined ? y(50) : y(d.percent);
-      showTip(c, host, m.l + band * (i + 0.5), top, d.percent === null ? '—' : d.percent + '%', caption(d, opts.prefix));
+      showTip(c, host, m.l + band * (i + 0.5), top, d.percent === null ? '-' : d.percent + '%', caption(d, opts.prefix));
     }
     function blur() {
       active = -1;

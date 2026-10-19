@@ -18,9 +18,9 @@ from django.templatetags.static import static
 from django.urls import NoReverseMatch, reverse
 from django.views.decorators.http import require_safe
 
-APP_NAME = 'SAS — Student Attendance'
+APP_NAME = 'SAS Student Attendance'
 SHORT_NAME = 'SAS'
-THEME_COLOR = '#4f46e5'
+THEME_COLOR = '#2a5bd7'
 BACKGROUND_COLOR = '#f4f6fb'
 SW_SOURCE = 'js/sw.js'
 

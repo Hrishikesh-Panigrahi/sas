@@ -60,6 +60,13 @@ def _inbox(request):
         leave.lectures = lectures_in_range(leave).count()
     counts = {s: scope.filter(status=s).count() for s in ('pending', 'approved', 'rejected')}
     context = {'title': 'Leave requests', 'requests': requests, 'status': status, 'counts': counts}
+    if status == 'pending':
+        # Below the queue: what was decided lately, so the page shows the whole picture.
+        recent = list(scope.exclude(status__in=('pending', 'cancelled'))
+                      .select_related('reviewed_by').order_by('-reviewed_at')[:6])
+        for leave in recent:
+            leave.lectures = lectures_in_range(leave).count()
+        context['recent'] = recent
     return render(request, 'leave/inbox.html', context)
 
 

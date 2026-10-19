@@ -1,0 +1,33 @@
+<article class="leave-row leave-card">
+    <div class="person">
+        <span class="avatar">{{ leave.student.user.initials }}</span>
+        <div class="min-w-0">
+            <a class="name" href="{% url 'student-detail' leave.student.id %}">{{ leave.student.user.full_name }}</a>
+            <div class="sub">{{ leave.student.cls.class_name|default:"No class" }}{% if leave.student.roll_no %} · Roll {{ leave.student.roll_no }}{% endif %}</div>
+        </div>
+    </div>
+    <div class="leave-facts">
+        <span><i class="far fa-calendar"></i>{{ leave.start_date|date:"D j M" }}{% if leave.end_date != leave.start_date %} – {{ leave.end_date|date:"D j M" }}{% endif %}</span>
+        <span><i class="fas fa-tag"></i>{{ leave.get_kind_display }}</span>
+        <span><i class="fas fa-chalkboard"></i>{{ leave.lectures }} lecture{{ leave.lectures|pluralize }} in this period</span>
+    </div>
+    <div>
+        <p class="leave-reason">{{ leave.reason }}</p>
+        {% if leave.has_document %}<a class="btn btn-sm btn-light mt-2" href="{% url 'leave-document' leave.id %}" target="_blank" rel="noopener"><i class="fas fa-paperclip"></i>{{ leave.document_name|truncatechars:32 }}</a>{% endif %}
+        {% if editable and leave.reviewed_by %}<p class="small text-muted mt-1 mb-0">{{ leave.get_status_display }} by {{ leave.reviewed_by.full_name }}, {{ leave.reviewed_at|date:"j M, H:i" }}{% if leave.review_note %} · “{{ leave.review_note }}”{% endif %}</p>{% endif %}
+    </div>
+    {% if editable %}
+    <form method="post" action="{% url 'leave-review' leave.id %}" class="leave-actions">
+        {% csrf_token %}
+        <input type="hidden" name="from" value="{{ status }}">
+        <input type="text" name="note" class="form-control form-control-sm" placeholder="Note for the student (optional)" maxlength="300" aria-label="Note for {{ leave.student.user.full_name }}">
+        {% if leave.status != 'rejected' %}<button class="btn btn-sm btn-light" name="action" value="reject" type="submit">{% if leave.status == 'approved' %}Revoke{% else %}Don't approve{% endif %}</button>{% endif %}
+        {% if leave.status != 'approved' %}<button class="btn btn-sm btn-success" name="action" value="approve" type="submit"><i class="fas fa-check"></i>Approve</button>{% endif %}
+    </form>
+    {% else %}
+    <div class="text-right">
+        {% include 'leave/_status.html' %}
+        {% if leave.reviewed_by %}<div class="small text-muted mt-1">{{ leave.reviewed_by.full_name }}, {{ leave.reviewed_at|date:"j M" }}{% if leave.review_note %} · “{{ leave.review_note|truncatechars:60 }}”{% endif %}</div>{% endif %}
+    </div>
+    {% endif %}
+</article>
