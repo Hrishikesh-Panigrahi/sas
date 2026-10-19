@@ -6,7 +6,7 @@
 .gen-setup .card + .card, .gen-preview .card + .card { margin-top: 0; }
 .gen-preview { min-width: 0; scroll-margin-top: 80px; order: -1; }
 .gen-setup-generate { grid-column: 1 / -1; }
-@media (min-width: 1400px) {
+@media (min-width: 1600px) {
   .gen { grid-template-columns: minmax(320px, 360px) 1fr; }
   .gen-setup { grid-template-columns: 1fr; }
   .gen-preview { order: 0; }
@@ -32,8 +32,10 @@
 .gen-break { font-size: .75rem; color: var(--muted); margin: .1rem 0 .4rem 1.8rem; display: flex; align-items: center; gap: .5rem; }
 .gen-break::after { content: ""; flex: 1; border-top: 1px dashed var(--border-strong); }
 
-.gen-course { padding: .85rem 1.25rem; border-bottom: 1px solid var(--border); }
-.gen-course:last-child { border-bottom: 0; }
+.gen-preview .card.gen-courses-card { margin-top: 1.25rem; overflow: hidden; }
+.gen-courses { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+/* Hairlines on the right and bottom of each course; the card clips the outer edges. */
+.gen-course { padding: .8rem 1rem; background: var(--surface); box-shadow: 1px 0 0 var(--border), 0 1px 0 var(--border); }
 .gen-course.is-off { background: var(--surface-2); }
 .gen-course.is-off .gen-course-head { opacity: .6; }
 .gen-course-head { display: flex; align-items: center; gap: .65rem; margin-bottom: .55rem; }

@@ -55,11 +55,6 @@
         </section>
 
         <section class="card">
-            <div class="card-header"><div><h2 class="card-title">Courses</h2><p class="card-subtitle">Lectures are for the whole class; labs run once per batch</p></div></div>
-            <div class="gen-courses" data-courses></div>
-        </section>
-
-        <section class="card">
             <div class="card-header"><h2 class="card-title">Rules</h2></div>
             <div class="card-body">
                 <div class="row">
@@ -123,6 +118,11 @@
                 <button type="button" class="btn btn-success" data-action="apply"><i class="fas fa-check"></i>Use this timetable</button>
             </div>
         </div>
+
+        <section class="card gen-courses-card">
+            <div class="card-header"><div><h2 class="card-title">Courses</h2><p class="card-subtitle">Lectures are for the whole class; labs run once per batch</p></div></div>
+            <div class="gen-courses" data-courses></div>
+        </section>
     </section>
 </div>
 {{ config|json_script:"gen-config" }}
